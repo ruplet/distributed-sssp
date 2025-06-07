@@ -49,3 +49,15 @@ ReservationName=mimuwp StartTime=2025-06-13T16:00:00 EndTime=2025-06-13T18:00:00
    TRES=cpu=288
    Users= Groups=(null) Accounts=g101-2284 Licenses=(null) State=INACTIVE BurstBuffer=(null) Watts=n/a
    MaxStartDelay=(null)
+
+
+
+Odpalanie:
+[balawend@hpc ~/distributed-sssp]$ make test
+[balawend@hpc ~/distributed-sssp]$ ssh okeanos
+okeanos-login3 /home/balawend> cd testing_env/
+okeanos-login3 balawend/testing_env> sbatch sbatch_run_tests.sh
+okeanos-login3 balawend/testing_env> squeue | grep balawend
+okeanos-login3 balawend/testing_env> cat output.txt
+
+okeanos-login3 balawend/testing_env> srun -n 10 ./test_command.sh LOGIN69 path_20_4

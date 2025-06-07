@@ -46,7 +46,7 @@ std::vector<long long> dist_local_responsible;
 const long long INF = std::numeric_limits<long long>::max();
 
 void delta_stepping_algorithm(const Data& data, size_t root_rt_global_id, long long delta_val) {
-    std::cerr << "Melduję się! proces: " << myRank << " posiadam wierzchołków: " << data.getNResponsible() << std::endl;
+    std::cout << "Melduję się! proces: " << myRank << " posiadam wierzchołków: " << data.getNResponsible() << std::endl;
     return;
 }
 
@@ -131,6 +131,8 @@ int main(int argc, char* argv[]) {
         MPI_Abort(MPI_COMM_WORLD, 1);
         return 1;
     }
+
+    std::cout << "Melduje sie! Proces " << myRank << std::endl;
 
     MPI_Barrier(MPI_COMM_WORLD);
     double start_time = MPI_Wtime();
