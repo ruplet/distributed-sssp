@@ -74,6 +74,33 @@ test-local: $(SOLUTION_ZIP)
 	cd $(TESTING_ENV_DIR) && python3 $(TEST_SCRIPT) -l
 	@echo "--- Testing Complete ---"
 
+
+test-okeanos: $(SOLUTION_ZIP)
+	@echo "--- Testing Solution ---"
+	@echo "Calculating SHA256 sum of $(SOLUTION_ZIP)..."
+	sha256sum $(SOLUTION_ZIP)
+
+	@echo "Cleaning up previous solution artifacts in $(TESTING_ENV_DIR)/..."
+	# Remove the old zip file from the testing environment, if it's there
+	rm -f "$(TESTING_ENV_DIR)/$(SOLUTION_ZIP)"
+	# Remove the old extracted solution folder from the testing environment, if it's there
+	if [ -d "$(TESTING_ENV_DIR)/LOGIN69" ]; then \
+		echo "Removing old solution folder: $(TESTING_ENV_DIR)/LOGIN69"; \
+		rm -rf "$(TESTING_ENV_DIR)/LOGIN69"; \
+	fi
+
+	@echo "Copying $(SOLUTION_ZIP) to $(TESTING_ENV_DIR)/..."
+	cp $(SOLUTION_ZIP) $(TESTING_ENV_DIR)/
+
+	@echo "Unzipping $(SOLUTION_ZIP) in $(TESTING_ENV_DIR)/..."
+	# -q quiet
+	# -d $(TESTING_ENV_DIR) extracts files into this directory
+	unzip -q $(TESTING_ENV_DIR)/$(SOLUTION_ZIP) -d $(TESTING_ENV_DIR)
+
+	@echo "Running tests in $(TESTING_ENV_DIR)/ ..."
+	cd $(TESTING_ENV_DIR) && python3 $(TEST_SCRIPT)
+	@echo "--- Testing Complete ---"
+
 solution.zip: pack.sh $(shell find src -type f) Makefile
 	bash pack.sh LOGIN69
 
