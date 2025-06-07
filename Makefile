@@ -5,10 +5,16 @@ SOLUTION_ZIP := solution.zip
 TESTING_ENV_DIR := testing_env
 TEST_SCRIPT := run_tests.py # Assumed to be at the root of LOGIN69 when unzipped
 
+ALL : sssp
+
 .PHONY: test clean_test_env
 
-sssp: src/main.cpp 
+sssp: src/main.cpp src/parse_data.cpp
 	mpic++ -std=c++17 -O3 -Wall -Werror $^ -o $@ -lm -Wno-sign-compare
+
+
+unit_test: src/unit_tests.cpp src/common.hpp src/block_dist.hpp
+	mpic++ -std=c++17 -g -Wall -Werror src/unit_tests.cpp -o $@ -lm -fsanitize=undefined,address -fno-omit-frame-pointer
 
 # Primary rule to test the solution
 test: $(SOLUTION_ZIP)
