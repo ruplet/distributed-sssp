@@ -98,7 +98,7 @@ test-okeanos: $(SOLUTION_ZIP)
 	unzip -q $(TESTING_ENV_DIR)/$(SOLUTION_ZIP) -d $(TESTING_ENV_DIR)
 
 	@echo "Running tests in $(TESTING_ENV_DIR)/ ..."
-	cd $(TESTING_ENV_DIR) && python3 $(TEST_SCRIPT)
+	cd $(TESTING_ENV_DIR) && sbatch sbatch_run_tests.sh
 	@echo "--- Testing Complete ---"
 
 solution.zip: pack.sh $(shell find src -type f) Makefile

@@ -10,6 +10,7 @@
 
 #include "block_dist.hpp"
 #include "parse_data.hpp"
+#include "logger.hpp"
 
 const long long DEFAULT_DELTA = 10;
 
@@ -66,6 +67,8 @@ void delta_stepping_algorithm(
         data.updateDist(root_rt_global_id, 0);
         buckets[0].push_back(root_rt_global_id);
     }
+
+    DebugLogger::getInstance().log("Initialization complete.");
     
     // Main loop: every iteration is one epoch
     while (true) {
@@ -77,18 +80,28 @@ void delta_stepping_algorithm(
         long long globalMinK = INF;
         MPI_Allreduce(&localMinK, &globalMinK, 1, MPI_LONG_LONG, MPI_MIN, MPI_COMM_WORLD);
 
+        std::stringstream ss_epoch;
+        ss_epoch << "\n--- Epoch Start --- Global Min k: " << (globalMinK == INF ? "INF" : std::to_string(globalMinK));
+        DebugLogger::getInstance().log(ss_epoch.str());
+
         // No more work to be done! (assumption: input graph is connected!)
         if (globalMinK == INF) {
+            DebugLogger::getInstance().log("Termination condition met. Exiting."); // <<< DEBUG
             break;
         }
 
         long long currentK = globalMinK;
+        DebugLogger::getInstance().log_buckets("Before Phases", currentK, buckets); // <<< DEBUG
 
         // 3. --- PHASES WITHIN AN EPOCH ---
         // buckets.count() is 0 or 1
         while (buckets.count(currentK) && !buckets[currentK].empty()) {
             std::vector<int> S = buckets[currentK];
             buckets.erase(currentK);
+
+            std::stringstream ss_phase;
+            ss_phase << "  > Phase for k=" << currentK << " | Processing |S|=" << S.size() << " vertices.";
+            DebugLogger::getInstance().log(ss_phase.str());
 
             // --- FENCE 1: Start one-sided communication epoch ---
             MPI_Win_fence(0, dist_window);
@@ -136,6 +149,11 @@ void delta_stepping_algorithm(
                     // If a vertex is dirty, find it in ANY bucket and move it.
                     int v_global_id = data.getFirstResponsibleGlobalIdx() + v_local_idx;
                     long long new_dist = data.getDist(v_global_id);
+
+                    // <<< DEBUG: Log the relaxation
+                    std::stringstream ss_relax;
+                    ss_relax << "    Relaxed v" << v_global_id << " -> " << new_dist;
+                    DebugLogger::getInstance().log(ss_relax.str());
                     
                     // Expensive search for the vertex in all buckets to find its old location
                     // bool found_and_removed = false;
@@ -161,6 +179,7 @@ void delta_stepping_algorithm(
                     dirty_flags[v_local_idx] = 0;
                 }
             }
+            DebugLogger::getInstance().log_buckets("After Phase Update", currentK, buckets); // <<< DEBUG
             // After re-bucketing, the active set for the next phase would be what is now in B_k
         }
     }
