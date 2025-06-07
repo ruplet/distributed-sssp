@@ -91,7 +91,7 @@ test-okeanos: $(SOLUTION_ZIP)
 	# Remove the old artifacts
 	rm -f "$(TESTING_ENV_DIR)/LOGIN69/core";
 	rm -f "$(TESTING_ENV_DIR)/LOGIN69/debug_log_*.txt";
-	rm -f "$(TESTING_ENV_DIR)/LOGIN69/outputs/*";
+	rm -f "$(TESTING_ENV_DIR)/outputs/*";
 	rm -f "$(TESTING_ENV_DIR)/LOGIN69/output.txt";
 
 	@echo "Copying $(SOLUTION_ZIP) to $(TESTING_ENV_DIR)/..."
