@@ -88,6 +88,11 @@ test-okeanos: $(SOLUTION_ZIP)
 		echo "Removing old solution folder: $(TESTING_ENV_DIR)/LOGIN69"; \
 		rm -rf "$(TESTING_ENV_DIR)/LOGIN69"; \
 	fi
+	# Remove the old artifacts
+	rm -f "$(TESTING_ENV_DIR)/LOGIN69/core";
+	rm -f "$(TESTING_ENV_DIR)/LOGIN69/debug_log_*.txt";
+	rm -f "$(TESTING_ENV_DIR)/LOGIN69/outputs/*";
+	rm -f "$(TESTING_ENV_DIR)/LOGIN69/output.txt";
 
 	@echo "Copying $(SOLUTION_ZIP) to $(TESTING_ENV_DIR)/..."
 	cp $(SOLUTION_ZIP) $(TESTING_ENV_DIR)/
