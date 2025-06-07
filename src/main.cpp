@@ -107,6 +107,8 @@ void delta_stepping_algorithm(
             MPI_Win_fence(0, dist_window);
             MPI_Win_fence(0, dirty_window);
 
+            DebugLogger::getInstance().log("FENCE SYNC 1");
+
             // --- Relaxation Step using MPI_Accumulate ---
             for (int u_global_id : S) {
                 // int u_local_idx = dist.globalToLocal(u_global_id).value();
@@ -127,8 +129,10 @@ void delta_stepping_algorithm(
             }
 
             // --- FENCE 2: Complete all accumulate operations ---
+            DebugLogger::getInstance().log("FENCE SYNC pre 1");
             MPI_Win_fence(0, dist_window);
             MPI_Win_fence(0, dirty_window);
+            DebugLogger::getInstance().log("FENCE SYNC 2");
 
             // --- Local Update: Check for changes and re-bucket ---
             char* dirty_flags = data.getDirtyFlagsBuffer();
