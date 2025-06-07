@@ -124,6 +124,7 @@ void delta_stepping_algorithm(
             DebugLogger::getInstance().log(ss_phase.str());
 
             // --- FENCE 1: Start one-sided communication epoch ---
+            DebugLogger::getInstance().log("FENCE SYNC pre 1");
             MPI_Win_fence(0, dist_window);
             MPI_Win_fence(0, dirty_window);
             DebugLogger::getInstance().log("FENCE SYNC 1");
@@ -148,7 +149,7 @@ void delta_stepping_algorithm(
             }
 
             // --- FENCE 2: Complete all accumulate operations ---
-            DebugLogger::getInstance().log("FENCE SYNC pre 1");
+            DebugLogger::getInstance().log("FENCE SYNC pre 2");
             MPI_Win_fence(0, dist_window);
             MPI_Win_fence(0, dirty_window);
             DebugLogger::getInstance().log("FENCE SYNC 2");
