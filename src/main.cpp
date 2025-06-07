@@ -51,8 +51,23 @@ struct RelaxRequest {
 };
 
 
-void delta_stepping_algorithm(const Data& data, size_t root_rt_global_id, long long delta_val) {
+void delta_stepping_algorithm(
+    const Data& data,
+    const BlockDistribution::Distribution& dist,
+    size_t root_rt_global_id,
+    long long delta_val
+) {
     std::cerr << "Melduję się! proces: " << myRank << " posiadam wierzchołków: " << data.getNResponsible() << std::endl;
+
+    std::fill(dist_local_responsible.begin(), dist_local_responsible.end(), INF);
+    std::map<long long, std::vector<int>> buckets;
+    
+    int root_owner = dist.getResponsibleProcessor(root_rt_global_id).value_or(-1);
+    if (myRank == root_owner) {
+        int root_local_idx = dist.globalToLocal(root_rt_global_id).value();
+        dist_local_responsible[root_local_idx] = 0;
+        buckets[0].push_back(root_rt_global_id);
+    }
     return;
 }
 
@@ -138,11 +153,9 @@ int main(int argc, char* argv[]) {
         return 1;
     }
 
-    std::cout << "Melduje sie! Proces " << myRank << std::endl;
-
     MPI_Barrier(MPI_COMM_WORLD);
     double start_time = MPI_Wtime();
-    delta_stepping_algorithm(data, 0, delta_param);
+    delta_stepping_algorithm(data, dist, 0, delta_param);
     MPI_Barrier(MPI_COMM_WORLD); // Ensure all processes done before anyone exits/prints final time
     double end_time = MPI_Wtime();
     if (myRank == 0) {
