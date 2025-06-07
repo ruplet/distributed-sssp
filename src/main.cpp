@@ -59,15 +59,14 @@ void delta_stepping_algorithm(
     size_t root_rt_global_id,
     long long delta_val
 ) {
-    std::map<long long, std::vector<int>> buckets;
+    std::map<long long, std::vector<size_t>> buckets;
 
     std::cerr << "Melduję się! proces: " << myRank << " posiadam wierzchołków: " << data.getNResponsible() << std::endl;
     
     // In your provided code, you have data methods `isOwned` and `updateDist`.
     // Let's assume they work as intended.
     if (data.isOwned(root_rt_global_id)) {
-        size_t local_idx = dist.globalToLocal(root_rt_global_id).value();
-        data.updateDist(local_idx, 0); // Assuming updateDist takes local index now
+        data.updateDist(root_rt_global_id, 0);
         buckets[0].push_back(root_rt_global_id);
     }
 
@@ -110,7 +109,7 @@ void delta_stepping_algorithm(
             // We now know that at least one process has work, so ALL processes must participate in the phase.
             
             // Determine the active set S for this process (it might be empty, that's OK)
-            std::vector<int> S;
+            std::vector<size_t> S;
             if (local_has_work) {
                 S = buckets[currentK];
                 buckets.erase(currentK);
@@ -120,7 +119,7 @@ void delta_stepping_algorithm(
             char* dirty_flags = data.getDirtyFlagsBuffer();
             for(size_t i = 0; i < data.getNResponsible(); ++i) {
                 // Assuming data.getDist(local_idx) exists. Your main() uses data.data()[i]
-                old_dist_copy[i] = data.getDist(i); 
+                old_dist_copy[i] = data.getDist(data.getFirstResponsibleGlobalIdx() + i); 
                 dirty_flags[i] = 0;
             }
 
@@ -135,14 +134,18 @@ void delta_stepping_algorithm(
             DebugLogger::getInstance().log("FENCE SYNC 1");
 
             // --- Relaxation Step ---
-            for (int u_global_id : S) {
+            for (size_t u_global_id : S) {
                 // Assuming data.getDist(global_id) also exists as per your code
                 long long u_dist = data.getDist(u_global_id); 
 
                 data.forEachNeighbor(u_global_id, [&](size_t vGlobalIdx, long long w) {
                     long long potential_new_dist = u_dist + w;
-                    int v_owner = dist.getResponsibleProcessor(vGlobalIdx).value();
-                    MPI_Aint v_disp = dist.globalToLocal(vGlobalIdx).value();
+                    auto v_ownerOpt = dist.getResponsibleProcessor(vGlobalIdx);
+                    if (!v_ownerOpt.has_value()) { throw Fatal("Owner doesn't exist!"); }
+                    size_t v_owner = *v_ownerOpt;
+                    auto vdispOpt = dist.globalToLocal(vGlobalIdx);
+                    if (!vdispOpt.has_value()) { throw Fatal("Owner doesn't exist!"); }
+                    MPI_Aint v_disp = *vdispOpt;
     
                     MPI_Accumulate(&potential_new_dist, 1, MPI_LONG_LONG, v_owner,
                                    v_disp, 1, MPI_LONG_LONG, MPI_MIN, dist_window);
@@ -159,10 +162,10 @@ void delta_stepping_algorithm(
             DebugLogger::getInstance().log("FENCE SYNC 2");
 
             // --- Local Update ---
-            std::vector<int> R;
+            std::vector<size_t> R;
             for (size_t v_local_idx = 0; v_local_idx < data.getNResponsible(); ++v_local_idx) {
                 if (dirty_flags[v_local_idx] == 1) {
-                    int v_global_id = data.getFirstResponsibleGlobalIdx() + v_local_idx;
+                    size_t v_global_id = data.getFirstResponsibleGlobalIdx() + v_local_idx;
                     long long new_dist = data.getDist(v_global_id);
                     long long old_dist = old_dist_copy[v_local_idx];
                     
