@@ -1,1 +1,51 @@
 for testing, remember to set DELTA in test_command.sh
+
+
+run on 10 different nodes:
+okeanos-login3 /home/balawend> srun -n 10 --ntasks-per-node=1 --time=00:00:15 --account=g101-2284 hostname
+nid00124
+nid00126
+nid00122
+nid00127
+nid00119
+nid00123
+nid00125
+nid00118
+nid00120
+nid00121
+
+
+okeanos-login3 /home/balawend> scontrol show partition okeanos
+PartitionName=okeanos
+   AllowGroups=ALL AllowAccounts=ALL AllowQos=ALL
+   AllocNodes=ALL Default=YES QoS=N/A
+   DefaultTime=02:00:00 DisableRootJobs=NO ExclusiveUser=NO GraceTime=0 Hidden=NO
+   MaxNodes=UNLIMITED MaxTime=14-00:00:00 MinNodes=0 LLN=NO MaxCPUsPerNode=UNLIMITED
+   Nodes=nid0[0008-0062,0072-0127,0136-0190,0192-0383,0392-0446,0456-0511,0520-0574,0576-0767,0776-0831,0840-0895,0900-1151]
+   PriorityJobFactor=10 PriorityTier=10 RootOnly=NO ReqResv=NO OverSubscribe=EXCLUSIVE
+   OverTimeLimit=NONE PreemptMode=OFF
+   State=UP TotalCPUs=51840 TotalNodes=1080 SelectTypeParameters=NONE
+   JobDefaults=(null)
+   DefMemPerNode=UNLIMITED MaxMemPerNode=UNLIMITED
+
+
+okeanos-login3 /home/balawend> sacctmgr show qos format=Name,MaxNodes,MaxJobs,MaxWall
+      Name MaxNodes MaxJobs     MaxWall 
+---------- -------- ------- ----------- 
+    normal                              
+       hpc                   2-00:00:00 
+  internal                   2-00:00:00 
+     meteo                   2-00:00:00 
+      long                   7-00:00:00 
+
+ReservationName=mimuww StartTime=2025-06-11T16:00:00 EndTime=2025-06-11T18:00:00 Duration=02:00:00
+   Nodes=nid000[50-55] NodeCnt=6 CoreCnt=144 Features=(null) PartitionName=(null) Flags=WEEKLY,SPEC_NODES
+   TRES=cpu=288
+   Users= Groups=(null) Accounts=g101-2284 Licenses=(null) State=INACTIVE BurstBuffer=(null) Watts=n/a
+   MaxStartDelay=(null)
+
+ReservationName=mimuwp StartTime=2025-06-13T16:00:00 EndTime=2025-06-13T18:00:00 Duration=02:00:00
+   Nodes=nid000[50-55] NodeCnt=6 CoreCnt=144 Features=(null) PartitionName=(null) Flags=WEEKLY,SPEC_NODES
+   TRES=cpu=288
+   Users= Groups=(null) Accounts=g101-2284 Licenses=(null) State=INACTIVE BurstBuffer=(null) Watts=n/a
+   MaxStartDelay=(null)

@@ -5,15 +5,15 @@ SOLUTION_ZIP := solution.zip
 TESTING_ENV_DIR := testing_env
 TEST_SCRIPT := run_tests.py # Assumed to be at the root of LOGIN69 when unzipped
 
-ALL : sssp
+ALL : sssp_okeanos
 
-.PHONY: test clean_test_env
+.PHONY: test clean_test_env local
 
 sssp_okeanos: src/main.cpp src/parse_data.cpp
-	CC -std=c++17 -O3 -Wall -Werror $^ -o $@ -lm -Wno-sign-compare
+	CC -std=c++17 -O3 -Wall -Werror $^ -o sssp -lm -Wno-sign-compare
 
-sssp: src/main.cpp src/parse_data.cpp
-	mpic++ -std=c++17 -O3 -Wall -Werror $^ -o $@ -lm -Wno-sign-compare
+local: src/main.cpp src/parse_data.cpp
+	mpic++ -std=c++17 -O3 -Wall -Werror $^ -o sssp -lm -Wno-sign-compare
 
 unit_test: src/unit_tests.cpp src/common.hpp src/block_dist.hpp
 	mpic++ -std=c++17 -g -Wall -Werror src/unit_tests.cpp -o $@ -lm -fsanitize=undefined,address -fno-omit-frame-pointer
@@ -28,7 +28,6 @@ test: $(SOLUTION_ZIP)
 	# Remove the old zip file from the testing environment, if it's there
 	rm -f "$(TESTING_ENV_DIR)/$(SOLUTION_ZIP)"
 	# Remove the old extracted solution folder from the testing environment, if it's there
-	# This rm -rf is now specific to the known folder name that your solution unzips to.
 	if [ -d "$(TESTING_ENV_DIR)/LOGIN69" ]; then \
 		echo "Removing old solution folder: $(TESTING_ENV_DIR)/LOGIN69"; \
 		rm -rf "$(TESTING_ENV_DIR)/LOGIN69"; \
@@ -42,10 +41,15 @@ test: $(SOLUTION_ZIP)
 	# -d $(TESTING_ENV_DIR) extracts files into this directory
 	unzip -q $(TESTING_ENV_DIR)/$(SOLUTION_ZIP) -d $(TESTING_ENV_DIR)
 
-	@echo "Running tests in $(TESTING_ENV_DIR)/ ..."
-	cd $(TESTING_ENV_DIR) && python3 $(TEST_SCRIPT) -l
+	@echo "Removing old testing env"
+	ssh okeanos "rm -rf testing_env"
+	@echo "Uploading new testing env to okeanos"
+	scp -rq testing_env okeanos:
+	@echo "Done! Files ready to test at remote"
 
-	@echo "--- Testing Complete ---"
+# @echo "Running tests in $(TESTING_ENV_DIR)/ ..."
+# cd $(TESTING_ENV_DIR) && python3 $(TEST_SCRIPT) -l
+# @echo "--- Testing Complete ---"
 
 solution.zip: pack.sh $(shell find src -type f) Makefile
 	bash pack.sh LOGIN69
