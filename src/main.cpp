@@ -14,12 +14,12 @@
 const long long DEFAULT_DELTA = 10;
 
 // --- Configuration Flags for Heuristics (all disabled by default) ---
-const bool ENABLE_IOS_HEURISTIC = false;
-const bool ENABLE_PRUNING_HEURISTIC = false;
+// const bool ENABLE_IOS_HEURISTIC = false;
+// const bool ENABLE_PRUNING_HEURISTIC = false;
 // const bool ENABLE_HYBRIDIZATION = false; // Not detailed enough in prompt to stub
 // const bool ENABLE_LOAD_BALANCING = false; // Not detailed enough in prompt to stub
 
-const bool SKIP_COMPUTATIONS_FOR_NOW = false; // Set to false to run algorithm
+// const bool SKIP_COMPUTATIONS_FOR_NOW = false; // Set to false to run algorithm
 
 int myRank, nProcessorsGlobal;
 

@@ -9,9 +9,11 @@ ALL : sssp
 
 .PHONY: test clean_test_env
 
+sssp_okeanos: src/main.cpp src/parse_data.cpp
+	CC -std=c++17 -O3 -Wall -Werror $^ -o $@ -lm -Wno-sign-compare
+
 sssp: src/main.cpp src/parse_data.cpp
 	mpic++ -std=c++17 -O3 -Wall -Werror $^ -o $@ -lm -Wno-sign-compare
-
 
 unit_test: src/unit_tests.cpp src/common.hpp src/block_dist.hpp
 	mpic++ -std=c++17 -g -Wall -Werror src/unit_tests.cpp -o $@ -lm -fsanitize=undefined,address -fno-omit-frame-pointer
