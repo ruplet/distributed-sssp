@@ -194,6 +194,8 @@ int main(int argc, char* argv[]) {
     MPI_Comm_rank(MPI_COMM_WORLD, &myRank);
     MPI_Comm_size(MPI_COMM_WORLD, &nProcessorsGlobal);
 
+    DebugLogger::getInstance().init(myRank);
+
     // assumption: argc is the same among processors
     if (argc < 3) {
         if (myRank == 0) std::cerr << "Usage: " << argv[0] << " <input_file> <output_file> [delta > 0]" << std::endl;
