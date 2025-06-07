@@ -113,6 +113,8 @@ clean_test_env:
 		echo "Removing solution folder: $(TESTING_ENV_DIR)/LOGIN69"; \
 		rm -rf "$(TESTING_ENV_DIR)/LOGIN69"; \
 	fi
+	rm $(TESTING_ENV_DIR)/output.txt  $(TESTING_ENV_DIR)/debug_log_*.txt
+
 	@echo "Solution artifacts cleaned from testing environment."
 
 # Example of a more general clean rule

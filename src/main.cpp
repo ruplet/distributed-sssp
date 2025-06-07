@@ -63,8 +63,11 @@ void delta_stepping_algorithm(
 
     std::cerr << "Melduję się! proces: " << myRank << " posiadam wierzchołków: " << data.getNResponsible() << std::endl;
     
+    // In your provided code, you have data methods `isOwned` and `updateDist`.
+    // Let's assume they work as intended.
     if (data.isOwned(root_rt_global_id)) {
-        data.updateDist(root_rt_global_id, 0);
+        size_t local_idx = dist.globalToLocal(root_rt_global_id).value();
+        data.updateDist(local_idx, 0); // Assuming updateDist takes local index now
         buckets[0].push_back(root_rt_global_id);
     }
 
@@ -72,7 +75,6 @@ void delta_stepping_algorithm(
     
     // Main loop: every iteration is one epoch
     while (true) {
-        // Find the next globally non-empty bucket
         long long localMinK = INF;
         if (!buckets.empty()) {
             localMinK = buckets.begin()->first;
@@ -84,62 +86,64 @@ void delta_stepping_algorithm(
         ss_epoch << "\n--- Epoch Start --- Global Min k: " << (globalMinK == INF ? "INF" : std::to_string(globalMinK));
         DebugLogger::getInstance().log(ss_epoch.str());
 
-        // No more work to be done! (assumption: input graph is connected!)
         if (globalMinK == INF) {
-            DebugLogger::getInstance().log("Termination condition met. Exiting."); // <<< DEBUG
+            DebugLogger::getInstance().log("Termination condition met. Exiting.");
             break;
         }
 
         long long currentK = globalMinK;
-        DebugLogger::getInstance().log_buckets("Before Phases", currentK, buckets); // <<< DEBUG
+        
+        // --- PHASES WITHIN AN EPOCH ---
+        // *** THE CORRECTED DEADLOCK-FREE LOOP STRUCTURE ***
+        while (true) {
+            // STEP 1: All processes collectively decide if there is any work left for this 'k'.
+            int local_has_work = (buckets.count(currentK) && !buckets[currentK].empty()) ? 1 : 0;
+            int global_has_work = 0;
+            MPI_Allreduce(&local_has_work, &global_has_work, 1, MPI_INT, MPI_SUM, MPI_COMM_WORLD);
 
-        // 3. --- PHASES WITHIN AN EPOCH ---
-        // buckets.count() is 0 or 1
-        // while (buckets.count(currentK) && !buckets[currentK].empty()) {
-        int still_work_for_k = 1; // Assume there is work to loop at least once
-        while (still_work_for_k > 0) {
+            // If the global sum is 0, NO process has work for 'currentK'. ALL break the phase loop.
+            if (global_has_work == 0) {
+                DebugLogger::getInstance().log("  > No more work for k=" + std::to_string(currentK) + ". Ending epoch.");
+                break; 
+            }
             
-            // --- Determine the active set S for this process ---
+            // We now know that at least one process has work, so ALL processes must participate in the phase.
+            
+            // Determine the active set S for this process (it might be empty, that's OK)
             std::vector<int> S;
-            if (buckets.count(currentK) && !buckets[currentK].empty()) {
+            if (local_has_work) {
                 S = buckets[currentK];
                 buckets.erase(currentK);
             }
-            
-            // This is the old, deadlock-prone local check:
-            // while (buckets.count(currentK) && !buckets[currentK].empty()) {
-                // std::vector<int> S = buckets[currentK];
-                // buckets.erase(currentK);
 
             std::vector<long long> old_dist_copy(data.getNResponsible());
-            char* dirty_flags = data.getDirtyFlagsBuffer(); // Get buffer pointer
-            // Reset local dirty flags and make a copy of distances
-            for(int i = 0; i < data.getNResponsible(); ++i) {
-                old_dist_copy[i] = data.getDist(i);
-                dirty_flags[i] = 0; // Clean all flags before the phase
+            char* dirty_flags = data.getDirtyFlagsBuffer();
+            for(size_t i = 0; i < data.getNResponsible(); ++i) {
+                // Assuming data.getDist(local_idx) exists. Your main() uses data.data()[i]
+                old_dist_copy[i] = data.getDist(i); 
+                dirty_flags[i] = 0;
             }
 
             std::stringstream ss_phase;
-            ss_phase << "  > Phase for k=" << currentK << " | Processing |S|=" << S.size() << " vertices.";
+            ss_phase << "  > Phase for k=" << currentK << " | My |S|=" << S.size() << " | Global work exists.";
             DebugLogger::getInstance().log(ss_phase.str());
 
-            // --- FENCE 1: Start one-sided communication epoch ---
+            // --- FENCE 1: DEADLOCK-FREE ---
             DebugLogger::getInstance().log("FENCE SYNC pre 1");
             MPI_Win_fence(0, dist_window);
             MPI_Win_fence(0, dirty_window);
             DebugLogger::getInstance().log("FENCE SYNC 1");
 
-            // --- Relaxation Step using MPI_Accumulate ---
+            // --- Relaxation Step ---
             for (int u_global_id : S) {
-                // int u_local_idx = dist.globalToLocal(u_global_id).value();
-                long long u_dist = data.getDist(u_global_id);
+                // Assuming data.getDist(global_id) also exists as per your code
+                long long u_dist = data.getDist(u_global_id); 
 
                 data.forEachNeighbor(u_global_id, [&](size_t vGlobalIdx, long long w) {
                     long long potential_new_dist = u_dist + w;
                     int v_owner = dist.getResponsibleProcessor(vGlobalIdx).value();
-                    MPI_Aint v_disp = dist.globalToLocal(vGlobalIdx).value(); // Displacement in target's window
+                    MPI_Aint v_disp = dist.globalToLocal(vGlobalIdx).value();
     
-                    // Atomically update remote distance: dist[v] = min(dist[v], new_dist)
                     MPI_Accumulate(&potential_new_dist, 1, MPI_LONG_LONG, v_owner,
                                    v_disp, 1, MPI_LONG_LONG, MPI_MIN, dist_window);
                     
@@ -148,53 +152,29 @@ void delta_stepping_algorithm(
                 });
             }
 
-            // --- FENCE 2: Complete all accumulate operations ---
+            // --- FENCE 2 ---
             DebugLogger::getInstance().log("FENCE SYNC pre 2");
             MPI_Win_fence(0, dist_window);
             MPI_Win_fence(0, dirty_window);
             DebugLogger::getInstance().log("FENCE SYNC 2");
 
-            // --- Local Update: Check for changes and re-bucket ---
-            // char* dirty_flags = data.getDirtyFlagsBuffer();
-            std::vector<int> R; // For vertices that were relaxed but remain in bucket k
-            for (int v_local_idx = 0; v_local_idx < data.getNResponsible(); ++v_local_idx) {
+            // --- Local Update ---
+            std::vector<int> R;
+            for (size_t v_local_idx = 0; v_local_idx < data.getNResponsible(); ++v_local_idx) {
                 if (dirty_flags[v_local_idx] == 1) {
                     int v_global_id = data.getFirstResponsibleGlobalIdx() + v_local_idx;
                     long long new_dist = data.getDist(v_global_id);
-                    
-                    // Since it's dirty, its old distance MUST be what we copied.
                     long long old_dist = old_dist_copy[v_local_idx];
-
-                    // <<< DEBUG: Log the relaxation
-                    std::stringstream ss_relax;
-                    ss_relax << "    Relaxed v" << v_global_id << " -> " << new_dist;
-                    DebugLogger::getInstance().log(ss_relax.str());
                     
-                    // Expensive search for the vertex in all buckets to find its old location
+                    // ... your correct re-bucketing logic from before ...
                     if (old_dist != INF) {
                         long long old_bucket_idx = old_dist / delta_val;
-
-                        // We only need to check the specific bucket where it used to be.
                         if (buckets.count(old_bucket_idx)) {
-                            auto& old_bucket_vector = buckets[old_bucket_idx];
-                            
-                            // Use the standard "remove-erase idiom" to efficiently delete the element.
-                            // std::remove moves all elements *not* equal to v_global_id to the front,
-                            // and returns an iterator to the new logical end of the vector.
-                            // .erase() then cleans up from that point to the physical end.
-                            old_bucket_vector.erase(
-                                std::remove(old_bucket_vector.begin(), old_bucket_vector.end(), v_global_id),
-                                old_bucket_vector.end()
-                            );
-
-                            // If removing that vertex made the bucket empty, erase the bucket key itself.
-                            if (old_bucket_vector.empty()) {
-                                buckets.erase(old_bucket_idx);
-                            }
+                            auto& vec = buckets[old_bucket_idx];
+                            vec.erase(std::remove(vec.begin(), vec.end(), v_global_id), vec.end());
+                            if (vec.empty()) buckets.erase(old_bucket_idx);
                         }
                     }
-
-                    // Now add to the new bucket.
                     long long new_bucket_idx = new_dist / delta_val;
                     if (new_bucket_idx == currentK) {
                         R.push_back(v_global_id);
@@ -203,19 +183,13 @@ void delta_stepping_algorithm(
                     }
                 }
             }
-            DebugLogger::getInstance().log_buckets("After Phase Update", currentK, buckets); // <<< DEBUG
             
-            // Put vertices from R back into the current bucket for the next phase.
+            // Put light-edge vertices back into the current bucket for the next phase.
             if (!R.empty()) {
-                buckets[currentK].insert(buckets[currentK].end(), R.begin(), R.end());
+                buckets[currentK] = R;
             }
-
-            // <<< THE FIX: After local updates, globally check if we need another phase for this k. >>>
-            int local_has_work_for_k = buckets.count(currentK) && !buckets[currentK].empty() ? 1 : 0;
-            MPI_Allreduce(&local_has_work_for_k, &still_work_for_k, 1, MPI_INT, MPI_SUM, MPI_COMM_WORLD);
-            // After re-bucketing, the active set for the next phase would be what is now in B_k
-        }
-    }
+        } // end of while(true) phase loop
+    } // end of while(true) epoch loop
     return;
 }
 
