@@ -95,9 +95,29 @@ void delta_stepping_algorithm(
 
         // 3. --- PHASES WITHIN AN EPOCH ---
         // buckets.count() is 0 or 1
-        while (buckets.count(currentK) && !buckets[currentK].empty()) {
-            std::vector<int> S = buckets[currentK];
-            buckets.erase(currentK);
+        // while (buckets.count(currentK) && !buckets[currentK].empty()) {
+        int still_work_for_k = 1; // Assume there is work to loop at least once
+        while (still_work_for_k > 0) {
+            
+            // --- Determine the active set S for this process ---
+            std::vector<int> S;
+            if (buckets.count(currentK) && !buckets[currentK].empty()) {
+                S = buckets[currentK];
+                buckets.erase(currentK);
+            }
+            
+            // This is the old, deadlock-prone local check:
+            // while (buckets.count(currentK) && !buckets[currentK].empty()) {
+                // std::vector<int> S = buckets[currentK];
+                // buckets.erase(currentK);
+
+            std::vector<long long> old_dist_copy(data.getNResponsible());
+            char* dirty_flags = data.getDirtyFlagsBuffer(); // Get buffer pointer
+            // Reset local dirty flags and make a copy of distances
+            for(int i = 0; i < data.getNResponsible(); ++i) {
+                old_dist_copy[i] = data.getDist(i);
+                dirty_flags[i] = 0; // Clean all flags before the phase
+            }
 
             std::stringstream ss_phase;
             ss_phase << "  > Phase for k=" << currentK << " | Processing |S|=" << S.size() << " vertices.";
@@ -106,7 +126,6 @@ void delta_stepping_algorithm(
             // --- FENCE 1: Start one-sided communication epoch ---
             MPI_Win_fence(0, dist_window);
             MPI_Win_fence(0, dirty_window);
-
             DebugLogger::getInstance().log("FENCE SYNC 1");
 
             // --- Relaxation Step using MPI_Accumulate ---
@@ -135,24 +154,15 @@ void delta_stepping_algorithm(
             DebugLogger::getInstance().log("FENCE SYNC 2");
 
             // --- Local Update: Check for changes and re-bucket ---
-            char* dirty_flags = data.getDirtyFlagsBuffer();
+            // char* dirty_flags = data.getDirtyFlagsBuffer();
+            std::vector<int> R; // For vertices that were relaxed but remain in bucket k
             for (int v_local_idx = 0; v_local_idx < data.getNResponsible(); ++v_local_idx) {
                 if (dirty_flags[v_local_idx] == 1) {
-                    // This is a placeholder for old_dist.
-                    // To properly re-bucket, we still need the pre-update distance.
-                    // This reveals a challenge with the pure dirty-flag approach.
-                    // Let's refine this: the bucket map itself tracks old distances.
-                    // We need a way to map local_idx to its old distance.
-                    // A simple map or tracking array can do this.
-                    
-                    // A full robust solution requires knowing the old distance to remove
-                    // from the old bucket. The logic gets complex. A pragmatic approach is
-                    // to just re-scan all buckets for the vertex.
-                    
-                    // The simplest, correct logic without adding more state:
-                    // If a vertex is dirty, find it in ANY bucket and move it.
                     int v_global_id = data.getFirstResponsibleGlobalIdx() + v_local_idx;
                     long long new_dist = data.getDist(v_global_id);
+                    
+                    // Since it's dirty, its old distance MUST be what we copied.
+                    long long old_dist = old_dist_copy[v_local_idx];
 
                     // <<< DEBUG: Log the relaxation
                     std::stringstream ss_relax;
@@ -160,30 +170,48 @@ void delta_stepping_algorithm(
                     DebugLogger::getInstance().log(ss_relax.str());
                     
                     // Expensive search for the vertex in all buckets to find its old location
-                    // bool found_and_removed = false;
-                    for (auto it = buckets.begin(); it != buckets.end(); ) {
-                        auto& bucket_vec = it->second;
-                        auto vec_it = std::find(bucket_vec.begin(), bucket_vec.end(), v_global_id);
-                        if (vec_it != bucket_vec.end()) {
-                            bucket_vec.erase(vec_it);
-                            if (bucket_vec.empty()) {
-                                it = buckets.erase(it);
+                    if (old_dist != INF) {
+                        long long old_bucket_idx = old_dist / delta_val;
+
+                        // We only need to check the specific bucket where it used to be.
+                        if (buckets.count(old_bucket_idx)) {
+                            auto& old_bucket_vector = buckets[old_bucket_idx];
+                            
+                            // Use the standard "remove-erase idiom" to efficiently delete the element.
+                            // std::remove moves all elements *not* equal to v_global_id to the front,
+                            // and returns an iterator to the new logical end of the vector.
+                            // .erase() then cleans up from that point to the physical end.
+                            old_bucket_vector.erase(
+                                std::remove(old_bucket_vector.begin(), old_bucket_vector.end(), v_global_id),
+                                old_bucket_vector.end()
+                            );
+
+                            // If removing that vertex made the bucket empty, erase the bucket key itself.
+                            if (old_bucket_vector.empty()) {
+                                buckets.erase(old_bucket_idx);
                             }
-                            // found_and_removed = true;
-                            break; 
                         }
-                        ++it;
                     }
 
                     // Now add to the new bucket.
                     long long new_bucket_idx = new_dist / delta_val;
-                    buckets[new_bucket_idx].push_back(v_global_id);
-
-                    // Reset the flag
-                    dirty_flags[v_local_idx] = 0;
+                    if (new_bucket_idx == currentK) {
+                        R.push_back(v_global_id);
+                    } else {
+                        buckets[new_bucket_idx].push_back(v_global_id);
+                    }
                 }
             }
             DebugLogger::getInstance().log_buckets("After Phase Update", currentK, buckets); // <<< DEBUG
+            
+            // Put vertices from R back into the current bucket for the next phase.
+            if (!R.empty()) {
+                buckets[currentK].insert(buckets[currentK].end(), R.begin(), R.end());
+            }
+
+            // <<< THE FIX: After local updates, globally check if we need another phase for this k. >>>
+            int local_has_work_for_k = buckets.count(currentK) && !buckets[currentK].empty() ? 1 : 0;
+            MPI_Allreduce(&local_has_work_for_k, &still_work_for_k, 1, MPI_INT, MPI_SUM, MPI_COMM_WORLD);
             // After re-bucketing, the active set for the next phase would be what is now in B_k
         }
     }
