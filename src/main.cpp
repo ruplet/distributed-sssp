@@ -45,8 +45,14 @@ std::vector<long long> dist_local_responsible;
 
 const long long INF = std::numeric_limits<long long>::max();
 
+struct RelaxRequest {
+    int target_vertex_global_id;
+    long long new_distance;
+};
+
+
 void delta_stepping_algorithm(const Data& data, size_t root_rt_global_id, long long delta_val) {
-    std::cout << "Melduję się! proces: " << myRank << " posiadam wierzchołków: " << data.getNResponsible() << std::endl;
+    std::cerr << "Melduję się! proces: " << myRank << " posiadam wierzchołków: " << data.getNResponsible() << std::endl;
     return;
 }
 

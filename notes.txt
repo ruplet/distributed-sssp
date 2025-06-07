@@ -61,3 +61,6 @@ okeanos-login3 balawend/testing_env> squeue | grep balawend
 okeanos-login3 balawend/testing_env> cat output.txt
 
 okeanos-login3 balawend/testing_env> srun -n 10 ./test_command.sh LOGIN69 path_20_4
+
+
+# max nodes is 90!

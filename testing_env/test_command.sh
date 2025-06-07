@@ -12,7 +12,8 @@ elif [ -n "${SLURM_PROCID}" ]; then # SLURM (often the fallback)
     RANK=${SLURM_PROCID}
 else
     echo "Warning: Could not determine MPI rank from environment variables."
-    RANK="unknown" # Or exit, or default to 0 if for single-process fallback
+    exit
 fi
 
+echo $HOSTNAME
 ./$1/sssp tests/$2/$RANK.in outputs/$RANK.out
