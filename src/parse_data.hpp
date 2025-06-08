@@ -104,7 +104,17 @@ public:
 
     // allow move constructor
     Data(Data&& other) noexcept
-        : winMemory(other.winMemory), window(other.window)
+        :
+            firstResponsibleGlobalIdx(other.firstResponsibleGlobalIdx),
+            nLocalResponsible(other.nLocalResponsible),
+            nVerticesGlobal(other.nVerticesGlobal),
+            neighOfLocal(std::move(other.neighOfLocal)),
+            distToRoot(std::move(other.distToRoot)),
+            dirtyFlags(std::move(other.dirtyFlags)),
+            winMemory(other.winMemory),
+            window(other.window),
+            winDisp(other.winDisp),
+            winSize(other.winSize)
     {
         other.window = MPI_WIN_NULL;
         other.winMemory = nullptr;
