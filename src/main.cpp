@@ -14,16 +14,7 @@
 
 const long long DEFAULT_DELTA = 10;
 
-// --- Configuration Flags for Heuristics (all disabled by default) ---
-// const bool ENABLE_IOS_HEURISTIC = false;
-// const bool ENABLE_PRUNING_HEURISTIC = false;
-// const bool ENABLE_HYBRIDIZATION = false; // Not detailed enough in prompt to stub
-// const bool ENABLE_LOAD_BALANCING = false; // Not detailed enough in prompt to stub
-
-// const bool SKIP_COMPUTATIONS_FOR_NOW = false; // Set to false to run algorithm
-
 int myRank, nProcessorsGlobal;
-
 
 class VertexOwnershipException : public std::runtime_error {
 public:
@@ -45,34 +36,88 @@ public:
     Fatal(std::string what) : std::runtime_error(what) {}
 };
 
-struct RelaxRequest {
-    int target_vertex_global_id;
-    long long new_distance;
-};
 
+bool anyoneHasWork(const std::map<long long, std::vector<size_t>>& buckets, size_t bucketIdx) {
+    int local_has_work = 0;
+    auto it = buckets.find(bucketIdx);
+    if (it != buckets.end() && !it->second.empty()) {
+        local_has_work = 1;
+    }
+
+    int global_has_work = 0;
+    MPI_Allreduce(&local_has_work, &global_has_work, 1, MPI_INT, MPI_MAX, MPI_COMM_WORLD);
+    if (global_has_work) { return true; }
+    else { return false; }
+}
+
+std::vector<size_t> getActiveSet(const std::map<long long, std::vector<size_t>>& buckets, size_t bucketIdx) {
+    std::vector<size_t> active;
+    auto it = buckets.find(bucketIdx);
+    if (it != buckets.end()) {
+        active = it->second;
+    }
+    return active;
+}
+
+void updateBucketInfo(
+    std::map<long long, std::vector<size_t>>& buckets,
+    size_t vGlobalIdx,
+    long long oldBucket,
+    long long newBucket
+) {
+    auto oldIt = buckets.find(oldBucket);
+    if (oldIt == buckets.end()) {
+        throw Fatal("Old bucket not found!");
+    }
+
+    auto& oldVec = oldIt->second;
+
+    auto pos = std::find(oldVec.begin(), oldVec.end(), vGlobalIdx);
+    if (pos == oldVec.end()) {
+        throw Fatal("Vertex not found in old bucket!");
+    }
+
+    auto newIt = buckets.find(newBucket);
+    if (newIt != buckets.end()) {
+        const auto& newVec = newIt->second;
+        if (std::find(newVec.begin(), newVec.end(), vGlobalIdx) != newVec.end()) {
+            throw Fatal("Vertex already present in new bucket!");
+        }
+    }
+
+    oldVec.erase(pos);
+    buckets[newBucket].push_back(vGlobalIdx);
+}
+
+void setActiveSet(
+    std::map<long long, std::vector<size_t>>& buckets,
+    size_t bucketIdx,
+    const std::vector<size_t>& activeSet
+) {
+    buckets[bucketIdx] = activeSet;
+}
 
 void delta_stepping_algorithm(
     Data& data,
     const BlockDistribution::Distribution& dist,
-    MPI_Win& dist_window,
-    MPI_Win& dirty_window,
     size_t root_rt_global_id,
     long long delta_val
 ) {
     std::map<long long, std::vector<size_t>> buckets;
 
-    std::cerr << "Melduję się! proces: " << myRank << " posiadam wierzchołków: " << data.getNResponsible() << std::endl;
+    {
+        std::stringstream ss;
+        ss << "Process " << myRank << " processing " << data.getNResponsible() << " vertices!";
+        DebugLogger::getInstance().log(ss.str());
+    }
     
-    // In your provided code, you have data methods `isOwned` and `updateDist`.
-    // Let's assume they work as intended.
     if (data.isOwned(root_rt_global_id)) {
         data.updateDist(root_rt_global_id, 0);
         buckets[0].push_back(root_rt_global_id);
     }
-
-    DebugLogger::getInstance().log("Initialization complete.");
     
     // Main loop: every iteration is one epoch
+    size_t epochNo = 0;
     while (true) {
         long long localMinK = INF;
         if (!buckets.empty()) {
@@ -80,10 +125,12 @@ void delta_stepping_algorithm(
         }
         long long globalMinK = INF;
         MPI_Allreduce(&localMinK, &globalMinK, 1, MPI_LONG_LONG, MPI_MIN, MPI_COMM_WORLD);
-
-        std::stringstream ss_epoch;
-        ss_epoch << "\n--- Epoch Start --- Global Min k: " << (globalMinK == INF ? "INF" : std::to_string(globalMinK));
-        DebugLogger::getInstance().log(ss_epoch.str());
+        {
+            std::stringstream ss;
+            ss << "Process " << myRank << " starting epoch " << epochNo << ". Bucket considered: " << (globalMinK == INF ? "INF" : std::to_string(globalMinK));
+            DebugLogger::getInstance().log(ss.str());
+        }
+        epochNo++;
 
         if (globalMinK == INF) {
             DebugLogger::getInstance().log("Termination condition met. Exiting.");
@@ -92,105 +139,87 @@ void delta_stepping_algorithm(
 
         long long currentK = globalMinK;
         
-        // --- PHASES WITHIN AN EPOCH ---
-        // *** THE CORRECTED DEADLOCK-FREE LOOP STRUCTURE ***
+        size_t phaseNo = 0;
         while (true) {
             // STEP 1: All processes collectively decide if there is any work left for this 'k'.
-            int local_has_work = (buckets.count(currentK) && !buckets[currentK].empty()) ? 1 : 0;
-            int global_has_work = 0;
-            MPI_Allreduce(&local_has_work, &global_has_work, 1, MPI_INT, MPI_SUM, MPI_COMM_WORLD);
-
             // If the global sum is 0, NO process has work for 'currentK'. ALL break the phase loop.
-            if (global_has_work == 0) {
-                DebugLogger::getInstance().log("  > No more work for k=" + std::to_string(currentK) + ". Ending epoch.");
+            if (anyoneHasWork(buckets, currentK)) {
+                std::stringstream ss;
+                ss << "Process " << myRank << " no more work for k=" << currentK;
+                DebugLogger::getInstance().log(ss.str());
                 break; 
             }
-            
             // We now know that at least one process has work, so ALL processes must participate in the phase.
             
             // Determine the active set S for this process (it might be empty, that's OK)
-            std::vector<size_t> S;
-            if (local_has_work) {
-                S = buckets[currentK];
-                buckets.erase(currentK);
+            std::vector<size_t> activeSet = getActiveSet(buckets, currentK);
+
+            // std::vector<long long> distancesBeforeRelaxations = data.getCopyOfDistances();
+            {
+                std::stringstream ss;
+                ss << "Process " << myRank << " starting phase " << phaseNo << " for k=" << currentK;
+                ss << ". Active vertices: [";
+                if (!activeSet.empty()) {
+                    ss << activeSet[0];
+                    for (auto it=activeSet.begin() + 1; it != activeSet.end(); ++it) {
+                        ss << ", " << *it;
+                    }
+                }
+                ss << "]";
+                DebugLogger::getInstance().log(ss.str());
             }
 
-            std::vector<long long> old_dist_copy(data.getNResponsible());
-            char* dirty_flags = data.getDirtyFlagsBuffer();
-            for(size_t i = 0; i < data.getNResponsible(); ++i) {
-                // Assuming data.getDist(local_idx) exists. Your main() uses data.data()[i]
-                old_dist_copy[i] = data.getDist(data.getFirstResponsibleGlobalIdx() + i); 
-                dirty_flags[i] = 0;
-            }
-
-            std::stringstream ss_phase;
-            ss_phase << "  > Phase for k=" << currentK << " | My |S|=" << S.size() << " | Global work exists.";
-            DebugLogger::getInstance().log(ss_phase.str());
-
-            // --- FENCE 1: DEADLOCK-FREE ---
-            DebugLogger::getInstance().log("FENCE SYNC pre 1");
-            MPI_Win_fence(0, dist_window);
-            MPI_Win_fence(0, dirty_window);
-            DebugLogger::getInstance().log("FENCE SYNC 1");
+            // FENCE 1
+            DebugLogger::getInstance().log("FENCE SYNC 1: waiting...");
+            data.syncWindowToActual();
+            data.fence();
+            DebugLogger::getInstance().log("FENCE SYNC 1: done! Performing relaxations...");
 
             // --- Relaxation Step ---
-            for (size_t u_global_id : S) {
-                // Assuming data.getDist(global_id) also exists as per your code
-                long long u_dist = data.getDist(u_global_id); 
+            for (auto u_global_id : activeSet) {
+                auto u_dist = data.getDist(u_global_id); 
 
                 data.forEachNeighbor(u_global_id, [&](size_t vGlobalIdx, long long w) {
-                    long long potential_new_dist = u_dist + w;
-                    auto v_ownerOpt = dist.getResponsibleProcessor(vGlobalIdx);
-                    if (!v_ownerOpt.has_value()) { throw Fatal("Owner doesn't exist!"); }
-                    size_t v_owner = *v_ownerOpt;
-                    auto vdispOpt = dist.globalToLocal(vGlobalIdx);
-                    if (!vdispOpt.has_value()) { throw Fatal("Owner doesn't exist!"); }
-                    MPI_Aint v_disp = *vdispOpt;
-    
-                    MPI_Accumulate(&potential_new_dist, 1, MPI_LONG_LONG, v_owner,
-                                   v_disp, 1, MPI_LONG_LONG, MPI_MIN, dist_window);
-                    
-                    char dirty_val = 1;
-                    MPI_Put(&dirty_val, 1, MPI_CHAR, v_owner, v_disp, 1, MPI_CHAR, dirty_window);
+                    auto potential_new_dist = u_dist + w;
+
+                    auto ownerProcessOpt = dist.getResponsibleProcessor(vGlobalIdx);
+                    if (!ownerProcessOpt.has_value()) { throw Fatal("Owner doesn't exist!"); }
+                    size_t ownerProcess = *ownerProcessOpt;
+
+                    auto dispAtownerOpt = dist.globalToLocal(vGlobalIdx);
+                    if (!dispAtownerOpt.has_value()) { throw Fatal("Owner doesn't exist!"); }
+                    MPI_Aint dispAtOwner = *dispAtownerOpt;
+
+                    data.communicateRelax(vGlobalIdx, potential_new_dist, ownerProcess, dispAtOwner);
                 });
             }
 
             // --- FENCE 2 ---
-            DebugLogger::getInstance().log("FENCE SYNC pre 2");
-            MPI_Win_fence(0, dist_window);
-            MPI_Win_fence(0, dirty_window);
-            DebugLogger::getInstance().log("FENCE SYNC 2");
+            DebugLogger::getInstance().log("FENCE SYNC 2: waiting...");
+            data.fence();
+            DebugLogger::getInstance().log("FENCE SYNC 2: done!");
 
-            // --- Local Update ---
-            std::vector<size_t> R;
-            for (size_t v_local_idx = 0; v_local_idx < data.getNResponsible(); ++v_local_idx) {
-                if (dirty_flags[v_local_idx] == 1) {
-                    size_t v_global_id = data.getFirstResponsibleGlobalIdx() + v_local_idx;
-                    long long new_dist = data.getDist(v_global_id);
-                    long long old_dist = old_dist_copy[v_local_idx];
-                    
-                    // ... your correct re-bucketing logic from before ...
-                    if (old_dist != INF) {
-                        long long old_bucket_idx = old_dist / delta_val;
-                        if (buckets.count(old_bucket_idx)) {
-                            auto& vec = buckets[old_bucket_idx];
-                            vec.erase(std::remove(vec.begin(), vec.end(), v_global_id), vec.end());
-                            if (vec.empty()) buckets.erase(old_bucket_idx);
-                        }
-                    }
-                    long long new_bucket_idx = new_dist / delta_val;
-                    if (new_bucket_idx == currentK) {
-                        R.push_back(v_global_id);
-                    } else {
-                        buckets[new_bucket_idx].push_back(v_global_id);
-                    }
+            // Check which distances and buckets have been relaxed in our data
+            std::vector<bool> wasUpdated(data.getNResponsible(), false);
+
+            // we will only preserve updates vertices
+            activeSet.clear();
+            for (auto update : data.getUpdatesAndSyncDataToWin()) {
+                auto vGlobalIdx = update.vGlobalIdx;
+                auto prevDist = update.prevDist;
+                auto newDist = update.newDist;
+
+                auto oldBucket = prevDist == INF ? INF : prevDist / delta_val;
+                auto newBucket = newDist / delta_val;
+
+                updateBucketInfo(buckets, vGlobalIdx, oldBucket, newBucket);
+
+                if (newBucket == currentK) {
+                    activeSet.push_back(vGlobalIdx);
                 }
             }
-            
-            // Put light-edge vertices back into the current bucket for the next phase.
-            if (!R.empty()) {
-                buckets[currentK] = R;
-            }
+            setActiveSet(buckets, currentK, activeSet);
+
         } // end of while(true) phase loop
     } // end of while(true) epoch loop
     return;
@@ -228,7 +257,7 @@ int main(int argc, char* argv[]) {
         MPI_Abort(MPI_COMM_WORLD, 1);
         return 1;
     }
-    auto data = *dataOpt;
+    auto& data = *dataOpt;
 
     BlockDistribution::Distribution dist(nProcessorsGlobal, data.getNVerticesGlobal());
     auto distNRespOpt = dist.getNResponsibleVertices(myRank);
@@ -277,24 +306,10 @@ int main(int argc, char* argv[]) {
         return 1;
     }
 
-    // --- MPI WINDOW CREATION ---
-    MPI_Win dist_window = MPI_WIN_NULL;
-    MPI_Win dirty_window = MPI_WIN_NULL;
-    MPI_Aint size = data.getNResponsible() * sizeof(long long);
-    MPI_Win_create(
-        data.data(), size, sizeof(long long),
-        MPI_INFO_NULL, MPI_COMM_WORLD, &dist_window
-    );
-
-    MPI_Win_create(
-        data.getDirtyFlagsBuffer(), data.getNResponsible() * sizeof(char), sizeof(char),
-        MPI_INFO_NULL, MPI_COMM_WORLD, &dirty_window
-    );
-
     MPI_Barrier(MPI_COMM_WORLD);
     double start_time = MPI_Wtime();
     try {
-        delta_stepping_algorithm(data, dist, dist_window, dirty_window, 0, delta_param);
+        delta_stepping_algorithm(data, dist, 0, delta_param);
     } catch (Fatal& ex) {
         std::cerr
             << "Fatal error while Delta-stepping: "
@@ -308,9 +323,6 @@ int main(int argc, char* argv[]) {
     if (myRank == 0) {
         std::cout << "Delta-stepping (one-sided) finished. Time: " << (end_time - start_time) << "s." << std::endl;
     }
-
-    MPI_Win_free(&dist_window);
-    MPI_Win_free(&dirty_window);
 
     for (size_t i = 0; i < data.getNResponsible(); ++i) {
         outfile_stream << (data.data()[i] == INF ? -1 : data.data()[i]) << std::endl;

@@ -15,5 +15,5 @@ else
     exit
 fi
 
-echo $HOSTNAME
+echo $HOSTNAME ":" "rank=" $RANK
 ./$1/sssp tests/$2/$RANK.in outputs/$RANK.out

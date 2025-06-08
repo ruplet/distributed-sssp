@@ -4,8 +4,10 @@
 #include <vector>
 #include <string>
 #include <optional>
+#include <mpi.h>
 #include <stdexcept>
-#include <functional>
+#include <cstring> // std::memcpy
+#include <functional> // std::function
 #include <limits>
 #include <iostream>
 
@@ -38,6 +40,11 @@ class Data {
     std::vector<long long> distToRoot;
     std::vector<char> dirtyFlags;
 
+    void *winMemory;
+    MPI_Win window;
+    int winDisp;
+    MPI_Aint winSize;
+
 public:
     Data(size_t firstResponsibleGlobalIdx, size_t nLocalResponsible, size_t nVerticesGlobal) 
         :
@@ -46,7 +53,11 @@ public:
             nVerticesGlobal(nVerticesGlobal),
             neighOfLocal(nLocalResponsible, std::vector<std::pair<size_t, long long>>()),
             distToRoot(nLocalResponsible, INF),
-            dirtyFlags(nLocalResponsible, 0)
+            dirtyFlags(nLocalResponsible, 0),
+            winMemory(nullptr),
+            window(MPI_WIN_NULL),
+            winDisp(sizeof(long long)),
+            winSize(nLocalResponsible * sizeof(long long))
     {
         if (
             nVerticesGlobal <= 0
@@ -68,6 +79,73 @@ public:
                 + std::to_string(distToRoot[0])
             );
         }
+
+        int mpi_err = MPI_Win_allocate(
+            winSize, winDisp,
+            MPI_INFO_NULL, MPI_COMM_WORLD, &winMemory, &window
+        );
+
+        if (mpi_err != MPI_SUCCESS || window == MPI_WIN_NULL) {
+            throw InvalidData("MPI_Win_allocate failed!");
+        }
+    }
+
+    ~Data() {
+        // winMemory will be freed automatically with MPI_Win_free
+        if (window != MPI_WIN_NULL) {
+            MPI_Win_free(&window);
+        }
+    }
+
+    // delete copy constructor and assignment
+    Data(const Data&) = delete;
+    Data& operator=(const Data&) = delete;
+    Data& operator=(Data&&) = delete;
+
+    // allow move constructor
+    Data(Data&& other) noexcept
+        : winMemory(other.winMemory), window(other.window)
+    {
+        other.window = MPI_WIN_NULL;
+        other.winMemory = nullptr;
+    }
+
+    void syncWindowToActual() {
+        std::memcpy(winMemory, distToRoot.data(), winSize);
+    }
+
+    void fence() {
+        MPI_Win_fence(0, window);
+    }
+
+    void communicateRelax(size_t vGlobalIdx, long long newDistance, int ownerProcess, MPI_Aint ownerDisp) {
+        MPI_Accumulate(&newDistance, 1, MPI_LONG_LONG, ownerProcess,
+                        ownerDisp, 1, MPI_LONG_LONG, MPI_MIN, window);
+    }
+
+    struct Update {
+        size_t vGlobalIdx;
+        long long prevDist;
+        long long newDist;
+    };
+
+    std::vector<Update> getUpdatesAndSyncDataToWin() {
+        std::vector<Update> updates;
+        for (size_t i = 0; i < nLocalResponsible; ++i) {
+            auto new_dist = static_cast<long long *>(winMemory)[i];
+            if (new_dist > distToRoot[i]) {
+                throw InvalidData("MPI distance relax caused dist to increase!");
+            } else if (new_dist < distToRoot[i]) {
+                Update update;
+                update.vGlobalIdx = getFirstResponsibleGlobalIdx() + i;
+                update.prevDist = distToRoot[i];
+                update.newDist = new_dist;
+                updates.push_back(update);
+                distToRoot[i] = new_dist;
+            }
+        }
+        return updates;
+        // std::memcpy(distToRoot.data(), winMemory, winSize);
     }
 
     long long* data() {
@@ -76,6 +154,10 @@ public:
 
     char* getDirtyFlagsBuffer() {
         return dirtyFlags.data();
+    }
+
+    std::vector<long long> getCopyOfDistances() const {
+        return distToRoot;
     }
 
     long long getDist(size_t vGlobalIdx) const {

@@ -1,5 +1,6 @@
 #include <fstream>
 #include <sstream>
+#include <optional>
 #include "parse_data.hpp"
 
 std::optional<Data> process_input_and_load_graph_from_stream(
