@@ -213,7 +213,9 @@ void delta_stepping_algorithm(
 
             // we will only preserve updates vertices
             activeSet.clear();
+            DebugLogger::getInstance().log("activeSet.clear(): done!");
             for (auto update : data.getUpdatesAndSyncDataToWin()) {
+                DebugLogger::getInstance().log("updating!");
                 auto vGlobalIdx = update.vGlobalIdx;
                 auto prevDist = update.prevDist;
                 auto newDist = update.newDist;
@@ -238,6 +240,7 @@ void delta_stepping_algorithm(
                     activeSet.push_back(vGlobalIdx);
                 }
             }
+            DebugLogger::getInstance().log("updates: done!");
             setActiveSet(buckets, currentK, activeSet);
             {
                 std::stringstream ss;
