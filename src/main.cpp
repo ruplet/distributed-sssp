@@ -65,18 +65,6 @@ void updateBucketInfo(
     long long oldBucket,
     long long newBucket
 ) {
-    auto oldIt = buckets.find(oldBucket);
-    if (oldIt == buckets.end()) {
-        throw Fatal("Old bucket not found!");
-    }
-
-    auto& oldVec = oldIt->second;
-
-    auto pos = std::find(oldVec.begin(), oldVec.end(), vGlobalIdx);
-    if (pos == oldVec.end()) {
-        throw Fatal("Vertex not found in old bucket!");
-    }
-
     auto newIt = buckets.find(newBucket);
     if (newIt != buckets.end()) {
         const auto& newVec = newIt->second;
@@ -85,7 +73,20 @@ void updateBucketInfo(
         }
     }
 
-    oldVec.erase(pos);
+    if (oldBucket != INF) {
+        auto oldIt = buckets.find(oldBucket);
+        if (oldIt == buckets.end()) {
+            throw Fatal("Old bucket not found!");
+        }
+        auto& oldVec = oldIt->second;
+    
+        auto pos = std::find(oldVec.begin(), oldVec.end(), vGlobalIdx);
+        if (pos == oldVec.end()) {
+            throw Fatal("Vertex not found in old bucket!");
+        }
+        oldVec.erase(pos);
+    }
+
     buckets[newBucket].push_back(vGlobalIdx);
 }
 
@@ -94,7 +95,12 @@ void setActiveSet(
     size_t bucketIdx,
     const std::vector<size_t>& activeSet
 ) {
-    buckets[bucketIdx] = activeSet;
+    auto it = buckets.find(bucketIdx);
+    if (!activeSet.empty()) {
+        it->second = activeSet;
+    } else {
+        buckets.erase(it);
+    }
 }
 
 void delta_stepping_algorithm(
@@ -113,7 +119,7 @@ void delta_stepping_algorithm(
     
     if (data.isOwned(root_rt_global_id)) {
         data.updateDist(root_rt_global_id, 0);
-        buckets[0].push_back(root_rt_global_id);
+        updateBucketInfo(buckets, root_rt_global_id, INF, 0);
     }
     
     // Main loop: every iteration is one epoch
@@ -127,7 +133,10 @@ void delta_stepping_algorithm(
         MPI_Allreduce(&localMinK, &globalMinK, 1, MPI_LONG_LONG, MPI_MIN, MPI_COMM_WORLD);
         {
             std::stringstream ss;
-            ss << "Process " << myRank << " starting epoch " << epochNo << ". Bucket considered: " << (globalMinK == INF ? "INF" : std::to_string(globalMinK));
+            ss
+                << "Process " << myRank << " starting epoch " << epochNo
+                << ". Bucket considered: " << (globalMinK == INF ? "INF" : std::to_string(globalMinK))
+                << "(raported my best bucket: " << localMinK << ", of " << buckets.begin()->second.size() << "nodes)";
             DebugLogger::getInstance().log(ss.str());
         }
         epochNo++;
