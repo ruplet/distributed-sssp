@@ -201,6 +201,11 @@ void delta_stepping_algorithm(
                     if (!dispAtownerOpt.has_value()) { throw Fatal("Owner doesn't exist!"); }
                     MPI_Aint dispAtOwner = *dispAtownerOpt;
 
+                    {
+                        std::stringstream ss;
+                        ss << "Sending update to process: " << ownerProcess << ". New dist of " << vGlobalIdx << " = " << potential_new_dist;
+                        DebugLogger::getInstance().log(ss.str());
+                    }
                     data.communicateRelax(vGlobalIdx, potential_new_dist, ownerProcess, dispAtOwner);
                 });
             }

@@ -5,6 +5,7 @@
 #include <string>
 #include <optional>
 #include <mpi.h>
+#include <sstream>
 #include <stdexcept>
 #include <cstring> // std::memcpy
 #include <functional> // std::function
