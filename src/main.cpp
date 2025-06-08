@@ -155,7 +155,7 @@ void delta_stepping_algorithm(
         while (true) {
             // STEP 1: All processes collectively decide if there is any work left for this 'k'.
             // If the global sum is 0, NO process has work for 'currentK'. ALL break the phase loop.
-            if (anyoneHasWork(buckets, currentK)) {
+            if (!anyoneHasWork(buckets, currentK)) {
                 std::stringstream ss;
                 ss << "Process " << myRank << " no more work for k=" << currentK;
                 DebugLogger::getInstance().log(ss.str());
