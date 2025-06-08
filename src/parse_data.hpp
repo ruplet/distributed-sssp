@@ -129,7 +129,7 @@ public:
         MPI_Win_fence(0, window);
     }
 
-    void communicateRelax(size_t vGlobalIdx, long long newDistance, int ownerProcess, MPI_Aint ownerDisp) {
+    void communicateRelax(long long newDistance, int ownerProcess, MPI_Aint ownerDisp) {
         MPI_Accumulate(&newDistance, 1, MPI_LONG_LONG, ownerProcess,
                         ownerDisp, 1, MPI_LONG_LONG, MPI_MIN, window);
     }

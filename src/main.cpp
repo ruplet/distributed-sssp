@@ -209,7 +209,7 @@ void delta_stepping_algorithm(
                         ss << "Sending update to process: " << ownerProcess << ". New dist of " << vGlobalIdx << " = " << potential_new_dist;
                         DebugLogger::getInstance().log(ss.str());
                     }
-                    data.communicateRelax(vGlobalIdx, potential_new_dist, ownerProcess, dispAtOwner);
+                    data.communicateRelax(potential_new_dist, ownerProcess, dispAtOwner);
                 });
             }
 
