@@ -188,7 +188,10 @@ void delta_stepping_algorithm(
 
             // --- Relaxation Step ---
             for (auto u_global_id : activeSet) {
-                auto u_dist = data.getDist(u_global_id); 
+                auto u_dist = data.getDist(u_global_id);
+                if (u_dist == INF) {
+                    continue;
+                }
 
                 data.forEachNeighbor(u_global_id, [&](size_t vGlobalIdx, long long w) {
                     auto potential_new_dist = u_dist + w;
