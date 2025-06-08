@@ -211,9 +211,6 @@ void delta_stepping_algorithm(
             data.fence();
             DebugLogger::getInstance().log("FENCE SYNC 2: done!");
 
-            // Check which distances and buckets have been relaxed in our data
-            std::vector<bool> wasUpdated(data.getNResponsible(), false);
-
             // we will only preserve updates vertices
             activeSet.clear();
             for (auto update : data.getUpdatesAndSyncDataToWin()) {
@@ -242,7 +239,19 @@ void delta_stepping_algorithm(
                 }
             }
             setActiveSet(buckets, currentK, activeSet);
-
+            {
+                std::stringstream ss;
+                ss << "Finishing phase. Updates processed.";
+                ss << " Active vertices: [";
+                if (!activeSet.empty()) {
+                    ss << activeSet[0];
+                    for (auto it=activeSet.begin() + 1; it != activeSet.end(); ++it) {
+                        ss << ", " << *it;
+                    }
+                }
+                ss << "]";
+                DebugLogger::getInstance().log(ss.str());
+            }
         } // end of while(true) phase loop
     } // end of while(true) epoch loop
     return;
