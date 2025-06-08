@@ -42,6 +42,11 @@ bool anyoneHasWork(const std::map<long long, std::vector<size_t>>& buckets, size
     auto it = buckets.find(bucketIdx);
     if (it != buckets.end() && !it->second.empty()) {
         local_has_work = 1;
+        {
+            DebugLogger::getInstance().log("I have some work to do!");
+        }
+    } else {
+        DebugLogger::getInstance().log("I don't raport anything to do!");
     }
 
     int global_has_work = 0;
@@ -129,24 +134,22 @@ void delta_stepping_algorithm(
         if (!buckets.empty()) {
             localMinK = buckets.begin()->first;
         }
-        long long globalMinK = INF;
-        MPI_Allreduce(&localMinK, &globalMinK, 1, MPI_LONG_LONG, MPI_MIN, MPI_COMM_WORLD);
+        long long currentK = INF;
+        MPI_Allreduce(&localMinK, &currentK, 1, MPI_LONG_LONG, MPI_MIN, MPI_COMM_WORLD);
         {
             std::stringstream ss;
             ss
                 << "Process " << myRank << " starting epoch " << epochNo
-                << ". Bucket considered: " << (globalMinK == INF ? "INF" : std::to_string(globalMinK))
-                << "(raported my best bucket: " << localMinK << ", of " << buckets.begin()->second.size() << "nodes)";
+                << ". Bucket considered: " << (currentK == INF ? "INF" : std::to_string(currentK))
+                << "(raported my best bucket: " << localMinK << ", of " << buckets.begin()->second.size() << " nodes)";
             DebugLogger::getInstance().log(ss.str());
         }
         epochNo++;
 
-        if (globalMinK == INF) {
+        if (currentK == INF) {
             DebugLogger::getInstance().log("Termination condition met. Exiting.");
             break;
         }
-
-        long long currentK = globalMinK;
         
         size_t phaseNo = 0;
         while (true) {
