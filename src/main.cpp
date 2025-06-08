@@ -100,11 +100,10 @@ void setActiveSet(
     size_t bucketIdx,
     const std::vector<size_t>& activeSet
 ) {
-    auto it = buckets.find(bucketIdx);
-    if (!activeSet.empty()) {
-        it->second = activeSet;
+    if (activeSet.empty()) {
+        buckets.erase(bucketIdx);
     } else {
-        buckets.erase(it);
+        buckets[bucketIdx] = activeSet;
     }
 }
 
