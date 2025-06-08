@@ -217,6 +217,12 @@ void delta_stepping_algorithm(
                 auto vGlobalIdx = update.vGlobalIdx;
                 auto prevDist = update.prevDist;
                 auto newDist = update.newDist;
+                {
+                    std::stringstream ss;
+                    ss << "Update registered: " << vGlobalIdx
+                        << "changed from " << prevDist << " to " << newDist;
+                    DebugLogger::getInstance().log(ss.str());
+                }
 
                 auto oldBucket = prevDist == INF ? INF : prevDist / delta_val;
                 auto newBucket = newDist / delta_val;
@@ -224,6 +230,11 @@ void delta_stepping_algorithm(
                 updateBucketInfo(buckets, vGlobalIdx, oldBucket, newBucket);
 
                 if (newBucket == currentK) {
+                    {
+                        std::stringstream ss;
+                        ss << "New active node: " << vGlobalIdx;
+                        DebugLogger::getInstance().log(ss.str());
+                    }
                     activeSet.push_back(vGlobalIdx);
                 }
             }

@@ -154,8 +154,8 @@ public:
                 distToRoot[i] = new_dist;
             }
         }
-        return updates;
         // std::memcpy(distToRoot.data(), winMemory, winSize);
+        return updates;
     }
 
     long long* data() {
