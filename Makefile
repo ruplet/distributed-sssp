@@ -10,7 +10,7 @@ ALL : sssp_okeanos
 .PHONY: test clean_test_env local
 
 sssp_okeanos: src/main.cpp src/parse_data.cpp
-	CC -std=c++17 -O0 -g  -Wextra -Wpedantic  -Wconversion -Wshadow  -fsanitize=undefined,address -fsanitize-trap=undefined  -fno-omit-frame-pointer -Wall -Werror $^ -o sssp -lm -Wno-sign-compare
+	CC -std=c++17 -O0 -g  -Wextra -Wpedantic -Wshadow  -fsanitize=undefined,address -fsanitize-trap=undefined  -fno-omit-frame-pointer -Wall -Werror $^ -o sssp -lm -Wno-sign-compare
 
 local: src/main.cpp src/parse_data.cpp
 	mpic++ -std=c++17 -O3 -Wall -Werror $^ -o sssp -lm -Wno-sign-compare
