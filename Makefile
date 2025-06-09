@@ -10,10 +10,10 @@ ALL : sssp_okeanos
 .PHONY: test clean_test_env local
 
 squeue:
-	squeue -u $USER
+	squeue -u $$USER
 
 scancel:
-	scancel -u $USER
+	scancel -u $$USER
 
 sssp_okeanos: src/main.cpp src/parse_data.cpp
 	CC -std=c++17 -O0 -Wextra -Wpedantic -Wshadow -Wall -Werror $^ -o sssp -lm -Wno-sign-compare
