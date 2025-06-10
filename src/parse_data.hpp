@@ -98,6 +98,8 @@ public:
         }
     }
 
+
+
     // delete copy constructor and assignment
     Data(const Data&) = delete;
     Data& operator=(const Data&) = delete;
@@ -119,6 +121,10 @@ public:
     {
         other.window = MPI_WIN_NULL;
         other.winMemory = nullptr;
+    }
+
+    std::vector<std::vector<std::pair<size_t, long long>>> getNeigh() const {
+        return neighOfLocal;
     }
 
     void syncWindowToActual() {

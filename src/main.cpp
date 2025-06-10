@@ -118,6 +118,15 @@ void delta_stepping_algorithm(
     {
         std::stringstream ss;
         ss << "Process " << myRank << " processing " << data.getNResponsible() << " vertices!";
+
+        for (size_t owned=data.getFirstResponsibleGlobalIdx(); owned <= data.lastResponsibleGlobalIdx(); ++owned) {
+            ss << "\nVertex: " << owned << " neighbours: [";
+            auto n = data.getNeigh();
+            for (size_t i=0; i < n.size(); ++i) {
+                ss << n[owned][i].first << "(@" << n[owned][i].second << "), ";
+            }
+            ss << "]";
+        }
         DebugLogger::getInstance().log(ss.str());
     }
     
