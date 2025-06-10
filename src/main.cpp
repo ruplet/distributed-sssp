@@ -189,6 +189,11 @@ void delta_stepping_algorithm(
             // --- Relaxation Step ---
             for (auto u_global_id : activeSet) {
                 auto u_dist = data.getDist(u_global_id);
+                {
+                    std::stringstream ss;
+                    ss << "Relaxing neighs of vertex: " << u_global_id << ". Dist of it:  " << u_dist;
+                    DebugLogger::getInstance().log(ss.str());
+                }
                 if (u_dist == INF) {
                     continue;
                 }
