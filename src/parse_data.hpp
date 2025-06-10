@@ -179,10 +179,11 @@ public:
     }
 
     void forEachNeighbor(size_t vGlobalIdx, const std::function<void(size_t, long long)>& visitor) const {
-        if (!isOwned(vGlobalIdx)) {
+        auto locOpt = globalToLocalIdx(vGlobalIdx);
+        if (!locOpt.has_value()) {
             throw InvalidData("Vertex not owned!");
         }
-        for (const auto& edge : neighOfLocal[*globalToLocalIdx(vGlobalIdx)]) {
+        for (const auto& edge : neighOfLocal[*locOpt]) {
             visitor(edge.first, edge.second);
         }
     }
@@ -232,6 +233,7 @@ public:
             neighOfLocal[*globalToLocalIdx(v)].push_back({u, weight});
         } else {
             std::cerr << "WARNING: " << ": Ignoring not owned edge: " << u << " " << v << " " << weight << std::endl;
+            throw InvalidData("Vertex not owned!");
         }
     }
 
