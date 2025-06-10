@@ -148,6 +148,7 @@ int main(int argc, char** argv) {
 
 
         // Edge from (v-1+n)%n to v. Its weight is weights[(v-1+n)%n].
+        outfile << n << " " << start_v << " " << end_v << "\n";
         int64_t v_prev = (start_v - 1 + n) % n;
         outfile << v_prev << " " << start_v << " " << weights[v_prev] << "\n";
         // Iterate through all vertices assigned to this process's block
