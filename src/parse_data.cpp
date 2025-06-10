@@ -52,6 +52,10 @@ std::optional<Data> process_input_and_load_graph_from_stream(
                 std::cerr << "Rank " << myRank << ": Fail parse edge" << std::endl;
                 return {};
             }
+            if (u < 0 || v < 0 || weight < 0) {
+                std::cerr << "Rank " << myRank << ": Fail parse edge" << std::endl;
+                return {};
+            }
             data.addEdge(u, v, weight);
         }
 

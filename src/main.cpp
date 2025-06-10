@@ -119,11 +119,12 @@ void delta_stepping_algorithm(
         std::stringstream ss;
         ss << "Process " << myRank << " processing " << data.getNResponsible() << " vertices!";
 
-        for (size_t owned=data.getFirstResponsibleGlobalIdx(); owned <= data.lastResponsibleGlobalIdx(); ++owned) {
+        for (size_t localVertexId=0; localVertexId <= data.getNResponsible(); ++localVertexId) {
+            auto owned = data.getFirstResponsibleGlobalIdx() + localVertexId;
             ss << "\nVertex: " << owned << " neighbours: [";
             auto n = data.getNeigh();
             for (size_t i=0; i < n.size(); ++i) {
-                ss << n[owned][i].first << "(@" << n[owned][i].second << "), ";
+                ss << n[localVertexId][i].first << "(@" << n[localVertexId][i].second << "), ";
             }
             ss << "]";
         }
@@ -144,12 +145,19 @@ void delta_stepping_algorithm(
         }
         long long currentK = INF;
         MPI_Allreduce(&localMinK, &currentK, 1, MPI_LONG_LONG, MPI_MIN, MPI_COMM_WORLD);
-        {
+        if (!buckets.empty()) {
             std::stringstream ss;
             ss
                 << "Process " << myRank << " starting epoch " << epochNo
                 << ". Bucket considered: " << (currentK == INF ? "INF" : std::to_string(currentK))
-                << "(raported my best bucket: " << localMinK << ", of " << buckets.begin()->second.size() << " nodes)";
+                << "(reported my best bucket: " << localMinK << ", of " << buckets.begin()->second.size() << " nodes)";
+            DebugLogger::getInstance().log(ss.str());
+        } else {
+            std::stringstream ss;
+            ss
+                << "Process " << myRank << " starting epoch " << epochNo
+                << ". Bucket considered: " << (currentK == INF ? "INF" : std::to_string(currentK))
+                << "(reported no bucket!)";
             DebugLogger::getInstance().log(ss.str());
         }
         epochNo++;
@@ -214,16 +222,16 @@ void delta_stepping_algorithm(
                     if (!ownerProcessOpt.has_value()) { throw Fatal("Owner doesn't exist!"); }
                     size_t ownerProcess = *ownerProcessOpt;
 
-                    auto dispAtownerOpt = dist.globalToLocal(vGlobalIdx);
-                    if (!dispAtownerOpt.has_value()) { throw Fatal("Owner doesn't exist!"); }
-                    MPI_Aint dispAtOwner = static_cast<MPI_Aint>(*dispAtownerOpt);
+                    auto indexAtOwnerOpt = dist.globalToLocal(vGlobalIdx);
+                    if (!indexAtOwnerOpt.has_value()) { throw Fatal("Owner doesn't exist!"); }
+                    MPI_Aint indexAtOwner = static_cast<MPI_Aint>(*indexAtOwnerOpt);
 
                     {
                         std::stringstream ss;
-                        ss << "Sending update to process: " << ownerProcess << "(displacement: " << dispAtOwner << "). New dist of " << vGlobalIdx << " = " << potential_new_dist;
+                        ss << "Sending update to process: " << ownerProcess << "(displacement: " << indexAtOwner << "). New dist of " << vGlobalIdx << " = " << potential_new_dist;
                         DebugLogger::getInstance().log(ss.str());
                     }
-                    data.communicateRelax(potential_new_dist, ownerProcess, dispAtOwner);
+                    data.communicateRelax(potential_new_dist, ownerProcess, indexAtOwner);
                 });
             }
 
@@ -284,11 +292,11 @@ void delta_stepping_algorithm(
 
 int main(int argc, char* argv[]) {
     MPI_Init(&argc, &argv);
-
+    
     // MPI_Win dist_window = MPI_WIN_NULL; // MPI Window for one-sided access to distances
     MPI_Comm_rank(MPI_COMM_WORLD, &myRank);
     MPI_Comm_size(MPI_COMM_WORLD, &nProcessorsGlobal);
-
+    
     DebugLogger::getInstance().init(myRank);
 
     // assumption: argc is the same among processors

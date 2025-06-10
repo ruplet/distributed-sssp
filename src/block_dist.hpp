@@ -1,6 +1,5 @@
 #pragma once
 
-#include <cassert>
 #include <optional>
 #include <cstddef>
 #include "common.hpp"
@@ -23,7 +22,9 @@ public:
                 throw InvalidDistribution();
             }
 
-            assert (baseLoad() * nProcessorsGlobal + extra() == nVerticesGlobal);
+            if (baseLoad() * nProcessorsGlobal + extra() != nVerticesGlobal) {
+                throw InvalidDistribution();
+            }
         }
     
     class InvalidDistribution : public std::runtime_error {

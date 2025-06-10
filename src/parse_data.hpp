@@ -60,6 +60,8 @@ public:
             winDisp(sizeof(long long)),
             winSize(nLocalResponsible * sizeof(long long))
     {
+        // TODO: this check has no way of being false for size_t variables being <= 0!
+        // they should be taken as ints
         if (
             nVerticesGlobal <= 0
             || firstResponsibleGlobalIdx < 0
@@ -135,9 +137,9 @@ public:
         MPI_Win_fence(0, window);
     }
 
-    void communicateRelax(long long newDistance, int ownerProcess, MPI_Aint ownerDisp) {
+    void communicateRelax(long long newDistance, int ownerProcess, int ownerIndex) {
         MPI_Accumulate(&newDistance, 1, MPI_LONG_LONG, ownerProcess,
-                        ownerDisp, 1, MPI_LONG_LONG, MPI_MIN, window);
+                        ownerIndex * winDisp, 1, MPI_LONG_LONG, MPI_MIN, window);
     }
 
     struct Update {
@@ -178,10 +180,11 @@ public:
     }
 
     long long getDist(size_t vGlobalIdx) const {
-        if (!isOwned(vGlobalIdx)) {
+        auto locOpt = globalToLocalIdx(vGlobalIdx);
+        if (!locOpt.has_value()) {
             throw InvalidData("Vertex not owned!");
         }
-        return distToRoot[*globalToLocalIdx(vGlobalIdx)];
+        return distToRoot[*locOpt];
     }
 
     void forEachNeighbor(size_t vGlobalIdx, const std::function<void(size_t, long long)>& visitor) const {
@@ -207,18 +210,23 @@ public:
     }
 
     size_t lastResponsibleGlobalIdx() const {
+        if (firstResponsibleGlobalIdx + nLocalResponsible == 0) {
+            throw InvalidData("This should never be zero!");
+        }
         return firstResponsibleGlobalIdx + nLocalResponsible - 1;
     }
 
     void updateDist(size_t vGlobalIdx, long long dist) {
-        if (!isOwned(vGlobalIdx)) {
+        auto locOpt = globalToLocalIdx(vGlobalIdx);
+        if (!locOpt.has_value()) {
             throw InvalidData("Vertex not owned!");
         }
-        distToRoot[*globalToLocalIdx(vGlobalIdx)] = dist;
+        distToRoot[*locOpt] = dist;
     }
 
     /// @brief Add new edge to stored data if responsible for any of the end vertices. Ignore if not owned!
     /// @throws InvalidData
+    // TODO: these < 0 checks can never succeed!!
     void addEdge(size_t u, size_t v, size_t weight){
         if (
             u < 0
