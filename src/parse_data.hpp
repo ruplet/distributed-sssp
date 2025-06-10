@@ -93,14 +93,9 @@ public:
         }
     }
 
-    ~Data() {
-        // winMemory will be freed automatically with MPI_Win_free
-        if (window != MPI_WIN_NULL) {
-            MPI_Win_free(&window);
-        }
+    void freeWindow() {
+        MPI_Win_free(&window);
     }
-
-
 
     // delete copy constructor and assignment
     Data(const Data&) = delete;

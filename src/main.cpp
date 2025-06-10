@@ -393,6 +393,7 @@ int main(int argc, char* argv[]) {
     }
     outfile_stream.close();
 
+    data.freeWindow();
     MPI_Finalize();
     return 0;
 }
