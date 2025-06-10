@@ -203,14 +203,14 @@ if __name__ == "__main__":
         raise Exception('Seed null!')
     
     # --- Configuration Parameters for Graph Generation ---
-    TREE_ARITY = 1            # 'r' in r-ary tree. Number of children each node has.
-    TREE_HEIGHT = 10           # 'h' in height h. Distance from root to furthest leaf.
+    TREE_ARITY = 2            # 'r' in r-ary tree. Number of children each node has.
+    TREE_HEIGHT = 16           # 'h' in height h. Distance from root to furthest leaf.
                               # For r=2, h=3: 15 nodes. For r=2, h=4: 31 nodes.
-    NUM_PROCESSES = 3         # Number of processes to distribute the graph among
-    TARGET_TOTAL_EDGES = 20
+    NUM_PROCESSES = 37         # Number of processes to distribute the graph among
     
     # Calculate the total number of vertices based on the tree parameters
     NUM_VERTICES = calculate_num_vertices_from_tree(TREE_ARITY, TREE_HEIGHT)
+    TARGET_TOTAL_EDGES = int(NUM_VERTICES * 2)
     
     # Ensure NUM_VERTICES is at least 1 for small trees like (1,0) -> 1 node
     if NUM_VERTICES == 0:
@@ -228,7 +228,7 @@ if __name__ == "__main__":
         TARGET_TOTAL_EDGES = 0
 
     MIN_WEIGHT = 0            # Minimum integer weight for graph edges
-    MAX_WEIGHT = 20           # Maximum integer weight for graph edges
+    MAX_WEIGHT = 3           # Maximum integer weight for graph edges
     
     # --- Configuration Parameters for Distribution and Output ---
     ROOT_NODE = 0             # The source vertex for SSSP calculation (always 0)
@@ -254,10 +254,10 @@ if __name__ == "__main__":
         # For single node graph, distance to itself is 0.
         if NUM_VERTICES == 1 and node == 0:
             print(f"  Node {node}: 0")
-        elif dist == float('inf'):
+        
+        if dist == float('inf'):
             print(f"  Node {node}: Unreachable (This indicates an issue with graph connectivity or root node)")
-        else:
-            print(f"  Node {node}: {dist}")
+            raise Exception()
     print("Serial Dijkstra calculation complete.")
 
     print(f"\n--- Distributing Graph Data for Distributed Processes ---")
