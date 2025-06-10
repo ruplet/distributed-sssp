@@ -139,7 +139,7 @@ public:
 
     void communicateRelax(long long newDistance, int ownerProcess, int ownerIndex) {
         MPI_Accumulate(&newDistance, 1, MPI_LONG_LONG, ownerProcess,
-                        ownerIndex * winDisp, 1, MPI_LONG_LONG, MPI_MIN, window);
+                        ownerIndex, 1, MPI_LONG_LONG, MPI_MIN, window);
     }
 
     struct Update {
