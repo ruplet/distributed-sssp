@@ -120,7 +120,7 @@ public:
         other.winMemory = nullptr;
     }
 
-    std::vector<std::vector<std::pair<size_t, long long>>> getNeigh() const {
+    const std::vector<std::vector<std::pair<size_t, long long>>>& getNeigh() const {
         return neighOfLocal;
     }
 

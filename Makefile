@@ -10,7 +10,7 @@ ALL : sssp_okeanos
 .PHONY: test clean_test_env local
 
 squeue:
-	squeue -u $$USER
+	squeue -u --iterate 1
 
 scancel:
 	scancel -u $$USER
