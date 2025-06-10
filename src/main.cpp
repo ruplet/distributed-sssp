@@ -73,7 +73,7 @@ void updateBucketInfo(
     if (oldBucket == newBucket) {
         return;
     }
-    
+
     auto newIt = buckets.find(newBucket);
     if (newIt != buckets.end()) {
         const auto& newVec = newIt->second;
@@ -144,6 +144,12 @@ void delta_stepping_algorithm(
     size_t epochNo = 0;
     while (true) {
         long long localMinK = INF;
+        while (!buckets.empty()) {
+            auto it = buckets.begin();
+            if (it->second.empty()) {
+                buckets.erase(it);
+            }
+        }
         if (!buckets.empty()) {
             localMinK = buckets.begin()->first;
         }
