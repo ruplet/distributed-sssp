@@ -182,7 +182,7 @@ def distribute_graph_and_save(graph, num_vertices, num_processes, wzorcowa, outp
                         f.write(f"{u} {v} {weight}\n")
         
         with open(os.path.join(output_dir, f"{p_id}.out"), 'w') as f:
-            f.write("\n".join(map(str, najlepsze_dystanse)))
+            f.write("\n".join(map(str, najlepsze_dystanse)) + '\n')
         
         # Update the starting node for the next process
         current_node_start += num_nodes_for_this_process
