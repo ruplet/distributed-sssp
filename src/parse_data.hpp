@@ -236,13 +236,14 @@ public:
             );
         }
         
+        if (!isOwned(u) && !isOwned(v)) {
+            throw InvalidData("Neither of edge ends owned!");
+        }
         if (isOwned(u)) {
             neighOfLocal[*globalToLocalIdx(u)].push_back({v, weight});
-        } else if (isOwned(v)) {
+        } 
+        if (isOwned(v)) {
             neighOfLocal[*globalToLocalIdx(v)].push_back({u, weight});
-        } else {
-            std::cerr << "WARNING: " << ": Ignoring not owned edge: " << u << " " << v << " " << weight << std::endl;
-            throw InvalidData("Vertex not owned!");
         }
     }
 

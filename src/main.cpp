@@ -219,7 +219,7 @@ void delta_stepping_algorithm(
                     DebugLogger::getInstance().log(ss.str());
                 }
                 if (u_dist == INF) {
-                    continue;
+                    throw Fatal("We should have never entered the INF bucket!");
                 }
 
                 data.forEachNeighbor(u_global_id, [&](size_t vGlobalIdx, long long w) {
