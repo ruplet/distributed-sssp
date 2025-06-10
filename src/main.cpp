@@ -70,6 +70,10 @@ void updateBucketInfo(
     long long oldBucket,
     long long newBucket
 ) {
+    if (oldBucket == newBucket) {
+        return;
+    }
+    
     auto newIt = buckets.find(newBucket);
     if (newIt != buckets.end()) {
         const auto& newVec = newIt->second;
