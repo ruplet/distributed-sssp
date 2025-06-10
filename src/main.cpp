@@ -144,11 +144,8 @@ void delta_stepping_algorithm(
     size_t epochNo = 0;
     while (true) {
         long long localMinK = INF;
-        while (!buckets.empty()) {
-            auto it = buckets.begin();
-            if (it->second.empty()) {
-                buckets.erase(it);
-            }
+        for (auto it=buckets.begin(); it != buckets.end() && it->second.empty(); it = buckets.begin()) {
+            buckets.erase(it);
         }
         if (!buckets.empty()) {
             localMinK = buckets.begin()->first;
