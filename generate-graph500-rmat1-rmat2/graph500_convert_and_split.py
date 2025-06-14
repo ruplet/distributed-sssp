@@ -2,23 +2,40 @@ import sys
 import struct
 import os
 import stat
+import shutil
 from pathlib import Path
 
 
-def make_fifos(dir_path, n):
+def prepare_outputs(dir_path, n, reuse_files):
+    paths = []
+    outputs = []
+
     for i in range(n):
-        fifo_path = dir_path / f"{i}.in"
-        if not fifo_path.exists():
-            os.mkfifo(fifo_path)
+        path = dir_path / f"{i}.in"
+        paths.append(path)
+
+        if not path.exists():
+            if reuse_files:
+                path.touch()
+            else:
+                os.mkfifo(path)
+
+        if not reuse_files and not stat.S_ISFIFO(path.stat().st_mode):
+            print(f"Error: {path} is not a FIFO")
+            sys.exit(1)
+
+        outputs.append(open(path, "w"))
+
+    return paths, outputs
 
 
-def remove_fifos(fifo_paths):
-    for fifo_path in fifo_paths:
+def remove_fifos(paths):
+    for path in paths:
         try:
-            if fifo_path.exists() and stat.S_ISFIFO(fifo_path.stat().st_mode):
-                fifo_path.unlink()
+            if path.exists() and stat.S_ISFIFO(path.stat().st_mode):
+                path.unlink()
         except Exception as e:
-            print(f"Warning: could not remove FIFO {fifo_path}: {e}", file=sys.stderr)
+            print(f"Warning: could not remove FIFO {path}: {e}", file=sys.stderr)
 
 
 def read_6byte_uint(f, scale):
@@ -40,28 +57,22 @@ def get_owner_process(vertex, num_vertices, num_procs):
         if vertex < acc + count:
             return p
         acc += count
-    return num_procs - 1  # fallback, should not happen
+    return num_procs - 1
 
 
-def main(edges_path, weights_path, scale, num_procs, fifo_paths):
-    num_vertices = 2**scale
-    # Open all FIFOs for writing
-    fifos = []
+def main(edges_path, weights_path, scale, num_procs, outputs):
+    num_vertices = 2 ** scale
     base_load = num_vertices // num_procs
     extra = num_vertices % num_procs
-    for i, path in enumerate(fifo_paths):
-        if not os.path.exists(path) or not stat.S_ISFIFO(os.stat(path).st_mode):
-            print(f"Error: {path} is not a named pipe (FIFO)")
-            sys.exit(1)
-        fifos.append(open(path, "w"))
+
+    for i in range(num_procs):
         if i < extra:
             first_resp = i * (base_load + 1)
             last_resp = first_resp + (base_load + 1) - 1
         else:
             first_resp = extra * (base_load + 1) + (i - extra) * base_load
             last_resp = first_resp + base_load - 1
-        line = f"{num_vertices} {first_resp} {last_resp}\n"
-        fifos[-1].write(line)
+        outputs[i].write(f"{num_vertices} {first_resp} {last_resp}\n")
 
     with open(edges_path, "rb") as ef, open(weights_path, "rb") as wf:
         while True:
@@ -81,24 +92,18 @@ def main(edges_path, weights_path, scale, num_procs, fifo_paths):
             owner_end = get_owner_process(end, num_vertices, num_procs)
 
             line = f"{start} {end} {weight_int}\n"
+            outputs[owner_start].write(line)
+            if owner_start != owner_end:
+                outputs[owner_end].write(line)
 
-            # Send to both owners if different
-            if owner_start == owner_end:
-                fifos[owner_start].write(line)
-            else:
-                fifos[owner_start].write(line)
-                fifos[owner_end].write(line)
-
-    for f in fifos:
+    for f in outputs:
         f.close()
-
-    remove_fifos(fifo_paths)
 
 
 if __name__ == "__main__":
-    if len(sys.argv) != 5:
+    if len(sys.argv) != 6:
         print(
-            f"Usage: {sys.argv[0]} <edges_folder> <scale> <num_procs> <tests_dir>",
+            f"Usage: {sys.argv[0]} <edges_folder> <scale> <num_procs> <tests_dir> <reuse_files>",
             file=sys.stderr,
         )
         sys.exit(1)
@@ -109,11 +114,26 @@ if __name__ == "__main__":
     scale = int(sys.argv[2])
     num_procs = int(sys.argv[3])
     tests_dir = Path(sys.argv[4])
+    reuse_files_raw = sys.argv[5].strip().lower()
+
+    if reuse_files_raw == 'reuse':
+        reuse_files = True
+    elif reuse_files_raw == 'noreuse':
+        reuse_files = False
+    else:
+        print(f"<reuse_files> must be 'reuse' or 'noreuse', got: {reuse_files_raw}")
+        sys.exit(1)
 
     out_dir = tests_dir / f"graph500-scale-{scale}_{2 ** scale}_{num_procs}"
     out_dir.mkdir(parents=True, exist_ok=True)
 
-    make_fifos(out_dir, num_procs)
-    fifo_paths = fifos = [out_dir / f"{i}.in" for i in range(num_procs)]
+    fifo_paths, outputs = prepare_outputs(out_dir, num_procs, reuse_files)
 
-    main(edges_file, weights_file, scale, num_procs, fifo_paths)
+    main(edges_file, weights_file, scale, num_procs, outputs)
+
+    if not reuse_files:
+        remove_fifos(fifo_paths)
+        try:
+            shutil.rmtree(out_dir)
+        except Exception as e:
+            print(f"Warning: could not remove directory {out_dir}: {e}", file=sys.stderr)
