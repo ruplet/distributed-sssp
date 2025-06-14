@@ -1,0 +1,9 @@
+this script uses NetworkX library to generate a random, full N-ary tree of height H.
+then it randomly adds edges until the graph has num_vertices * 2 edges.
+there are no duplicate edges or loops, and the graph is connected (because it already has a spanning tree by design).
+
+to run it:
+python3 -m venv .venv
+. .venv/bin/activate
+pip install -r requirements.txt
+python3 gen.py <args>
