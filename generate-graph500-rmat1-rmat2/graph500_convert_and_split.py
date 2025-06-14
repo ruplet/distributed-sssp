@@ -51,13 +51,12 @@ def get_owner_process(vertex, num_vertices, num_procs):
     base = num_vertices // num_procs
     extras = num_vertices % num_procs
 
-    acc = 0
-    for p in range(num_procs):
-        count = base + (1 if p < extras else 0)
-        if vertex < acc + count:
-            return p
-        acc += count
-    return num_procs - 1
+    # Vertices [0, extras * (base + 1)) are assigned one extra
+    threshold = extras * (base + 1)
+    if vertex < threshold:
+        return vertex // (base + 1)
+    else:
+        return extras + (vertex - threshold) // base
 
 
 def main(edges_path, weights_path, scale, num_procs, outputs):
