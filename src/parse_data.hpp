@@ -223,6 +223,7 @@ public:
     /// @throws InvalidData
     // TODO: these < 0 checks can never succeed!!
     void addEdge(size_t u, size_t v, size_t weight){
+        if (u == v) { return; }
         if (
             u < 0
             || u >= nVerticesGlobal
@@ -240,10 +241,26 @@ public:
             throw InvalidData("Neither of edge ends owned!");
         }
         if (isOwned(u)) {
-            neighOfLocal[*globalToLocalIdx(u)].push_back({v, weight});
+            auto& neighbors = neighOfLocal[*globalToLocalIdx(u)];
+            auto it = std::find_if(neighbors.begin(), neighbors.end(),
+                [v](const std::pair<uint64_t, uint8_t>& p) { return p.first == v; });
+
+            if (it == neighbors.end()) {
+                neighbors.push_back({v, weight});
+            } else if (weight < it->second) {
+                it->second = weight;
+            }
         } 
         if (isOwned(v)) {
-            neighOfLocal[*globalToLocalIdx(v)].push_back({u, weight});
+            auto& neighbors = neighOfLocal[*globalToLocalIdx(v)];
+            auto it = std::find_if(neighbors.begin(), neighbors.end(),
+                [u](const std::pair<uint64_t, uint8_t>& p) { return p.first == u; });
+
+            if (it == neighbors.end()) {
+                neighbors.push_back({u, weight});
+            } else if (weight < it->second) {
+                it->second = weight;
+            }
         }
     }
 
