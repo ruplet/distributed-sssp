@@ -199,7 +199,7 @@ if __name__ == "__main__":
                         help="Height (h) of the tree — distance from root to deepest leaf.")
     parser.add_argument('--num-procs', type=int, required=True,
                         help="Number of processes for distributing the graph.")
-    parser.add_argument('--edge-factor', type=int, default=2
+    parser.add_argument('--edge-factor', type=int, default=2,
                         help="Average number of edges per node.")
 
     args = parser.parse_args()
