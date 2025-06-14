@@ -189,24 +189,25 @@ def distribute_graph_and_save(graph, num_vertices, num_processes, wzorcowa, outp
 
     print(f"Generated input files for {num_processes} processes in '{output_dir}/'")
 
-# --- Main execution part ---
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Generate test inputs for distributed Dijkstra's algorithm.")
     parser.add_argument('--seed', type=int, default=42,
                         help="Seed for the random number generator for reproducible results.")
+    parser.add_argument('--arity', type=int, required=True,
+                        help="Arity (r) of the tree — number of children per node.")
+    parser.add_argument('--height', type=int, required=True,
+                        help="Height (h) of the tree — distance from root to deepest leaf.")
+    parser.add_argument('--num-procs', type=int, required=True,
+                        help="Number of processes for distributing the graph.")
+
     args = parser.parse_args()
 
-    if args.seed is not None:
-        random.seed(args.seed)
-        print(f"Random seed set to: {args.seed}")
-    else:
-        raise Exception('Seed null!')
-    
-    # --- Configuration Parameters for Graph Generation ---
-    TREE_ARITY = 2            # 'r' in r-ary tree. Number of children each node has.
-    TREE_HEIGHT = 16           # 'h' in height h. Distance from root to furthest leaf.
-                              # For r=2, h=3: 15 nodes. For r=2, h=4: 31 nodes.
-    NUM_PROCESSES = 37         # Number of processes to distribute the graph among
+    random.seed(args.seed)
+    print(f"Random seed set to: {args.seed}")
+
+    TREE_ARITY = args.arity
+    TREE_HEIGHT = args.height
+    NUM_PROCESSES = args.num_procs
     
     # Calculate the total number of vertices based on the tree parameters
     NUM_VERTICES = calculate_num_vertices_from_tree(TREE_ARITY, TREE_HEIGHT)
