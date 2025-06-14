@@ -31,11 +31,21 @@ def get_owner_process(vertex, num_vertices, num_procs):
 def main(edges_path, weights_path, num_vertices, num_procs, fifo_paths):
     # Open all FIFOs for writing
     fifos = []
-    for path in fifo_paths:
+    base_load = num_vertices // num_procs
+    extra = num_vertices % num_procs
+    for i, path in enumerate(fifo_paths):
         if not os.path.exists(path) or not stat.S_ISFIFO(os.stat(path).st_mode):
             print(f"Error: {path} is not a named pipe (FIFO)")
             sys.exit(1)
         fifos.append(open(path, 'w'))
+        if i < extra:
+            first_resp = i * (base_load + 1)
+            last_resp = first_resp + (base_load + 1) - 1
+        else:
+            first_resp = extra * (base_load + 1) + (i - extra) * base_load
+            last_resp = first_resp + base_load - 1
+        line = f"{num_vertices} {first_resp} {last_resp}\n"
+        fifos[-1].write(line)
 
     with open(edges_path, 'rb') as ef, open(weights_path, 'rb') as wf:
         while True:
