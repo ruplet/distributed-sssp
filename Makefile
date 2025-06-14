@@ -8,6 +8,9 @@ ALL : sssp_okeanos
 
 .PHONY: test clean_test_env local
 
+watch:
+	tail -f testing_env/output.txt
+
 squeue:
 	squeue --me --iterate 1
 
