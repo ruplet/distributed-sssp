@@ -7,17 +7,18 @@
 #include <fstream>  // For file output
 #include <limits>
 #include <string>   // For std::to_string
+#include <filesystem>
 
 int main(int argc, char** argv) {
-    // Modified to accept 4 arguments: <number_of_vertices> <total_max> <num_processes>
-    if (argc != 4) {
-        std::cerr << "Usage: " << argv[0] << " <number_of_vertices> <total_max> <num_processes>\n";
+    // Modified to accept 4 arguments: <number_of_vertices> <num_processes>
+    if (argc != 3) {
+        std::cerr << "Usage: " << argv[0] << " <number_of_vertices> <num_processes>\n";
         return 1;
     }
 
     int64_t n = std::atoll(argv[1]);
     int64_t TOTAL_MAX = std::numeric_limits<int64_t>::max(); //std::atoll(argv[2]);
-    int num_processes = std::atoi(argv[3]); // New argument for number of processes
+    int num_processes = std::atoi(argv[2]); // New argument for number of processes
 
     if (n < 2) {
         std::cerr << "Number of vertices must be at least 2.\n";
@@ -116,6 +117,10 @@ int main(int argc, char** argv) {
     int64_t base_block_size = n / num_processes;
     int64_t extra_vertices = n % num_processes; // These processes get one extra vertex
     int64_t current_vertex_start = 0;
+
+    std::string dirname = "bigcycle_" + std::to_string(n) + "_" + std::to_string(num_processes);
+    std::filesystem::create_directories(dirname);  // Ensure output directory exists
+
 
     for (int p_id = 0; p_id < num_processes; ++p_id) {
         std::string filename = std::string("bigcycle_") + std::to_string(n) + "_" + std::to_string(num_processes) + "/" + std::to_string(p_id) + ".in";

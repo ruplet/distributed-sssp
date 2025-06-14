@@ -1,0 +1,6 @@
+this script generates a test case which is just a huge cycle
+it has some trivial edge weights, except of one edge which
+has weight int64_t::max() - (sum of all other weights) xdd
+
+g++ cycle.cpp -O3 -o cycle -std=c++17
+./cycle
