@@ -1,0 +1,1 @@
+mv graph500-scale-* ../testing_env/tests/
