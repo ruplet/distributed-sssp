@@ -199,11 +199,14 @@ if __name__ == "__main__":
                         help="Height (h) of the tree — distance from root to deepest leaf.")
     parser.add_argument('--num-procs', type=int, required=True,
                         help="Number of processes for distributing the graph.")
+    parser.add_argument('--edge-factor', type=int, default=2
+                        help="Average number of edges per node.")
 
     args = parser.parse_args()
 
     random.seed(args.seed)
     print(f"Random seed set to: {args.seed}")
+    ef = args.edge_factor
 
     TREE_ARITY = args.arity
     TREE_HEIGHT = args.height
@@ -211,7 +214,7 @@ if __name__ == "__main__":
     
     # Calculate the total number of vertices based on the tree parameters
     NUM_VERTICES = calculate_num_vertices_from_tree(TREE_ARITY, TREE_HEIGHT)
-    TARGET_TOTAL_EDGES = int(NUM_VERTICES * 2)
+    TARGET_TOTAL_EDGES = int(NUM_VERTICES * ef)
     
     # Ensure NUM_VERTICES is at least 1 for small trees like (1,0) -> 1 node
     if NUM_VERTICES == 0:
