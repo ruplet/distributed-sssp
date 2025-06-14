@@ -53,17 +53,11 @@ test-okeanos: $(SOLUTION_ZIP)
 	# -d $(TESTING_ENV_DIR) extracts files into this directory
 	unzip -q $(TESTING_ENV_DIR)/$(SOLUTION_ZIP) -d $(TESTING_ENV_DIR)
 
-	@echo "Launching edge splitter in background..."
-	python3 test-generator/graph500_convert_and_split.py ~/graph500/src/out_a5700_bc1900_d10000_s2_3_n17_ef16/edges.out ~/graph500/src/out_a5700_bc1900_d10000_s2_3_n17_ef16/edges.out.weights 131072 4 graph500_scale17 $(TESTING_ENV_DIR)/tests & \
-	SPLITTER_PID=$$! && \
-	echo "Edge splitter PID: $$SPLITTER_PID" && \
-	echo "Running tests via SLURM..." && \
 	cd $(TESTING_ENV_DIR) && \
-	sbatch sbatch_run_tests.sh && \
-	echo "Waiting for edge splitter (PID=$$SPLITTER_PID) to finish..." && \
-	wait $$SPLITTER_PID
+		sbatch sbatch_run_tests.sh && \
+		echo "Waiting for edge splitter (PID=$$SPLITTER_PID) to finish..."
 
-	@echo "--- Testing Complete ---"
+	@echo "--- Testing job submitted ---"
 
 solution.zip: pack.sh $(shell find src -type f) Makefile
 	bash pack.sh LOGIN69
