@@ -64,3 +64,7 @@ okeanos-login3 balawend/testing_env> srun -n 10 ./test_command.sh LOGIN69 path_2
 
 
 # max nodes is 90!
+
+
+check disk quota:
+lfs quota -uh $USER /lu/tetyda/home/

@@ -4,11 +4,11 @@ import os
 import stat
 from pathlib import Path
 
-def make_fifos(n):
+def make_fifos(dir_path, n):
     for i in range(n):
-        fifo_name = f"{i}.in"
-        if not os.path.exists(fifo_name):
-            os.mkfifo(fifo_name)
+        fifo_path = dir_path / f"{i}.in"
+        if not fifo_path.exists():
+            os.mkfifo(fifo_path)
 
 def read_6byte_uint(f):
     b = f.read(6)
