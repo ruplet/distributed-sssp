@@ -81,6 +81,3 @@
 . .venv/bin/activate && python gen.py --arity 3 --height 9 --num-procs 7 --edge-factor 10 --seed 47
 . .venv/bin/activate && python gen.py --arity 3 --height 9 --num-procs 7 --edge-factor 10 --seed 48
 . .venv/bin/activate && python gen.py --arity 3 --height 9 --num-procs 7 --edge-factor 10 --seed 49
-
-
-mv -r random_* ../testing_env/tests/
