@@ -85,7 +85,8 @@ def main(edges_path, weights_path, scale, num_procs, outputs):
             if len(w_bytes) < 4:
                 break
             (w,) = struct.unpack("<f", w_bytes)
-            weight_int = min(int(w * 256), 255)
+            # weight_int = min(int(w * 256), 255)
+            weight_int = 10
 
             owner_start = get_owner_process(start, num_vertices, num_procs)
             owner_end = get_owner_process(end, num_vertices, num_procs)
