@@ -68,3 +68,14 @@ okeanos-login3 balawend/testing_env> srun -n 10 ./test_command.sh LOGIN69 path_2
 
 check disk quota:
 lfs quota -uh $USER /lu/tetyda/home/
+
+
+Graph500:
+
+ta biblioteka zwraca 48 bitów per node-id.
+ale tylko <SCALE> dolnych bitów jest ważna!
+
+dla scale=9, powinno byc 512 nodeow.
+node_ids = sorted(set(int.from_bytes(x, byteorder='little') & 0x1ff  for e in es for x in e))
+len(set(node_ids)) == 294
+jest mniej, bo niektore wierzcholki nie dostaly zadnej krawedzi po prostu
