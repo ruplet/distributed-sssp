@@ -7,7 +7,8 @@
 #include <fstream>  // For file output
 #include <limits>
 #include <string>   // For std::to_string
-#include <filesystem>
+#include <sys/stat.h>
+#include <sys/types.h>
 
 int main(int argc, char** argv) {
     // Modified to accept 4 arguments: <number_of_vertices> <num_processes>
@@ -119,8 +120,13 @@ int main(int argc, char** argv) {
     int64_t current_vertex_start = 0;
 
     std::string dirname = "bigcycle_" + std::to_string(n) + "_" + std::to_string(num_processes);
-    std::filesystem::create_directories(dirname);  // Ensure output directory exists
-
+    struct stat st = {0};
+    if (stat(dirname.c_str(), &st) == -1) {
+        if (mkdir(dirname.c_str(), 0755) != 0) {
+            std::cerr << "Error: Failed to create directory '" << dirname << "'.\n";
+            return 1;
+        }
+    }
 
     for (int p_id = 0; p_id < num_processes; ++p_id) {
         std::string filename = std::string("bigcycle_") + std::to_string(n) + "_" + std::to_string(num_processes) + "/" + std::to_string(p_id) + ".in";
