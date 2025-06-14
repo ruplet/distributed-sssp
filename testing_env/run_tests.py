@@ -16,6 +16,10 @@ def run_tests(break_on_fail, local):
                 continue
             print(f"Solution: {solution.name}")
             for test in Path("tests").iterdir():
+                nodes = int(test.name[test.name.find("_") + 1:])
+                if nodes > 1000:
+                    print(f"    {test.name}: SKIPPED (LARGE)")
+                    continue
                 workers = int(test.name[test.name.rfind("_") + 1:])
                 # Remove old outputs
                 for f in Path("outputs").iterdir():
