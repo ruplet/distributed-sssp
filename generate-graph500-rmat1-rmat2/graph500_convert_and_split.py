@@ -43,8 +43,7 @@ def read_6byte_uint(f, scale):
     if len(b) < 6:
         return None
     val = int.from_bytes(b, byteorder="little", signed=False)
-    # mask = (1 << scale) - 1
-    mask = 0xFFFFFFFFFFFF
+    mask = (1 << scale) - 1
     return val & mask
 
 
