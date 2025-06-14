@@ -1,7 +1,10 @@
 import argparse
 from pathlib import Path
 import subprocess
+import os
 import filecmp
+
+max_nodes = int(os.environ.get("TESTMAX", "300000"))
 
 def run_tests(break_on_fail, local):
     Path("outputs").mkdir(parents=True, exist_ok=True)
@@ -18,7 +21,7 @@ def run_tests(break_on_fail, local):
             for test in Path("tests").iterdir():
                 print(f"Running: {test.name}", flush=True)
                 nodes = int(test.name[test.name.find("_") + 1: test.name.rfind("_")])
-                if nodes > 30000:
+                if nodes > max_nodes:
                     print(f"    {test.name}: SKIPPED (LARGE)", flush=True)
                     continue
                 workers = int(test.name[test.name.rfind("_") + 1:])
