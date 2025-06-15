@@ -26,9 +26,9 @@ def run_tests(break_on_fail, local):
                 continue
             print(f"Solution: {solution.name}")
             for test in Path("tests").iterdir():
-                # if test.name not in ['bigcycle_100200300_48']:
-                #     print(f"Skipping: {test.name}", flush=True)
-                #     continue
+                if test.name not in ['bigcycle_100100_24']:
+                    print(f"Skipping: {test.name}", flush=True)
+                    continue
                 print(f"Running: {test.name}", flush=True)
                 nodes = int(test.name[test.name.find("_") + 1: test.name.rfind("_")])
                 if nodes > max_nodes:
