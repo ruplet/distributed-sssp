@@ -26,7 +26,7 @@ def run_tests(break_on_fail, local):
                 continue
             print(f"Solution: {solution.name}")
             for test in Path("tests").iterdir():
-                if test.name not in ['bigcycle_100100_24']:
+                if test.name not in ['bigcycle_1000000000_48', ]:
                     print(f"Skipping: {test.name}", flush=True)
                     continue
                 print(f"Running: {test.name}", flush=True)

@@ -97,3 +97,7 @@ czyli rozmiar:
 21M * 8 = 200MB na distToRoot
 21M * 32 = 800MB na neighOfLocal
 powinno wejść!
+
+
+a bigtest na 5B?
+5GB per proces.
