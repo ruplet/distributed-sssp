@@ -114,3 +114,5 @@ spoko testy
 ZLICZANIE:
 - number of phases, dla roznych DELTA, dla skal 28-30
 - number of relaxations, dla roznych DELTA, skale 28-30
+
+failing: graph500-scale-5_32_14

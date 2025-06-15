@@ -4,8 +4,7 @@
 #SBATCH --account "g101-2284"
 #SBATCH --cpus-per-task 1
 #SBATCH --ntasks-per-node 12
-#SBATCH --nodes 4
-#SBATCH --time 01:20:00
+#SBATCH --time 00:05:00
 
 module load common/python/3.11
 python3 run_graph500.py
