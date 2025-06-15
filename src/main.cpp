@@ -16,6 +16,10 @@ const long long DEFAULT_DELTA = 10;
 
 int myRank, nProcessorsGlobal;
 
+void logError(std::string msg) {
+    std::cerr << "ERROR: " << msg << " (" << __FILE__ << ":" << __LINE__ << ")" << std::endl;
+}
+
 class VertexOwnershipException : public std::runtime_error
 {
 public:
@@ -212,7 +216,7 @@ void processBucket(
             std::stringstream ss;
             ss << "Process " << myRank << " starting phase " << phaseNo << " for k=" << currentK;
             ss << ". Active vertices: [";
-            if (!activeSet.empty())
+            if (!activeSet.empty() && activeSet.size() < 1000)
             {
                 ss << activeSet[0];
                 for (auto it = activeSet.begin() + 1; it != activeSet.end(); ++it)

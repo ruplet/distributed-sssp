@@ -45,7 +45,6 @@ std::optional<Data> process_input_and_load_graph_from_stream(
 
         // the graph considered is assumed to be undirected!
         long long u, v, weight;
-        size_t i = 0;
         while (std::getline(instream, line)) {
             if (line.empty()) continue;
             std::istringstream iss_edge(line);
