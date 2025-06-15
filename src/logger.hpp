@@ -7,6 +7,17 @@
 
 #include "common.hpp"
 
+template<typename T>
+void append_to_stream(std::ostringstream& oss, const T& arg) {
+    oss << arg;
+}
+
+template<typename T, typename... Args>
+void append_to_stream(std::ostringstream& oss, const T& first, const Args&... rest) {
+    oss << first << ' ';
+    append_to_stream(oss, rest...);
+}
+
 class DebugLogger
 {
 private:
@@ -20,53 +31,36 @@ public:
         return instance;
     }
 
-    void init(int rank)
+    void init(const std::string& filename)
     {
         {
             if (!log_file.is_open())
             {
-                log_file.open("debug_log_" + std::to_string(rank) + ".txt");
+                log_file.open(filename);
             }
         }
     }
 
-    void force_log(const std::string &message)
+    template<typename... Args>
+    void log(const Args&... args)
     {
         if (log_file.is_open())
         {
-            log_file << message << std::endl; // endl also flushes
+            std::ostringstream oss;
+            append_to_stream(oss, args...);
+            log_file << oss.str();
         }
     }
 
-    void log(const std::string &message)
+    template<typename... Args>
+    void logn(const Args&... args)
     {
-        if (ENABLE_LOGGING && log_file.is_open())
+        if (log_file.is_open())
         {
-            log_file << message << std::endl; // endl also flushes
+            std::ostringstream oss;
+            append_to_stream(oss, args...);
+            log_file << oss.str() << std::endl;
         }
-    }
-
-    // A helper to log the state of buckets
-    void log_buckets(const std::string &context, long long current_k, const std::map<long long, std::vector<int>> &buckets)
-    {
-        if (!ENABLE_LOGGING)
-        {
-            return;
-        }
-        std::stringstream ss;
-        ss << "[" << context << "] k=" << current_k << " | Buckets: ";
-        if (buckets.empty())
-        {
-            ss << "EMPTY";
-        }
-        else
-        {
-            for (const auto &pair : buckets)
-            {
-                ss << "[" << pair.first << ": " << pair.second.size() << "v] ";
-            }
-        }
-        log(ss.str());
     }
 
 private:

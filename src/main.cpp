@@ -12,11 +12,56 @@
 #include "parse_data.hpp"
 #include "logger.hpp"
 
-const long long DEFAULT_DELTA = 10;
+enum class LoggingLevel
+{
+    None,
+    Progress,
+    Debug
+};
 
+const long long DEFAULT_DELTA = 10;
+const int DEFAULT_PROGESS_FREQ = 10;
+LoggingLevel logging_level = LoggingLevel::Progress;
 int myRank, nProcessorsGlobal;
 
-void logError(std::string msg) {
+#define PROGRESS(...)                                                                        \
+    do                                                                                       \
+    {                                                                                        \
+        if (logging_level == LoggingLevel::Progress || logging_level == LoggingLevel::Debug) \
+        {                                                                                    \
+            DebugLogger::getInstance().log(__VA_ARGS__);                                     \
+        }                                                                                    \
+    } while (0)
+
+#define PROGRESSN(...)                                                                       \
+    do                                                                                       \
+    {                                                                                        \
+        if (logging_level == LoggingLevel::Progress || logging_level == LoggingLevel::Debug) \
+        {                                                                                    \
+            DebugLogger::getInstance().logn(__VA_ARGS__);                                    \
+        }                                                                                    \
+    } while (0)
+
+#define DEBUG(...)                                       \
+    do                                                   \
+    {                                                    \
+        if (logging_level == LoggingLevel::Debug)        \
+        {                                                \
+            DebugLogger::getInstance().log(__VA_ARGS__); \
+        }                                                \
+    } while (0)
+
+#define DEBUGN(...)                                       \
+    do                                                    \
+    {                                                     \
+        if (logging_level == LoggingLevel::Debug)         \
+        {                                                 \
+            DebugLogger::getInstance().logn(__VA_ARGS__); \
+        }                                                 \
+    } while (0)
+
+void logError(std::string msg)
+{
     std::cerr << "ERROR: " << msg << " (" << __FILE__ << ":" << __LINE__ << ")" << std::endl;
 }
 
@@ -49,12 +94,12 @@ bool anyoneHasWork(const std::vector<size_t> &activeSet)
     {
         local_has_work = 1;
         {
-            DebugLogger::getInstance().log("I have some work to do!");
+            DEBUGN("I have some work to do!");
         }
     }
     else
     {
-        DebugLogger::getInstance().log("I don't raport anything to do!");
+        DEBUGN("I don't raport anything to do!");
     }
 
     int global_has_work = 0;
@@ -145,36 +190,31 @@ void relaxAllEdges(
     long long delta_val)
 {
     // --- Relaxation Step ---
-    
+
     std::vector<size_t> newActive;
     // originally it was not a loop, but a single execution.
     // my optimization: if a process owns newly activated vertices, proceed
-    while (!activeSet.empty()) {
+    while (!activeSet.empty())
+    {
         auto currentBucket = activeSet[0] / delta_val;
         newActive.clear();
 
         for (auto u_global_id : activeSet)
         {
             auto u_dist = data.getDist(u_global_id);
-            if (ENABLE_LOGGING) {
-                std::stringstream ss;
-                ss << "Relaxing neighs of vertex: " << u_global_id << ". Dist of it:  " << u_dist;
-                DebugLogger::getInstance().log(ss.str());
-            }
+            DEBUGN("Relaxing neighs of vertex:", u_global_id, ". Dist of it:", u_dist);
+
             if (u_dist == INF)
             {
                 throw Fatal("We should have never entered the INF bucket!");
             }
 
-            data.forEachNeighbor(u_global_id, [&](size_t vGlobalIdx, long long w) {
+            data.forEachNeighbor(u_global_id, [&](size_t vGlobalIdx, long long w)
+                                 {
                 auto potential_new_dist = u_dist + w;
 
                 if (!edgeConsidered(u_global_id, vGlobalIdx, w)) {
-                    if (ENABLE_LOGGING) {
-                        std::stringstream ss;
-                        ss << "Skipping relaxation of " << u_global_id << " " << vGlobalIdx << " as is not relevant"; 
-                        DebugLogger::getInstance().log(ss.str());
-                    }
+                    DEBUGN("Skipping relaxation of", u_global_id, vGlobalIdx, "as is not relevant");
                     return;
                 }
 
@@ -186,27 +226,23 @@ void relaxAllEdges(
                 if (!indexAtOwnerOpt.has_value()) { throw Fatal("Owner doesn't exist!"); }
                 MPI_Aint indexAtOwner = static_cast<MPI_Aint>(*indexAtOwnerOpt);
 
-                if (ENABLE_LOGGING) {
-                    std::stringstream ss;
-                    ss << "Sending update to process: " << ownerProcess << "(displacement: " << indexAtOwner << "). New dist of " << vGlobalIdx << " = " << potential_new_dist;
-                    DebugLogger::getInstance().log(ss.str());
-                }
+                DEBUGN("Sending update to process: ", ownerProcess, "(displacement:",
+                    indexAtOwner, "). New dist of", vGlobalIdx, "=", potential_new_dist);
 
                 // NOTE: this will bypass syncing window to dist afterwards!
                 if (ownerProcess == myRank) {
                     auto prevDist = data.getDist(vGlobalIdx);
                     auto oldBucket = prevDist == INF ? INF : prevDist / delta_val;
                     auto newBucket = potential_new_dist / delta_val;
-                    // DebugLogger::getInstance().force_log("Try short: " + std::to_string(vGlobalIdx) + " " + std::to_string(prevDist) + " " + std::to_string(oldBucket) + " " + std::to_string(newBucket) + " " + std::to_string(currentBucket) + " " + std::to_string(delta_val));
+                    DEBUGN("Try short:", vGlobalIdx, prevDist, oldBucket, newBucket, currentBucket, delta_val);
                     if (oldBucket > currentBucket && newBucket == currentBucket) {
-                        // DebugLogger::getInstance().force_log("Shortcut! " + std::to_string(vGlobalIdx));
+                        DEBUGN("Shortcut!", vGlobalIdx);
                         data.updateDist(vGlobalIdx, potential_new_dist);
                         updateBucketInfo(buckets, vGlobalIdx, oldBucket, newBucket);
                         newActive.push_back(vGlobalIdx);
                     }
                 }
-                data.communicateRelax(potential_new_dist, ownerProcess, indexAtOwner);
-            });
+                data.communicateRelax(potential_new_dist, ownerProcess, indexAtOwner); });
         }
         activeSet = newActive;
     }
@@ -233,7 +269,7 @@ void processBucket(
         {
             std::stringstream ss;
             ss << "Process " << myRank << " no more work for k=" << currentK;
-            DebugLogger::getInstance().log(ss.str());
+            DEBUGN(ss.str());
             break;
         }
         // We now know that at least one process has work, so ALL processes must participate in the phase.
@@ -251,28 +287,28 @@ void processBucket(
                 }
             }
             ss << "]";
-            DebugLogger::getInstance().log(ss.str());
+            DEBUGN(ss.str());
         }
 
         // FENCE 1
-        DebugLogger::getInstance().log("FENCE SYNC 1: waiting...");
+        DEBUGN("FENCE SYNC 1: waiting...");
         data.syncWindowToActual();
         data.fence();
-        DebugLogger::getInstance().log("FENCE SYNC 1: done! Performing relaxations...");
+        DEBUGN("FENCE SYNC 1: done! Performing relaxations...");
 
         relaxAllEdges(activeSet, edgeConsidered, data, dist, buckets, delta_val);
 
         // --- FENCE 2 ---
-        DebugLogger::getInstance().log("FENCE SYNC 2: waiting...");
+        DEBUGN("FENCE SYNC 2: waiting...");
         data.fence();
-        DebugLogger::getInstance().log("FENCE SYNC 2: done!");
+        DEBUGN("FENCE SYNC 2: done!");
 
         // we will only preserve updates vertices
         activeSet.clear();
-        DebugLogger::getInstance().log("activeSet.clear(): done!");
+        DEBUGN("activeSet.clear(): done!");
         for (auto update : data.getUpdatesAndSyncDataToWin())
         {
-            DebugLogger::getInstance().log("updating!");
+            DEBUGN("updating!");
             auto vGlobalIdx = update.vGlobalIdx;
             auto prevDist = update.prevDist;
             auto newDist = update.newDist;
@@ -280,7 +316,7 @@ void processBucket(
                 std::stringstream ss;
                 ss << "Update registered: " << vGlobalIdx
                    << "changed from " << prevDist << " to " << newDist;
-                DebugLogger::getInstance().log(ss.str());
+                DEBUGN(ss.str());
             }
 
             auto oldBucket = prevDist == INF ? INF : prevDist / delta_val;
@@ -293,12 +329,12 @@ void processBucket(
                 {
                     std::stringstream ss;
                     ss << "New active node: " << vGlobalIdx;
-                    DebugLogger::getInstance().log(ss.str());
+                    DEBUGN(ss.str());
                 }
                 activeSet.push_back(vGlobalIdx);
             }
         }
-        DebugLogger::getInstance().log("updates: done!");
+        DEBUGN("updates: done!");
         {
             std::stringstream ss;
             ss << "Finishing phase. Updates processed.";
@@ -312,7 +348,7 @@ void processBucket(
                 }
             }
             ss << "]";
-            DebugLogger::getInstance().log(ss.str());
+            DEBUGN(ss.str());
         }
     } // end of while(true) phase loop
 }
@@ -321,15 +357,20 @@ void delta_stepping_algorithm(
     Data &data,
     const BlockDistribution::Distribution &dist,
     size_t root_rt_global_id,
-    long long delta_val)
+    long long delta_val,
+    int progress_freq,
+    bool enable_ios,
+    bool enable_pruning)
 {
+    (void)enable_pruning;
     std::map<long long, std::vector<size_t>> buckets;
 
     {
         std::stringstream ss;
         ss << "Process " << myRank << " processing " << data.getNResponsible() << " vertices!";
 
-        if (data.getNResponsible() < 1000) {
+        if (data.getNResponsible() < 1000)
+        {
             for (size_t localVertexId = 0; localVertexId < data.getNResponsible(); ++localVertexId)
             {
                 auto owned = data.getFirstResponsibleGlobalIdx() + localVertexId;
@@ -342,7 +383,7 @@ void delta_stepping_algorithm(
                 ss << "]";
             }
         }
-        DebugLogger::getInstance().log(ss.str());
+        DEBUGN(ss.str());
     }
 
     if (data.isOwned(root_rt_global_id))
@@ -366,33 +407,36 @@ void delta_stepping_algorithm(
         }
         long long currentK = INF;
         MPI_Allreduce(&localMinK, &currentK, 1, MPI_LONG_LONG, MPI_MIN, MPI_COMM_WORLD);
-        if (epochNo % 1 == 0 && !buckets.empty())
+
+        if (epochNo % progress_freq == 0)
         {
-            std::stringstream ss;
-            ss
-                << "Process " << myRank << " starting epoch " << epochNo
-                << ". Bucket considered: " << (currentK == INF ? "INF" : std::to_string(currentK))
-                << "(reported my best bucket: " << localMinK << ", of " << buckets.begin()->second.size() << " nodes)";
-            DebugLogger::getInstance().force_log(ss.str());
-        }
-        else
-        {
-            std::stringstream ss;
-            ss
-                << "Process " << myRank << " starting epoch " << epochNo
-                << ". Bucket considered: " << (currentK == INF ? "INF" : std::to_string(currentK))
-                << "(reported no bucket!)";
-            DebugLogger::getInstance().log(ss.str());
+            PROGRESSN("Process", myRank, "is starting epoch", epochNo);
+            if (!buckets.empty())
+            {
+                if (currentK == INF)
+                    PROGRESSN("Bucket considered:", "INF");
+                else
+                    PROGRESSN(
+                        "Bucket considered:", currentK, "(raported my best bucket:",
+                        localMinK, "of", buckets.begin()->second.size(), "nodes");
+            }
+            else
+            {
+                if (currentK == INF)
+                    PROGRESSN("Bucket considered:", "INF");
+                else
+                    PROGRESSN("Bucket considered:", currentK, "(raported no bucket)");
+            }
         }
         epochNo++;
 
         if (currentK == INF)
         {
-            DebugLogger::getInstance().log("Termination condition met. Exiting.");
+            DEBUGN("Termination condition met. Exiting.");
             break;
         }
 
-        if (!ENABLE_IOS_HEURISTIC)
+        if (!enable_ios)
         {
             processBucket(buckets, currentK, data, dist, delta_val, [](size_t, size_t, long long) -> bool
                           { return true; });
@@ -427,26 +471,123 @@ int main(int argc, char *argv[])
     MPI_Comm_rank(MPI_COMM_WORLD, &myRank);
     MPI_Comm_size(MPI_COMM_WORLD, &nProcessorsGlobal);
 
-    DebugLogger::getInstance().init(myRank);
+    DebugLogger::getInstance().init("debug_log_" + std::to_string(myRank) + ".txt");
 
     // assumption: argc is the same among processors
     if (argc < 3)
     {
         if (myRank == 0)
-            std::cerr << "Usage: " << argv[0] << " <input_file> <output_file> [delta > 0]" << std::endl;
+        {
+            std::cerr << "\nUsage:\n";
+            std::cerr << "  " << argv[0] << " <input_file> <output_file> [delta > 0] [options]\n\n";
+            std::cerr << "Required arguments:\n";
+            std::cerr << "  <input_file>             Path to input graph data\n";
+            std::cerr << "  <output_file>            Path where results will be written\n";
+            std::cerr << "  [delta > 0]              (Optional) Delta-stepping bucket width (default: " << DEFAULT_DELTA << ")\n\n";
+
+            std::cerr << "Optional flags:\n";
+            std::cerr << "  --ios / --noios          Enable or disable iOS optimizations (default: disabled)\n";
+            std::cerr << "  --pruning / --nopruning  Enable or disable pruning optimization (default: disabled)\n";
+            std::cerr << "  --logging <level>        Set logging level: none | progress | debug (default: progress)\n";
+            std::cerr << "  --progress-freq <int>    Report progress once every N epochs (default: 10)\n";
+            std::cerr << std::endl;
+        }
         MPI_Finalize();
         return 1;
     }
     std::string input_filename = argv[1];
     std::string output_filename = argv[2];
     long long delta_param = (argc > 3) ? std::stoll(argv[3]) : DEFAULT_DELTA;
+
     // assumption: delta CLI arg is hardcoded in mpirun script, so it will be the same everywhere
     if (delta_param <= 0)
     {
         if (myRank == 0)
-            std::cerr << "Error: " << "delta param must be > 0" << std::endl;
+            std::cerr << "Error: delta param must be > 0" << std::endl;
         MPI_Finalize();
         return 1;
+    }
+
+    // === New flags ===
+    bool enable_ios_optimizations = true;
+    bool enable_pruning = true;
+
+    int progress_freq = DEFAULT_PROGESS_FREQ;
+
+    for (int i = 4; i < argc; ++i)
+    {
+        std::string arg = argv[i];
+
+        if (arg == "--ios")
+        {
+            enable_ios_optimizations = true;
+        }
+        else if (arg == "--noios")
+        {
+            enable_ios_optimizations = false;
+        }
+        else if (arg == "--pruning")
+        {
+            enable_pruning = true;
+        }
+        else if (arg == "--nopruning")
+        {
+            enable_pruning = false;
+        }
+        else if (arg == "--logging")
+        {
+            if (i + 1 >= argc)
+            {
+                if (myRank == 0)
+                    std::cerr << "--logging requires an argument: none, progress, or debug" << std::endl;
+                MPI_Finalize();
+                return 1;
+            }
+            std::string level = argv[++i];
+            if (level == "none")
+                logging_level = LoggingLevel::None;
+            else if (level == "progress")
+                logging_level = LoggingLevel::Progress;
+            else if (level == "debug")
+                logging_level = LoggingLevel::Debug;
+            else
+            {
+                if (myRank == 0)
+                    std::cerr << "Invalid value for --logging: " << level << std::endl;
+                MPI_Finalize();
+                return 1;
+            }
+        }
+        else if (arg == "--progress-freq")
+        {
+            if (i + 1 >= argc)
+            {
+                if (myRank == 0)
+                    std::cerr << "--progress-freq requires an integer argument" << std::endl;
+                MPI_Finalize();
+                return 1;
+            }
+            try
+            {
+                progress_freq = std::stoi(argv[++i]);
+                if (progress_freq <= 0)
+                    throw std::invalid_argument("must be > 0");
+            }
+            catch (const std::exception &e)
+            {
+                if (myRank == 0)
+                    std::cerr << "Invalid value for --progress-freq: " << e.what() << std::endl;
+                MPI_Finalize();
+                return 1;
+            }
+        }
+        else
+        {
+            if (myRank == 0)
+                std::cerr << "Unknown argument: " << arg << std::endl;
+            MPI_Finalize();
+            return 1;
+        }
     }
 
     auto dataOpt = process_input_and_load_graph_from_stream(myRank, input_filename);
@@ -511,11 +652,11 @@ int main(int argc, char *argv[])
     }
 
     MPI_Barrier(MPI_COMM_WORLD);
-    DebugLogger::getInstance().log("Starting delta stepping!");
+    DEBUGN("Starting delta stepping!");
     double start_time = MPI_Wtime();
     try
     {
-        delta_stepping_algorithm(data, dist, 0, delta_param);
+        delta_stepping_algorithm(data, dist, 0, delta_param, progress_freq, enable_ios_optimizations, enable_pruning);
     }
     catch (Fatal &ex)
     {

@@ -14,9 +14,9 @@ class Distribution {
 
 public:
     /// @throws `InvalidDistribution` if distributing nonzero work among zero processors
-    Distribution(size_t nProcessorsGlobal, size_t nVerticesGlobal) :
-        nProcessorsGlobal(nProcessorsGlobal),
-        nVerticesGlobal(nVerticesGlobal)
+    Distribution(size_t nProcessorsGlobal_, size_t nVerticesGlobal_) :
+        nProcessorsGlobal(nProcessorsGlobal_),
+        nVerticesGlobal(nVerticesGlobal_)
         {
             if (nVerticesGlobal > 0 && nProcessorsGlobal == 0) {
                 throw InvalidDistribution();

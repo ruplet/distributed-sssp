@@ -59,7 +59,7 @@ std::optional<Data> process_input_and_load_graph_from_stream(
             data.addEdge(u, v, weight);
         }
 
-        return std::move(data);
+        return data;
     } catch (InvalidData& ex) {
         std::cerr << "Failed to parse infile: " << ex.what() << std::endl;
         return {};
