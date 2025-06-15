@@ -140,7 +140,9 @@ void relaxAllEdges(
     std::vector<size_t> activeSet, // by copy!
     const std::function<bool(size_t, size_t, long long)> &edgeConsidered,
     Data &data,
-    const BlockDistribution::Distribution &dist)
+    const BlockDistribution::Distribution &dist,
+    std::map<long long, std::vector<size_t>> &buckets,
+    long long delta_val)
 {
     // --- Relaxation Step ---
     
@@ -148,9 +150,8 @@ void relaxAllEdges(
     // originally it was not a loop, but a single execution.
     // my optimization: if a process owns newly activated vertices, proceed
     while (!activeSet.empty()) {
+        auto currentBucket = activeSet[0] / delta_val;
         newActive.clear();
-        // this should be related to delta, but nevermind
-        auto currentBucketBound = INF - 10;
 
         for (auto u_global_id : activeSet)
         {
@@ -190,11 +191,21 @@ void relaxAllEdges(
                     ss << "Sending update to process: " << ownerProcess << "(displacement: " << indexAtOwner << "). New dist of " << vGlobalIdx << " = " << potential_new_dist;
                     DebugLogger::getInstance().log(ss.str());
                 }
-                data.communicateRelax(potential_new_dist, ownerProcess, indexAtOwner);
-                if (ownerProcess == myRank && data.getDist(vGlobalIdx) > currentBucketBound) {
-                    // NOTE: this will bypass syncing window to dist afterwards!
-                    data.updateDist(vGlobalIdx, potential_new_dist);
-                    newActive.push_back(vGlobalIdx);
+
+                // NOTE: this will bypass syncing window to dist afterwards!
+                if (ownerProcess == myRank) {
+                    auto prevDist = data.getDist(vGlobalIdx);
+                    auto oldBucket = prevDist == INF ? INF : prevDist / delta_val;
+                    auto newBucket = potential_new_dist / delta_val;
+                    if (oldBucket > currentBucket && newBucket == currentBucket) {
+                        data.updateDist(vGlobalIdx, potential_new_dist);
+                        updateBucketInfo(buckets, vGlobalIdx, oldBucket, newBucket);
+                        newActive.push_back(vGlobalIdx);
+                    } else {
+                        data.communicateRelax(potential_new_dist, ownerProcess, indexAtOwner);    
+                    }
+                } else {
+                    data.communicateRelax(potential_new_dist, ownerProcess, indexAtOwner);
                 }
             });
         }
@@ -250,7 +261,7 @@ void processBucket(
         data.fence();
         DebugLogger::getInstance().log("FENCE SYNC 1: done! Performing relaxations...");
 
-        relaxAllEdges(activeSet, edgeConsidered, data, dist);
+        relaxAllEdges(activeSet, edgeConsidered, data, dist, buckets, delta_val);
 
         // --- FENCE 2 ---
         DebugLogger::getInstance().log("FENCE SYNC 2: waiting...");
