@@ -198,6 +198,7 @@ void relaxAllEdges(
                     auto oldBucket = prevDist == INF ? INF : prevDist / delta_val;
                     auto newBucket = potential_new_dist / delta_val;
                     if (oldBucket > currentBucket && newBucket == currentBucket) {
+                        DebugLogger::getInstance().force_log("Shortcut!" + std::to_string(vGlobalIdx));
                         data.updateDist(vGlobalIdx, potential_new_dist);
                         updateBucketInfo(buckets, vGlobalIdx, oldBucket, newBucket);
                         newActive.push_back(vGlobalIdx);
