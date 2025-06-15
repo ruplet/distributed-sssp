@@ -5,6 +5,13 @@ import os
 import filecmp
 
 TIMEOUT = 3600  # seconds
+test_max_str = os.getenv('TESTMAX')
+if not test_max_str:
+    print('TESTMAX not set. Setting to 10000')
+    max_nodes = 10000
+else:
+    max_nodes = int(test_max_str)
+
 
 def run_tests(break_on_fail, local):
     Path("outputs").mkdir(parents=True, exist_ok=True)
@@ -19,14 +26,14 @@ def run_tests(break_on_fail, local):
                 continue
             print(f"Solution: {solution.name}")
             for test in Path("tests").iterdir():
-                if test.name not in ['bigcycle_100200300_48']:
-                    print(f"Skipping: {test.name}", flush=True)
-                    continue
-                print(f"Running: {test.name}", flush=True)
-                # nodes = int(test.name[test.name.find("_") + 1: test.name.rfind("_")])
-                # if nodes > max_nodes:
-                #     print(f"    {test.name}: SKIPPED (LARGE)", flush=True)
+                # if test.name not in ['bigcycle_100200300_48']:
+                #     print(f"Skipping: {test.name}", flush=True)
                 #     continue
+                print(f"Running: {test.name}", flush=True)
+                nodes = int(test.name[test.name.find("_") + 1: test.name.rfind("_")])
+                if nodes > max_nodes:
+                    print(f"    {test.name}: SKIPPED (LARGE)", flush=True)
+                    continue
                 workers = int(test.name[test.name.rfind("_") + 1:])
                 # Remove old outputs
                 for f in Path("outputs").iterdir():
