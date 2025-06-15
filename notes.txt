@@ -82,3 +82,6 @@ jest mniej, bo niektore wierzcholki nie dostaly zadnej krawedzi po prostu
 
 
 zmienna: setenv TESTMAX 30000
+
+
+NOTE: duze testy mi dają OOM, bo puszczam zbyt duzo procesow na jednym nodzie!
