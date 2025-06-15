@@ -16,4 +16,4 @@ else
 fi
 
 echo $HOSTNAME ":" "rank=" $RANK
-./$1/sssp tests/$2/$RANK.in outputs/$RANK.out 200300400500
+./$1/sssp tests/$2/$RANK.in outputs/$RANK.out 100000
