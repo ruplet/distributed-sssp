@@ -148,6 +148,7 @@ void relaxAllEdges(
     // originally it was not a loop, but a single execution.
     // my optimization: if a process owns newly activated vertices, proceed
     while (!activeSet.empty()) {
+        newActive.clear();
         // this should be related to delta, but nevermind
         auto currentBucketBound = INF - 10;
 
