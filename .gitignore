@@ -1,4 +1,5 @@
 unit_test
+test-generator
 .venv
 sssp
 solution.zip
