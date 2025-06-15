@@ -191,6 +191,8 @@ void relaxAllEdges(
                 }
                 data.communicateRelax(potential_new_dist, ownerProcess, indexAtOwner);
                 if (ownerProcess == myRank && data.getDist(vGlobalIdx) > currentBucketBound) {
+                    // NOTE: this will bypass syncing window to dist afterwards!
+                    data.updateDist(vGlobalIdx, potential_new_dist);
                     newActive.push_back(vGlobalIdx);
                 }
             });
