@@ -367,7 +367,7 @@ void delta_stepping_algorithm(
         }
         else
         {
-            auto isInnerShort = [&data, delta_val, currentK](size_t uGlobalIdx, [[maybe_unused]] vGlobalIdx, long long weight) -> bool
+            auto isInnerShort = [&data, delta_val, currentK](size_t uGlobalIdx, [[maybe_unused]] size_t vGlobalIdx, long long weight) -> bool
             {
                 auto u_dist = data.getDist(uGlobalIdx);
                 auto potential_new_dist = u_dist + weight;
