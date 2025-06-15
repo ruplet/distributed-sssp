@@ -384,10 +384,10 @@ int main(int argc, char* argv[]) {
         return 1; // Indicate invalid argument
     }
 
+    uint64_t num_vertices_for_dir_name = 1ULL << scale;
     // Construct the output directory path
-    // Line 378 is here.
     std::string out_dir = tests_dir + "/graph500-scale-" + std::to_string(scale) + "_" +
-                          std::to_string(static_cast<uint64_t>(1ULL << scale)) + "_" +
+                          std::to_string(num_vertices_for_dir_name) + "_" +
                           std::to_string(num_procs);
     
     // Create the output directory and any necessary parent directories
