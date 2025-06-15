@@ -358,7 +358,7 @@ int main(int argc, char* argv[]) {
     std::string edges_folder = argv[1];
     std::string edges_file = edges_folder + "/edges.out";
     std::string weights_file = edges_folder + "/edges.out.weights";
-    int scale = std::stoi(argv[2]);        // Convert string to integer
+    unsigned long scale = std::stoul(argv[2]);        // Convert string to integer
     int num_procs = std::stoi(argv[3]);    // Convert string to integer
     std::string tests_dir = argv[4];
     std::string reuse_files_raw = argv[5];
