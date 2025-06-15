@@ -4,7 +4,7 @@ import subprocess
 import os
 import filecmp
 
-TIMEOUT = 3600  # seconds
+TIMEOUT = 7200  # seconds
 test_max_str = os.getenv('TESTMAX')
 if not test_max_str:
     print('TESTMAX not set. Setting to 10000')
@@ -26,9 +26,9 @@ def run_tests(break_on_fail, local):
                 continue
             print(f"Solution: {solution.name}")
             for test in Path("tests").iterdir():
-                if test.name not in ['bigcycle_1000000000_48', ]:
-                    print(f"Skipping: {test.name}", flush=True)
-                    continue
+                # if test.name not in ['bigcycle_1000000000_48', ]:
+                #     print(f"Skipping: {test.name}", flush=True)
+                #     continue
                 print(f"Running: {test.name}", flush=True)
                 nodes = int(test.name[test.name.find("_") + 1: test.name.rfind("_")])
                 if nodes > max_nodes:

@@ -101,3 +101,5 @@ powinno wejść!
 
 a bigtest na 5B?
 5GB per proces.
+
+odpalanie: setenv TESTMAX 100200300400 ; make test-big
