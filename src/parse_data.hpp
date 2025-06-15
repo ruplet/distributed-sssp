@@ -229,7 +229,6 @@ public:
     // TODO: these < 0 checks can never succeed!!
     void addEdge(size_t u, size_t v, size_t weight)
     {
-        DebugLogger::getInstance().log("adding edge " + std::to_string(u) + ", " + std::to_string(v));
         if (u == v)
         {
             return;

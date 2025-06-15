@@ -7,13 +7,60 @@
 
 #include "common.hpp"
 
-template<typename T>
-void append_to_stream(std::ostream& oss, const T& arg) {
+#define PROGRESS(...)                                                                        \
+    do                                                                                       \
+    {                                                                                        \
+        if (logging_level == LoggingLevel::Progress || logging_level == LoggingLevel::Debug) \
+        {                                                                                    \
+            DebugLogger::getInstance().log(__VA_ARGS__);                                     \
+        }                                                                                    \
+    } while (0)
+
+#define PROGRESSN(...)                                                                       \
+    do                                                                                       \
+    {                                                                                        \
+        if (logging_level == LoggingLevel::Progress || logging_level == LoggingLevel::Debug) \
+        {                                                                                    \
+            DebugLogger::getInstance().logn(__VA_ARGS__);                                    \
+        }                                                                                    \
+    } while (0)
+
+#define DEBUG(...)                                       \
+    do                                                   \
+    {                                                    \
+        if (logging_level == LoggingLevel::Debug)        \
+        {                                                \
+            DebugLogger::getInstance().log(__VA_ARGS__); \
+        }                                                \
+    } while (0)
+
+#define DEBUGN(...)                                       \
+    do                                                    \
+    {                                                     \
+        if (logging_level == LoggingLevel::Debug)         \
+        {                                                 \
+            DebugLogger::getInstance().logn(__VA_ARGS__); \
+        }                                                 \
+    } while (0)
+
+#define ERROR(...)                                            \
+    do                                                        \
+    {                                                         \
+        append_to_stream(std::cerr, "ERROR", "(");            \
+        append_to_stream(std::cerr, __FILE__, ":", __LINE__); \
+        append_to_stream(std::cerr, ")", __VA_ARGS__);        \
+        std::cerr << std::endl;                               \
+    } while (0)
+
+template <typename T>
+void append_to_stream(std::ostream &oss, const T &arg)
+{
     oss << arg;
 }
 
-template<typename T, typename... Args>
-void append_to_stream(std::ostream& oss, const T& first, const Args&... rest) {
+template <typename T, typename... Args>
+void append_to_stream(std::ostream &oss, const T &first, const Args &...rest)
+{
     oss << first << ' ';
     append_to_stream(oss, rest...);
 }
@@ -31,7 +78,7 @@ public:
         return instance;
     }
 
-    void init(const std::string& filename)
+    void init(const std::string &filename)
     {
         {
             if (!log_file.is_open())
@@ -41,8 +88,8 @@ public:
         }
     }
 
-    template<typename... Args>
-    void log(const Args&... args)
+    template <typename... Args>
+    void log(const Args &...args)
     {
         if (log_file.is_open())
         {
@@ -52,8 +99,8 @@ public:
         }
     }
 
-    template<typename... Args>
-    void logn(const Args&... args)
+    template <typename... Args>
+    void logn(const Args &...args)
     {
         if (log_file.is_open())
         {

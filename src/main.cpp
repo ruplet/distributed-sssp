@@ -29,51 +29,6 @@ unsigned long long int relaxationsShort = 0;
 unsigned long long int relaxationsLong = 0;
 std::vector<unsigned long long int> nRelaxationsInPhase;
 
-#define PROGRESS(...)                                                                        \
-    do                                                                                       \
-    {                                                                                        \
-        if (logging_level == LoggingLevel::Progress || logging_level == LoggingLevel::Debug) \
-        {                                                                                    \
-            DebugLogger::getInstance().log(__VA_ARGS__);                                     \
-        }                                                                                    \
-    } while (0)
-
-#define PROGRESSN(...)                                                                       \
-    do                                                                                       \
-    {                                                                                        \
-        if (logging_level == LoggingLevel::Progress || logging_level == LoggingLevel::Debug) \
-        {                                                                                    \
-            DebugLogger::getInstance().logn(__VA_ARGS__);                                    \
-        }                                                                                    \
-    } while (0)
-
-#define DEBUG(...)                                       \
-    do                                                   \
-    {                                                    \
-        if (logging_level == LoggingLevel::Debug)        \
-        {                                                \
-            DebugLogger::getInstance().log(__VA_ARGS__); \
-        }                                                \
-    } while (0)
-
-#define DEBUGN(...)                                       \
-    do                                                    \
-    {                                                     \
-        if (logging_level == LoggingLevel::Debug)         \
-        {                                                 \
-            DebugLogger::getInstance().logn(__VA_ARGS__); \
-        }                                                 \
-    } while (0)
-
-#define ERROR(...)                                               \
-    do                                                           \
-    {                                                            \
-        append_to_stream(std::cerr, "ERROR", "(");               \
-        append_to_stream(std::cerr, __FILE__, ":", __LINE__);      \
-        append_to_stream(std::cerr, ")", __VA_ARGS__);           \
-        std::cerr << std::endl;                                  \
-    } while (0)
-
 
 class VertexOwnershipException : public std::runtime_error
 {
