@@ -329,7 +329,9 @@ void delta_stepping_algorithm(
     size_t epochNo = 0;
     while (true)
     {
-        DebugLogger::getInstance().force_log("Beginning epoch:" + std::to_string(epochNo));
+        if (epochNo % 500 == 0 && myRank == 0) {
+            DebugLogger::getInstance().force_log("Beginning epoch:" + std::to_string(epochNo));
+        }
         long long localMinK = INF;
         for (auto it = buckets.begin(); it != buckets.end() && it->second.empty(); it = buckets.begin())
         {
