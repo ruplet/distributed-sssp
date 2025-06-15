@@ -39,7 +39,6 @@ class Data {
 
     // distToRoot[local_idx] for MPI_Win communication
     std::vector<long long> distToRoot;
-    std::vector<char> dirtyFlags;
 
     void *winMemory;
     MPI_Win window;
@@ -54,7 +53,6 @@ public:
             nVerticesGlobal(nVerticesGlobal),
             neighOfLocal(nLocalResponsible, std::vector<std::pair<size_t, long long>>()),
             distToRoot(nLocalResponsible, INF),
-            dirtyFlags(nLocalResponsible, 0),
             winMemory(nullptr),
             window(MPI_WIN_NULL),
             winDisp(sizeof(long long)),
@@ -110,7 +108,6 @@ public:
             nVerticesGlobal(other.nVerticesGlobal),
             neighOfLocal(std::move(other.neighOfLocal)),
             distToRoot(std::move(other.distToRoot)),
-            dirtyFlags(std::move(other.dirtyFlags)),
             winMemory(other.winMemory),
             window(other.window),
             winDisp(other.winDisp),
@@ -164,10 +161,6 @@ public:
 
     long long* data() {
         return distToRoot.data();
-    }
-
-    char* getDirtyFlagsBuffer() {
-        return dirtyFlags.data();
     }
 
     std::vector<long long> getCopyOfDistances() const {

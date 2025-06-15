@@ -85,3 +85,15 @@ zmienna: setenv TESTMAX 30000
 
 
 NOTE: duze testy mi dają OOM, bo puszczam zbyt duzo procesow na jednym nodzie!
+
+rozmiar testu bigcycle_1000 000 000 _ 48:
+20.84 miliona krawędzi per proces (E)
+20.84 miliona wierzcholkow (V)
+
+size(distToRoot) = sizeof(long long) * V = 8 * |V|
+size(neighOfLocal) = Sum_{e in E} 2 * (sizeof(size_t) + sizeof(long long)) = 32 * |E|
+
+czyli rozmiar:
+21M * 8 = 200MB na distToRoot
+21M * 32 = 800MB na neighOfLocal
+powinno wejść!
