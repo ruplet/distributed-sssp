@@ -21,7 +21,7 @@ enum class LoggingLevel
 
 const long long DEFAULT_DELTA = 10;
 const int DEFAULT_PROGESS_FREQ = 10;
-const float HYBRIDIZATION_THRESHOLD = 0.4;
+// const float HYBRIDIZATION_THRESHOLD = 0.4;
 LoggingLevel logging_level = LoggingLevel::Progress;
 int myRank, nProcessorsGlobal;
 unsigned long long int totalPhases = 0;
