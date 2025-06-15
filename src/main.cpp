@@ -201,12 +201,9 @@ void relaxAllEdges(
                         data.updateDist(vGlobalIdx, potential_new_dist);
                         updateBucketInfo(buckets, vGlobalIdx, oldBucket, newBucket);
                         newActive.push_back(vGlobalIdx);
-                    } else {
-                        data.communicateRelax(potential_new_dist, ownerProcess, indexAtOwner);    
                     }
-                } else {
-                    data.communicateRelax(potential_new_dist, ownerProcess, indexAtOwner);
                 }
+                data.communicateRelax(potential_new_dist, ownerProcess, indexAtOwner);
             });
         }
         activeSet = newActive;
