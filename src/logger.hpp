@@ -11,7 +11,6 @@ class DebugLogger
 {
 private:
     std::ofstream log_file;
-    int rank;
 
 public:
     // This is a singleton pattern to ensure one logger per process
