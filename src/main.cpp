@@ -360,7 +360,7 @@ void delta_stepping_algorithm(
             break;
         }
 
-        if (!ENABLE_DELTA_STEPPING_OPTIMIZATIONS)
+        if (!ENABLE_IOS_HEURISTIC)
         {
             processBucket(buckets, currentK, data, dist, delta_val, [](size_t, size_t, long long) -> bool
                           { return true; });
