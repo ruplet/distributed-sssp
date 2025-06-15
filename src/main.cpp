@@ -137,7 +137,7 @@ void setActiveSet(
 }
 
 void relaxAllEdges(
-    const std::vector<size_t> &activeSet,
+    std::vector<size_t> activeSet, // by copy!
     const std::function<bool(size_t, size_t, long long)> &edgeConsidered,
     Data &data,
     const BlockDistribution::Distribution &dist)
@@ -156,33 +156,42 @@ void relaxAllEdges(
             throw Fatal("We should have never entered the INF bucket!");
         }
 
-        data.forEachNeighbor(u_global_id, [&](size_t vGlobalIdx, long long w)
-                             {
-            auto potential_new_dist = u_dist + w;
+        std::vector<size_t> newActive;
+        // originally it was not a loop, but a single execution.
+        // my optimization: if a process owns newly activated vertices, proceed
+        while (!activeSet.empty()) {
+            data.forEachNeighbor(u_global_id, [&](size_t vGlobalIdx, long long w) {
+                auto potential_new_dist = u_dist + w;
 
-            if (!edgeConsidered(u_global_id, vGlobalIdx, w)) {
+                if (!edgeConsidered(u_global_id, vGlobalIdx, w)) {
+                    {
+                        std::stringstream ss;
+                        ss << "Skipping relaxation of " << u_global_id << " " << vGlobalIdx << " as is not relevant"; 
+                        DebugLogger::getInstance().log(ss.str());
+                    }
+                    return;
+                }
+
+                auto ownerProcessOpt = dist.getResponsibleProcessor(vGlobalIdx);
+                if (!ownerProcessOpt.has_value()) { throw Fatal("Owner doesn't exist!"); }
+                size_t ownerProcess = *ownerProcessOpt;
+
+                auto indexAtOwnerOpt = dist.globalToLocal(vGlobalIdx);
+                if (!indexAtOwnerOpt.has_value()) { throw Fatal("Owner doesn't exist!"); }
+                MPI_Aint indexAtOwner = static_cast<MPI_Aint>(*indexAtOwnerOpt);
+
                 {
                     std::stringstream ss;
-                    ss << "Skipping relaxation of " << u_global_id << " " << vGlobalIdx << " as is not relevant"; 
+                    ss << "Sending update to process: " << ownerProcess << "(displacement: " << indexAtOwner << "). New dist of " << vGlobalIdx << " = " << potential_new_dist;
                     DebugLogger::getInstance().log(ss.str());
                 }
-                return;
-            }
-
-            auto ownerProcessOpt = dist.getResponsibleProcessor(vGlobalIdx);
-            if (!ownerProcessOpt.has_value()) { throw Fatal("Owner doesn't exist!"); }
-            size_t ownerProcess = *ownerProcessOpt;
-
-            auto indexAtOwnerOpt = dist.globalToLocal(vGlobalIdx);
-            if (!indexAtOwnerOpt.has_value()) { throw Fatal("Owner doesn't exist!"); }
-            MPI_Aint indexAtOwner = static_cast<MPI_Aint>(*indexAtOwnerOpt);
-
-            {
-                std::stringstream ss;
-                ss << "Sending update to process: " << ownerProcess << "(displacement: " << indexAtOwner << "). New dist of " << vGlobalIdx << " = " << potential_new_dist;
-                DebugLogger::getInstance().log(ss.str());
-            }
-            data.communicateRelax(potential_new_dist, ownerProcess, indexAtOwner); });
+                data.communicateRelax(potential_new_dist, ownerProcess, indexAtOwner);
+                if (ownerProcess == myRank) {
+                    newActive.push_back(vGlobalIdx);
+                }
+            });
+            activeSet = newActive;
+        }
     }
 }
 
