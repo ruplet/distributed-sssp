@@ -288,7 +288,12 @@ void process_graph_data(
     }
 
     // Main loop for reading edge and weight data
+    size_t i = 0;
     while (true) {
+        if (i % 1000000 == 0) {
+            std::cout << "Processed" << i << "vertices" << std::endl;
+        }
+        ++i;
         uint64_t start, end;
         // Read start vertex (6-byte unsigned int)
         if (!read_6byte_uint(edges_file, scale, start)) { // Check if read was successful (not EOF)
