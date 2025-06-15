@@ -7,8 +7,8 @@ import filecmp
 TIMEOUT = 7200  # seconds
 test_max_str = os.getenv('TESTMAX')
 if not test_max_str:
-    print('TESTMAX not set. Setting to 10000')
-    max_nodes = 10000
+    print('TESTMAX not set. Setting to 10100200300')
+    max_nodes = 10100200300
 else:
     max_nodes = int(test_max_str)
 

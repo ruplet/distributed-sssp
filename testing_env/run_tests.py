@@ -4,7 +4,7 @@ import subprocess
 import os
 import filecmp
 
-max_nodes = int(os.environ.get("TESTMAX", "300000"))
+max_nodes = int(os.environ.get("TESTMAX", "30000"))
 
 def run_tests(break_on_fail, local):
     Path("outputs").mkdir(parents=True, exist_ok=True)
