@@ -3,14 +3,102 @@
 #include <vector>        // For dynamic arrays (std::vector)
 #include <string>        // For string manipulation (std::string, std::to_string)
 #include <cmath>         // For mathematical functions like pow (used for 2^scale, though bit shift is preferred)
-#include <filesystem>    // For path manipulation and directory operations (std::filesystem::path, exists, create_directories, remove_all) (C++17)
-#include <sys/stat.h>    // For stat() and S_ISFIFO macro to check file type (Unix/Linux specific)
-#include <fcntl.h>       // For open(), mkfifo() for named pipes (Unix/Linux specific)
-#include <unistd.h>      // For unlink() to delete files/FIFOs (Unix/Linux specific)
+#include <sys/stat.h>    // For stat(), mkfifo(), S_ISFIFO, mkdir (POSIX specific)
+#include <fcntl.h>       // For mkfifo() (POSIX specific)
+#include <unistd.h>      // For unlink(), rmdir() (POSIX specific)
 #include <memory>        // For smart pointers like std::unique_ptr to manage file streams
-#include <optional>      // For std::optional to represent potentially absent values (e.g., end of file) (C++17)
-#include <cstring>       // For memcpy to copy raw bytes
-#include <utility>       // For std::pair and std::move
+#include <cstring>       // For memcpy, strerror
+#include <utility>       // For std::pair, std::move
+#include <cerrno>        // For errno
+#include <cstdio>        // For remove() (to delete files)
+#include <cstdlib>       // For system()
+#include <limits>        // For numeric_limits
+
+// --- Utility Functions for File System Operations (replacing std::filesystem) ---
+
+/**
+ * @brief Checks if a path exists.
+ * @param path The path as a C-style string.
+ * @return True if the path exists, false otherwise.
+ */
+bool path_exists(const char* path) {
+    struct stat st;
+    return stat(path, &st) == 0;
+}
+
+/**
+ * @brief Creates a single directory.
+ * @param path The directory path as a C-style string.
+ * @return 0 on success, -1 on error.
+ */
+int create_directory_single(const char* path) {
+    // 0755 means owner can read/write/execute, group and others can read/execute
+    return mkdir(path, 0755);
+}
+
+/**
+ * @brief Creates nested directories, similar to 'mkdir -p'.
+ * This function is POSIX-specific (Unix/Linux/macOS).
+ * @param path The full path to the directory to create.
+ */
+void create_nested_directories(const std::string& path) {
+    std::string current_path;
+    std::string::size_type start = 0;
+    std::string::size_type end = path.find('/', start); // Find first path separator
+
+    while (start < path.length()) {
+        if (end == std::string::npos) { // Last component
+            current_path = path;
+        } else {
+            current_path = path.substr(0, end);
+        }
+
+        // Only try to create if current_path is not empty or a root '/' or current/parent dir ('.', '..')
+        if (!current_path.empty() && current_path != "/" && current_path != "." && current_path != "..") {
+            struct stat st;
+            if (stat(current_path.c_str(), &st) == -1) { // Directory does not exist or stat error
+                if (errno == ENOENT) { // Directory truly doesn't exist
+                    if (create_directory_single(current_path.c_str()) == -1) {
+                        if (errno != EEXIST) { // EEXIST means it was created by another process, which is fine
+                            std::cerr << "Error: Failed to create directory " << current_path << ": " << strerror(errno) << std::endl;
+                            exit(1);
+                        }
+                    }
+                } else { // Other stat error
+                    std::cerr << "Error: Failed to stat " << current_path << ": " << strerror(errno) << std::endl;
+                    exit(1);
+                }
+            } else if (!S_ISDIR(st.st_mode)) { // Path exists but is not a directory
+                std::cerr << "Error: " << current_path << " exists but is not a directory." << std::endl;
+                exit(1);
+            }
+        }
+
+        if (end == std::string::npos) { // Reached the end of the path
+            break;
+        }
+        start = end + 1;
+        end = path.find('/', start); // Find next path separator
+    }
+}
+
+/**
+ * @brief Removes a directory and its contents recursively (Unix-specific, uses system command).
+ * This is a simplification replacing shutil.rmtree from the Python script.
+ * @param path The path to the directory to remove.
+ */
+void remove_directory_recursive(const std::string& path) {
+    // WARNING: This uses a system call to 'rm -rf'.
+    // This is Unix/Linux/macOS specific and should be used with caution,
+    // as it executes an external command. For truly cross-platform C++,
+    // a more complex manual recursive deletion would be needed.
+    std::string cmd = "rm -rf \"" + path + "\"";
+    if (system(cmd.c_str()) != 0) {
+        std::cerr << "Warning: Could not remove directory " << path << ". Command: '" << cmd << "'" << std::endl;
+    }
+}
+
+// --- Original Logic Functions (modified for C++11/14 compatibility) ---
 
 /**
  * @brief Reads a 6-byte unsigned integer from a binary input stream in little-endian format.
@@ -18,14 +106,14 @@
  *
  * @param f The input file stream.
  * @param scale The scale value used to create the bitmask.
- * @return An optional containing the read and masked 64-bit unsigned integer,
- * or std::nullopt if fewer than 6 bytes could be read (e.g., end of file).
+ * @param out_val A reference to store the read and masked 64-bit unsigned integer.
+ * @return True if 6 bytes were successfully read, false otherwise (e.g., end of file).
  */
-std::optional<uint64_t> read_6byte_uint(std::ifstream& f, int scale) {
+bool read_6byte_uint(std::ifstream& f, int scale, uint64_t& out_val) {
     char bytes[6];
     f.read(bytes, 6); // Attempt to read 6 bytes
     if (f.gcount() < 6) { // Check if 6 bytes were actually read
-        return std::nullopt; // Indicate end of file or read error
+        return false; // Indicate end of file or read error
     }
 
     uint64_t val = 0;
@@ -37,7 +125,8 @@ std::optional<uint64_t> read_6byte_uint(std::ifstream& f, int scale) {
     // Apply the bitmask: (1ULL << scale) - 1
     // 1ULL ensures the shift is performed on an unsigned long long to avoid overflow for large scales.
     uint64_t mask = (1ULL << scale) - 1;
-    return val & mask;
+    out_val = val & mask; // Assign the result to the output reference
+    return true;
 }
 
 /**
@@ -72,23 +161,22 @@ int get_owner_process(uint64_t vertex, uint64_t num_vertices, int num_procs) {
  * @param reuse_files If true, existing files are "touched" (created if not exist, otherwise left),
  * if false, FIFOs are created.
  * @return A pair containing:
- * - A vector of `std::filesystem::path` objects for the created files/FIFOs.
+ * - A vector of `std::string` objects for the created files/FIFOs.
  * - A vector of `std::unique_ptr<std::ofstream>` objects, managing the open output streams.
  */
-std::pair<std::vector<std::filesystem::path>, std::vector<std::unique_ptr<std::ofstream>>>
-prepare_outputs(const std::filesystem::path& dir_path, int n, bool reuse_files) {
-    std::vector<std::filesystem::path> paths;
+std::pair<std::vector<std::string>, std::vector<std::unique_ptr<std::ofstream>>>
+prepare_outputs(const std::string& dir_path, int n, bool reuse_files) {
+    std::vector<std::string> paths;
     std::vector<std::unique_ptr<std::ofstream>> outputs;
 
     for (int i = 0; i < n; ++i) {
-        std::filesystem::path path = dir_path / (std::to_string(i) + ".in");
+        std::string path = dir_path + "/" + std::to_string(i) + ".in";
         paths.push_back(path);
 
-        if (!std::filesystem::exists(path)) {
+        if (!path_exists(path.c_str())) { // Check if path exists using the utility function
             if (reuse_files) {
                 // If reusing files, simply create an empty file if it doesn't exist.
-                // This is equivalent to Python's path.touch()
-                std::ofstream{path}.close(); // Create and immediately close to "touch"
+                std::ofstream{path.c_str()}.close(); // Create and immediately close to "touch"
             } else {
                 // Create a FIFO (named pipe) with read/write permissions for owner/group/others (0666)
                 if (mkfifo(path.c_str(), 0666) == -1) {
@@ -116,35 +204,32 @@ prepare_outputs(const std::filesystem::path& dir_path, int n, bool reuse_files) 
 
         // Open the file/FIFO for writing. std::ios_base::out is the default.
         // For FIFOs, this open call will block until a reader opens the other end.
-        outputs.push_back(std::make_unique<std::ofstream>(path));
+        outputs.push_back(std::make_unique<std::ofstream>(path.c_str()));
         if (!outputs.back()->is_open()) {
             std::cerr << "Error: Could not open output file/FIFO " << path << std::endl;
             exit(1);
         }
     }
-    // --- FIX APPLIED HERE ---
     // Explicitly move outputs into the pair to guarantee move semantics.
-    return {paths, std::move(outputs)};
+    return std::make_pair(paths, std::move(outputs));
 }
 
 /**
  * @brief Removes named pipes (FIFOs) created by the script.
  * It safely checks if a path exists and is a FIFO before attempting to unlink it.
  *
- * @param paths A vector of `std::filesystem::path` objects representing the FIFOs to remove.
+ * @param paths A vector of `std::string` objects representing the FIFOs to remove.
  */
-void remove_fifos(const std::vector<std::filesystem::path>& paths) {
+void remove_fifos(const std::vector<std::string>& paths) {
     for (const auto& path : paths) {
         try {
             struct stat st;
             // Check if path exists and is a FIFO before calling unlink
-            if (std::filesystem::exists(path) && stat(path.c_str(), &st) != -1 && S_ISFIFO(st.st_mode)) {
+            if (path_exists(path.c_str()) && stat(path.c_str(), &st) != -1 && S_ISFIFO(st.st_mode)) {
                 if (unlink(path.c_str()) == -1) {
                     std::cerr << "Warning: could not remove FIFO " << path << ": " << strerror(errno) << std::endl;
                 }
             }
-        } catch (const std::filesystem::filesystem_error& e) {
-            std::cerr << "Warning: could not remove FIFO " << path << ": " << e.what() << std::endl;
         } catch (const std::exception& e) {
             std::cerr << "Warning: could not remove FIFO " << path << ": " << e.what() << std::endl;
         }
@@ -163,8 +248,8 @@ void remove_fifos(const std::vector<std::filesystem::path>& paths) {
  * @param outputs A vector of unique pointers to output streams (files/FIFOs).
  */
 void process_graph_data(
-    const std::filesystem::path& edges_path,
-    const std::filesystem::path& weights_path,
+    const std::string& edges_path,
+    const std::string& weights_path,
     int scale,
     int num_procs,
     std::vector<std::unique_ptr<std::ofstream>>& outputs
@@ -189,8 +274,8 @@ void process_graph_data(
     }
 
     // Open binary input files
-    std::ifstream edges_file(edges_path, std::ios::binary);
-    std::ifstream weights_file(weights_path, std::ios::binary);
+    std::ifstream edges_file(edges_path.c_str(), std::ios::binary);
+    std::ifstream weights_file(weights_path.c_str(), std::ios::binary);
 
     // Error handling for opening input files
     if (!edges_file.is_open()) {
@@ -204,20 +289,17 @@ void process_graph_data(
 
     // Main loop for reading edge and weight data
     while (true) {
+        uint64_t start, end;
         // Read start vertex (6-byte unsigned int)
-        std::optional<uint64_t> start_opt = read_6byte_uint(edges_file, scale);
-        if (!start_opt) { // Check if read was successful (not EOF)
+        if (!read_6byte_uint(edges_file, scale, start)) { // Check if read was successful (not EOF)
             break;
         }
-        uint64_t start = *start_opt;
 
         // Read end vertex (6-byte unsigned int)
-        std::optional<uint64_t> end_opt = read_6byte_uint(edges_file, scale);
-        if (!end_opt) { // Check if read was successful (not EOF)
+        if (!read_6byte_uint(edges_file, scale, end)) { // Check if read was successful (not EOF)
             std::cerr << "Warning: Unexpected EOF in edges file after reading start vertex." << std::endl;
             break;
         }
-        uint64_t end = *end_opt;
 
         char w_bytes[4];
         weights_file.read(w_bytes, 4); // Read 4 bytes for the float weight
@@ -273,13 +355,23 @@ int main(int argc, char* argv[]) {
     }
 
     // Parse command-line arguments
-    std::filesystem::path edges_folder = argv[1];
-    std::filesystem::path edges_file = edges_folder / "edges.out";
-    std::filesystem::path weights_file = edges_folder / "edges.out.weights";
+    std::string edges_folder = argv[1];
+    std::string edges_file = edges_folder + "/edges.out";
+    std::string weights_file = edges_folder + "/edges.out.weights";
     int scale = std::stoi(argv[2]);        // Convert string to integer
     int num_procs = std::stoi(argv[3]);    // Convert string to integer
-    std::filesystem::path tests_dir = argv[4];
+    std::string tests_dir = argv[4];
     std::string reuse_files_raw = argv[5];
+
+    // --- DIAGNOSTIC AND VALIDATION ADDED HERE ---
+    std::cerr << "DEBUG: Parsed scale value: " << scale << std::endl;
+    if (scale < 0 || scale >= std::numeric_limits<uint64_t>::digits) { // Check if scale is valid for 1ULL << scale
+        std::cerr << "Error: Invalid scale value. For uint64_t, scale must be between 0 and "
+                  << (std::numeric_limits<uint64_t>::digits - 1) << " (inclusive). Got: " << scale << std::endl;
+        return 1;
+    }
+    // --- END DIAGNOSTIC AND VALIDATION ---
+
 
     bool reuse_files;
     // Determine the value of reuse_files based on the argument string
@@ -293,22 +385,23 @@ int main(int argc, char* argv[]) {
     }
 
     // Construct the output directory path
-    std::filesystem::path out_dir = tests_dir / ("graph500-scale-" + std::to_string(scale) + "_" +
-                                                  std::to_string(static_cast<uint64_t>(1ULL << scale)) + "_" +
-                                                  std::to_string(num_procs));
+    // Line 378 is here.
+    std::string out_dir = tests_dir + "/graph500-scale-" + std::to_string(scale) + "_" +
+                          std::to_string(static_cast<uint64_t>(1ULL << scale)) + "_" +
+                          std::to_string(num_procs);
     
-    // Create the output directory and any necessary parent directories (equivalent to mkdir -p)
-    try {
-        std::filesystem::create_directories(out_dir);
-    } catch (const std::filesystem::filesystem_error& e) {
-        std::cerr << "Error: Could not create directory " << out_dir << ": " << e.what() << std::endl;
-        return 1; // Indicate error
-    }
+    // Create the output directory and any necessary parent directories
+    create_nested_directories(out_dir);
 
     // Vectors to hold paths and unique pointers to output file streams
-    // Using C++17 structured bindings to directly capture the elements of the returned pair.
-    // This correctly handles the move semantics for std::unique_ptr.
-    auto [fifo_paths, outputs] = prepare_outputs(out_dir, num_procs, reuse_files);
+    std::vector<std::string> fifo_paths;
+    std::vector<std::unique_ptr<std::ofstream>> outputs;
+
+    // Prepare output files/FIFOs
+    std::pair<std::vector<std::string>, std::vector<std::unique_ptr<std::ofstream>>> prepared =
+        prepare_outputs(out_dir, num_procs, reuse_files);
+    fifo_paths = std::move(prepared.first);
+    outputs = std::move(prepared.second);
 
     // Process the graph data
     process_graph_data(edges_file, weights_file, scale, num_procs, outputs);
@@ -316,12 +409,8 @@ int main(int argc, char* argv[]) {
     // Cleanup: remove FIFOs and the output directory if not reusing files
     if (!reuse_files) {
         remove_fifos(fifo_paths); // Remove created FIFOs
-        try {
-            // Remove the output directory and its contents (equivalent to shutil.rmtree)
-            std::filesystem::remove_all(out_dir);
-        } catch (const std::filesystem::filesystem_error& e) {
-            std::cerr << "Warning: could not remove directory " << out_dir << ": " << e.what() << std::endl;
-        }
+        // Remove the output directory and its contents recursively (Unix-specific)
+        remove_directory_recursive(out_dir);
     }
 
     return 0; // Indicate successful execution
