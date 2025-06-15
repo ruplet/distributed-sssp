@@ -102,3 +102,14 @@ a bigtest na 5B?
 5GB per proces.
 
 odpalanie: setenv TESTMAX 100000 ; make test-big
+
+
+1c5a12744f98f331304966fe6d82eb0505e8cde9 - ten commit ma wpisana moj opt, ale wczesniejszy przechodzi na pewno
+spoko testy
+
+64567e75a1b44aa146b195e97ac20022915f3e8a - ten commit wygląda sensownie dla bigcycle
+
+
+ZLICZANIE:
+- number of phases, dla roznych DELTA, dla skal 28-30
+- number of relaxations, dla roznych DELTA, skale 28-30
