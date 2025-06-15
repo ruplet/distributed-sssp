@@ -90,7 +90,7 @@ test-big: $(SOLUTION_ZIP)
 	# -d $(TESTING_ENV_DIR) extracts files into this directory
 	unzip -q $(TESTING_ENV_DIR)/$(SOLUTION_ZIP) -d $(TESTING_ENV_DIR)
 
-	cd $(TESTING_ENV_DIR) && \
+	setenv TESTMAX 10100200300 ; cd $(TESTING_ENV_DIR) && \
 		sbatch sbatch_run_tests_big.sh
 	# && \ echo "Waiting for edge splitter (PID=$$SPLITTER_PID) to finish..."
 
