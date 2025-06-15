@@ -1,19 +1,17 @@
 #!/bin/bash
+if [ -z ${OMPI_COMM_WORLD_LOCAL_RANK+x} ]; then RANK=$SLURM_PROCID; else RANK=$OMPI_COMM_WORLD_LOCAL_RANK; fi
 
-# if [ -z ${OMPI_COMM_WORLD_LOCAL_RANK+x} ]; then RANK=$SLURM_PROCID; else RANK=$OMPI_COMM_WORLD_LOCAL_RANK; fi
-
-if [ -n "${OMPI_COMM_WORLD_RANK}" ]; then # Open MPI global rank
-    RANK=${OMPI_COMM_WORLD_RANK}
-elif [ -n "${PMI_RANK}" ]; then # MPICH/MVAPICH
-    RANK=${PMI_RANK}
-elif [ -n "${I_MPI_RANK}" ]; then # Intel MPI
-    RANK=${I_MPI_RANK}
-elif [ -n "${SLURM_PROCID}" ]; then # SLURM (often the fallback)
-    RANK=${SLURM_PROCID}
-else
-    echo "Warning: Could not determine MPI rank from environment variables."
-    exit
+# Check at least 2 positional arguments: binary subdir and test name
+if [ "$#" -lt 2 ]; then
+    echo "Usage: $0 <binary_subdir> <test_name> [options...]"
+    echo "Example: $0 build test01 --logging debug --progress-freq 5 --noios"
+    exit 1
 fi
 
-echo $HOSTNAME ":" "rank=" $RANK
-./$1/sssp tests/$2/$RANK.in outputs/$RANK.out
+# Extract required arguments
+BINARY_SUBDIR="$1"
+TEST_NAME="$2"
+shift 2  # Remove $1 and $2 from the list, leave remaining args
+
+# Run the binary with appropriate input/output and forwarded optional args
+./$BINARY_SUBDIR/sssp "tests/$TEST_NAME/$RANK.in" "outputs/$RANK.out" "$@"
