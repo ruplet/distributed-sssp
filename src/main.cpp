@@ -415,9 +415,11 @@ void delta_stepping_algorithm(
     int progress_freq,
     bool enable_ios,
     bool enable_pruning,
-    bool enable_local_bypass)
+    bool enable_local_bypass,
+    bool enable_hybridization)
 {
     (void)enable_pruning;
+    (void)enable_hybridization;
     std::map<long long, std::vector<size_t>> buckets;
 
     {
@@ -544,6 +546,7 @@ int main(int argc, char *argv[])
             std::cerr << "  --ios / --noios          Enable or disable IOS optimizations (default: enabled)\n";
             std::cerr << "  --pruning / --nopruning  Enable or disable pruning optimization (default: enabled)\n";
             std::cerr << "  --local-bypass / --nolocal-bypass  Enable or disable dynamically adding just relaxed nodes to active set inside one processor (default: enabled)\n";
+            std::cerr << "  --hybrid / --nohybrid    Enable or disable hybridization optimization (default: enabled)\n";
             std::cerr << "  --logging <level>        Set logging level: none | progress | debug (default: progress)\n";
             std::cerr << "  --progress-freq <int>    Report progress once every N epochs (default: 10)\n";
             std::cerr << std::endl;
@@ -568,6 +571,7 @@ int main(int argc, char *argv[])
     bool enable_ios_optimizations = true;
     bool enable_pruning = true;
     bool enable_local_bypass = true;
+    bool enable_hybridization = true;
 
     int progress_freq = DEFAULT_PROGESS_FREQ;
 
@@ -598,6 +602,14 @@ int main(int argc, char *argv[])
         else if (arg == "--nolocal-bypass")
         {
             enable_local_bypass = false;
+        }
+        else if (arg == "--hybrid")
+        {
+            enable_hybridization = true;
+        }
+        else if (arg == "--nohybrid")
+        {
+            enable_hybridization = false;
         }
         else if (arg == "--logging")
         {
@@ -713,7 +725,8 @@ int main(int argc, char *argv[])
     try
     {
         delta_stepping_algorithm(data, dist, 0, delta_param, progress_freq,
-            enable_ios_optimizations, enable_pruning, enable_local_bypass);
+            enable_ios_optimizations, enable_pruning, enable_local_bypass,
+        enable_hybridization);
     }
     catch (Fatal &ex)
     {
