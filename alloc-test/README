@@ -1,0 +1,108 @@
+main.cpp provides a script for allocating huge memory.
+it touches every page to guarantee the memory is actually accessible
+it also tests if swapping can occur (but it most usually can)
+
+the second script, main2.cpp, allocates by MiB
+
+Run this on Okeanos:
+
+CC -O3 main.cpp -o main.out
+srun --tasks-per-node 1 -n 1 --cpus-per-task 24 -- ./main.out 123
+
+for 124GiB it terminates immediately, not being able to allocate
+for 123GiB, cpus-per-task=24, it starts but after a while, gives oom
+for 123GiB, cpus-per-task=48, it starts and after a while, gives oom
+
+for cpus-per-task=48, tasks-per-node=2, srun fails to start (no such nodes available)
+for 2 tasks, 2 workers, 24cpus/task, it OOMs on 60gb
+for 4 tasks, 4 workers, 12cpus/task, it allocates successfully 29 GiB
+
+for 48 tasks, workers, 1 cpu/task, it ooms on 3gib
+but with main2.out, we can allocate 2490 MiB per process! (but not 2500)
+this is pretty close to theoretical max of 128/48 = 2.667
+
+for 24 tasks per node, 48 workers, 1 cpu/task, we can alloate 4700MiB per process!
+
+
+for 123 (123GiB of data) it still works! (1 node, 1 task is crucial!)
+
+
+> srun --tasks-per-node 1 -n 1 -- ./main.out 124
+System page size: 4096 bytes
+Allocating 124 GB (133143986176 bytes)
+mmap: Cannot allocate memory
+Memory allocation or page touch failed
+srun: error: nid00060: task 0: Exited with exit code 1
+srun: launch/slurm: _step_signal: Terminating StepId=1392917.0
+
+> srun --tasks-per-node 1 --cpus-per-task 24 -n 1 -- ./main.out 123
+mlock: Cannot allocate memory
+Warning: mlock failed, memory might be swapped
+System page size: 4096 bytes
+Allocating 123 GB (132070244352 bytes)
+Mapped address: 0x7fe134a93000
+slurmstepd: error: Detected 1 oom-kill event(s) in StepId=1392923.0 cgroup. Some of your processes may have been killed by the cgroup out-of-memory handler.
+srun: error: nid00060: task 0: Out Of Memory
+srun: launch/slurm: _step_signal: Terminating StepId=1392923.0
+
+> srun --tasks-per-node 1 --cpus-per-task 24 -n 1 -- ./main.out 90
+mlock: Cannot allocate memory
+Warning: mlock failed, memory might be swapped
+System page size: 4096 bytes
+Allocating 90 GB (96636764160 bytes)
+Mapped address: 0x7fe974a93000
+Value at start of last page: 42
+
+> srun --tasks-per-node 1 --cpus-per-task 24 -n 1 -- ./main.out 110
+mlock: Cannot allocate memory
+Warning: mlock failed, memory might be swapped
+System page size: 4096 bytes
+Allocating 110 GB (118111600640 bytes)
+Mapped address: 0x7fe474a93000
+Value at start of last page: 42
+
+
+> srun --tasks-per-node 2 --cpus-per-task 24 -n 2 -- ./main.out 60
+mlock: Cannot allocate memory
+Warning: mlock failed, memory might be swapped
+System page size: 4096 bytes
+Allocating 60 GB (64424509440 bytes)
+Mapped address: 0x7ff0f4a93000
+mlock: Cannot allocate memory
+Warning: mlock failed, memory might be swapped
+System page size: 4096 bytes
+Allocating 60 GB (64424509440 bytes)
+Mapped address: 0x7ff0f4a93000
+^[[1;2Dslurmstepd: error: Detected 1 oom-kill event(s) in StepId=1392939.0 cgroup. Some of your processes may have been killed by the cgroup out-of-memory handler.
+srun: error: nid00010: task 0: Out Of Memory
+srun: launch/slurm: _step_signal: Terminating StepId=1392939.0
+slurmstepd: error: *** STEP 1392939.0 ON nid00010 CANCELLED AT 2025-06-15T14:57:52 ***
+
+
+> srun --tasks-per-node 4 --cpus-per-task 12 -n 4 -- ./main.out 29
+mlock: Cannot allocate memory
+Warning: mlock failed, memory might be swapped
+System page size: 4096 bytes
+Allocating 29 GB (31138512896 bytes)
+Mapped address: 0x7ff8b4a93000
+mlock: Cannot allocate memory
+Warning: mlock failed, memory might be swapped
+System page size: 4096 bytes
+Allocating 29 GB (31138512896 bytes)
+Mapped address: 0x7ff8b4a93000
+System page size: 4096 bytes
+Allocating 29 GB (31138512896 bytes)
+Mapped address: 0x7ff8b4a93000
+mlock: Cannot allocate memory
+Warning: mlock failed, memory might be swapped
+System page size: 4096 bytes
+Allocating 29 GB (31138512896 bytes)
+Mapped address: 0x7ff8b4a93000
+mlock: Cannot allocate memory
+Warning: mlock failed, memory might be swapped
+Value at start of last page: 42
+Value at start of last page: 42
+Value at start of last page: 42
+Value at start of last page: 42
+
+
