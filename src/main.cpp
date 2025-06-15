@@ -299,16 +299,18 @@ void delta_stepping_algorithm(
         std::stringstream ss;
         ss << "Process " << myRank << " processing " << data.getNResponsible() << " vertices!";
 
-        for (size_t localVertexId = 0; localVertexId < data.getNResponsible(); ++localVertexId)
-        {
-            auto owned = data.getFirstResponsibleGlobalIdx() + localVertexId;
-            ss << "\nVertex: " << owned << " neighbours: [";
-            auto curNeighs = data.getNeigh()[localVertexId];
-            for (size_t i = 0; i < curNeighs.size(); ++i)
+        if (data.getNResponsible() < 1000) {
+            for (size_t localVertexId = 0; localVertexId < data.getNResponsible(); ++localVertexId)
             {
-                ss << curNeighs[i].first << "(@" << curNeighs[i].second << "), ";
+                auto owned = data.getFirstResponsibleGlobalIdx() + localVertexId;
+                ss << "\nVertex: " << owned << " neighbours: [";
+                auto curNeighs = data.getNeigh()[localVertexId];
+                for (size_t i = 0; i < curNeighs.size(); ++i)
+                {
+                    ss << curNeighs[i].first << "(@" << curNeighs[i].second << "), ";
+                }
+                ss << "]";
             }
-            ss << "]";
         }
         DebugLogger::getInstance().log(ss.str());
     }
@@ -479,6 +481,7 @@ int main(int argc, char *argv[])
     }
 
     MPI_Barrier(MPI_COMM_WORLD);
+    DebugLogger::getInstance().log("Starting delta stepping!");
     double start_time = MPI_Wtime();
     try
     {
