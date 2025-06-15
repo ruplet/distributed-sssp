@@ -156,7 +156,7 @@ void relaxAllEdges(
         for (auto u_global_id : activeSet)
         {
             auto u_dist = data.getDist(u_global_id);
-            {
+            if (ENABLE_LOGGING) {
                 std::stringstream ss;
                 ss << "Relaxing neighs of vertex: " << u_global_id << ". Dist of it:  " << u_dist;
                 DebugLogger::getInstance().log(ss.str());
@@ -170,7 +170,7 @@ void relaxAllEdges(
                 auto potential_new_dist = u_dist + w;
 
                 if (!edgeConsidered(u_global_id, vGlobalIdx, w)) {
-                    {
+                    if (ENABLE_LOGGING) {
                         std::stringstream ss;
                         ss << "Skipping relaxation of " << u_global_id << " " << vGlobalIdx << " as is not relevant"; 
                         DebugLogger::getInstance().log(ss.str());
@@ -186,7 +186,7 @@ void relaxAllEdges(
                 if (!indexAtOwnerOpt.has_value()) { throw Fatal("Owner doesn't exist!"); }
                 MPI_Aint indexAtOwner = static_cast<MPI_Aint>(*indexAtOwnerOpt);
 
-                {
+                if (ENABLE_LOGGING) {
                     std::stringstream ss;
                     ss << "Sending update to process: " << ownerProcess << "(displacement: " << indexAtOwner << "). New dist of " << vGlobalIdx << " = " << potential_new_dist;
                     DebugLogger::getInstance().log(ss.str());
