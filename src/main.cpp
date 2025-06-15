@@ -21,8 +21,13 @@ enum class LoggingLevel
 
 const long long DEFAULT_DELTA = 10;
 const int DEFAULT_PROGESS_FREQ = 10;
+const float HYBRIDIZATION_THRESHOLD = 0.4;
 LoggingLevel logging_level = LoggingLevel::Progress;
 int myRank, nProcessorsGlobal;
+unsigned long long int totalPhases = 0;
+unsigned long long int relaxationsShort = 0;
+unsigned long long int relaxationsLong = 0;
+std::vector<unsigned long long int> nRelaxationsInPhase;
 
 #define PROGRESS(...)                                                                        \
     do                                                                                       \
@@ -60,10 +65,15 @@ int myRank, nProcessorsGlobal;
         }                                                 \
     } while (0)
 
-void logError(std::string msg)
-{
-    std::cerr << "ERROR: " << msg << " (" << __FILE__ << ":" << __LINE__ << ")" << std::endl;
-}
+#define ERROR(...)                                               \
+    do                                                           \
+    {                                                            \
+        append_to_stream(std::cerr, "ERROR", "(");               \
+        append_to_stream(std::cerr, __FILE__, ":", __LINE__);      \
+        append_to_stream(std::cerr, ")", __VA_ARGS__);           \
+        std::cerr << std::endl;                                  \
+    } while (0)
+
 
 class VertexOwnershipException : public std::runtime_error
 {
@@ -181,7 +191,7 @@ void setActiveSet(
     }
 }
 
-void relaxAllEdges(
+void relaxAllEdgesLocalBypass(
     std::vector<size_t> activeSet, // by copy!
     const std::function<bool(size_t, size_t, long long)> &edgeConsidered,
     Data &data,
@@ -248,13 +258,53 @@ void relaxAllEdges(
     }
 }
 
+void relaxAllEdges(
+    const std::vector<size_t>& activeSet,
+    const std::function<bool(size_t, size_t, long long)> &edgeConsidered,
+    Data &data,
+    const BlockDistribution::Distribution &dist)
+{
+    for (auto u_global_id : activeSet)
+    {
+        auto u_dist = data.getDist(u_global_id);
+        DEBUGN("Relaxing neighs of vertex:", u_global_id, ". Dist of it:", u_dist);
+
+        if (u_dist == INF)
+        {
+            throw Fatal("We should have never entered the INF bucket!");
+        }
+
+        data.forEachNeighbor(u_global_id, [&](size_t vGlobalIdx, long long w) {
+            auto potential_new_dist = u_dist + w;
+
+            if (!edgeConsidered(u_global_id, vGlobalIdx, w)) {
+                DEBUGN("Skipping relaxation of", u_global_id, vGlobalIdx, "as is not relevant");
+                return;
+            }
+
+            auto ownerProcessOpt = dist.getResponsibleProcessor(vGlobalIdx);
+            if (!ownerProcessOpt.has_value()) { throw Fatal("Owner doesn't exist!"); }
+            size_t ownerProcess = *ownerProcessOpt;
+
+            auto indexAtOwnerOpt = dist.globalToLocal(vGlobalIdx);
+            if (!indexAtOwnerOpt.has_value()) { throw Fatal("Owner doesn't exist!"); }
+            MPI_Aint indexAtOwner = static_cast<MPI_Aint>(*indexAtOwnerOpt);
+
+            DEBUGN("Sending update to process: ", ownerProcess, "(displacement:",
+                indexAtOwner, "). New dist of", vGlobalIdx, "=", potential_new_dist);
+
+            data.communicateRelax(potential_new_dist, ownerProcess, indexAtOwner); });
+    }
+}
+
 void processBucket(
     std::map<long long, std::vector<size_t>> &buckets,
     size_t currentK,
     Data &data,
     const BlockDistribution::Distribution &dist,
     long long delta_val,
-    const std::function<bool(size_t, size_t, long long)> &edgeConsidered)
+    const std::function<bool(size_t, size_t, long long)> &edgeConsidered,
+    bool enable_local_bypass)
 {
     size_t phaseNo = 0;
 
@@ -296,7 +346,11 @@ void processBucket(
         data.fence();
         DEBUGN("FENCE SYNC 1: done! Performing relaxations...");
 
-        relaxAllEdges(activeSet, edgeConsidered, data, dist, buckets, delta_val);
+        if (enable_local_bypass) {
+            relaxAllEdgesLocalBypass(activeSet, edgeConsidered, data, dist, buckets, delta_val);
+        } else {
+            relaxAllEdges(activeSet, edgeConsidered, data, dist);
+        }
 
         // --- FENCE 2 ---
         DEBUGN("FENCE SYNC 2: waiting...");
@@ -360,7 +414,8 @@ void delta_stepping_algorithm(
     long long delta_val,
     int progress_freq,
     bool enable_ios,
-    bool enable_pruning)
+    bool enable_pruning,
+    bool enable_local_bypass)
 {
     (void)enable_pruning;
     std::map<long long, std::vector<size_t>> buckets;
@@ -439,7 +494,7 @@ void delta_stepping_algorithm(
         if (!enable_ios)
         {
             processBucket(buckets, currentK, data, dist, delta_val, [](size_t, size_t, long long) -> bool
-                          { return true; });
+                          { return true; }, enable_local_bypass);
         }
         else
         {
@@ -455,8 +510,8 @@ void delta_stepping_algorithm(
                 return !isInnerShort(uGlobalIdx, vGlobalIdx, weight);
             };
 
-            processBucket(buckets, currentK, data, dist, delta_val, isInnerShort);
-            processBucket(buckets, currentK, data, dist, delta_val, isNotInnerShort);
+            processBucket(buckets, currentK, data, dist, delta_val, isInnerShort, enable_local_bypass);
+            processBucket(buckets, currentK, data, dist, delta_val, isNotInnerShort, enable_local_bypass);
         }
         setActiveSet(buckets, currentK, {});
     } // end of while(true) epoch loop
@@ -486,8 +541,9 @@ int main(int argc, char *argv[])
             std::cerr << "  [delta > 0]              (Optional) Delta-stepping bucket width (default: " << DEFAULT_DELTA << ")\n\n";
 
             std::cerr << "Optional flags:\n";
-            std::cerr << "  --ios / --noios          Enable or disable iOS optimizations (default: disabled)\n";
-            std::cerr << "  --pruning / --nopruning  Enable or disable pruning optimization (default: disabled)\n";
+            std::cerr << "  --ios / --noios          Enable or disable IOS optimizations (default: enabled)\n";
+            std::cerr << "  --pruning / --nopruning  Enable or disable pruning optimization (default: enabled)\n";
+            std::cerr << "  --local-bypass / --nolocal-bypass  Enable or disable dynamically adding just relaxed nodes to active set inside one processor (default: enabled)\n";
             std::cerr << "  --logging <level>        Set logging level: none | progress | debug (default: progress)\n";
             std::cerr << "  --progress-freq <int>    Report progress once every N epochs (default: 10)\n";
             std::cerr << std::endl;
@@ -503,7 +559,7 @@ int main(int argc, char *argv[])
     if (delta_param <= 0)
     {
         if (myRank == 0)
-            std::cerr << "Error: delta param must be > 0" << std::endl;
+            ERROR("Delta param must be > 0");
         MPI_Finalize();
         return 1;
     }
@@ -511,6 +567,7 @@ int main(int argc, char *argv[])
     // === New flags ===
     bool enable_ios_optimizations = true;
     bool enable_pruning = true;
+    bool enable_local_bypass = true;
 
     int progress_freq = DEFAULT_PROGESS_FREQ;
 
@@ -533,6 +590,14 @@ int main(int argc, char *argv[])
         else if (arg == "--nopruning")
         {
             enable_pruning = false;
+        }
+        else if (arg == "--local-bypass")
+        {
+            enable_local_bypass = true;
+        }
+        else if (arg == "--nolocal-bypass")
+        {
+            enable_local_bypass = false;
         }
         else if (arg == "--logging")
         {
@@ -593,7 +658,7 @@ int main(int argc, char *argv[])
     auto dataOpt = process_input_and_load_graph_from_stream(myRank, input_filename);
     if (!dataOpt.has_value())
     {
-        logError("Unable to parse data!");
+        ERROR("Unable to parse data!");
         MPI_Abort(MPI_COMM_WORLD, 1);
         return 1;
     }
@@ -603,21 +668,16 @@ int main(int argc, char *argv[])
     auto distNRespOpt = dist.getNResponsibleVertices(myRank);
     if (!distNRespOpt.has_value())
     {
-        logError("Unable to take nResp from distribution");
+        ERROR("Unable to take nResp from distribution");
         MPI_Abort(MPI_COMM_WORLD, 1);
         return 1;
     }
     auto distNResp = *distNRespOpt;
     if (distNResp != data.getNResponsible())
     {
-        std::cerr
-            << "Rank "
-            << myRank
-            << ": mismatch in number of vertices owned by process: "
-            << distNResp
-            << " != "
-            << data.getNResponsible()
-            << std::endl;
+        ERROR("Rank", myRank,
+            ": mismatch in number of vertices owned by process: ",
+            distNResp, "!=", data.getNResponsible());
         MPI_Abort(MPI_COMM_WORLD, 1);
         return 1;
     }
@@ -625,7 +685,7 @@ int main(int argc, char *argv[])
     auto respProcLstOpt = dist.getResponsibleProcessor(data.lastResponsibleGlobalIdx());
     if (!respProcFstOpt.has_value() || !respProcLstOpt.has_value())
     {
-        logError("Unable to obtain processor of first/last from distribution");
+        ERROR("Unable to obtain processor of first/last from distribution");
         MPI_Abort(MPI_COMM_WORLD, 1);
         return 1;
     }
@@ -633,12 +693,8 @@ int main(int argc, char *argv[])
     auto respProcLst = *respProcLstOpt;
     if (respProcFst != myRank || respProcLst != myRank)
     {
-        std::cerr
-            << "Rank "
-            << myRank
-            << ": mismatch in owner of vertices: "
-            << respProcFst << " or " << respProcLst << " != " << myRank
-            << std::endl;
+        ERROR("Rank", myRank, ": mismatch in owner of vertices: ",
+            respProcFst, "or", respProcLst, "!=", myRank);
         MPI_Abort(MPI_COMM_WORLD, 1);
         return 1;
     }
@@ -656,14 +712,12 @@ int main(int argc, char *argv[])
     double start_time = MPI_Wtime();
     try
     {
-        delta_stepping_algorithm(data, dist, 0, delta_param, progress_freq, enable_ios_optimizations, enable_pruning);
+        delta_stepping_algorithm(data, dist, 0, delta_param, progress_freq,
+            enable_ios_optimizations, enable_pruning, enable_local_bypass);
     }
     catch (Fatal &ex)
     {
-        std::cerr
-            << "Fatal error while Delta-stepping: "
-            << ex.what()
-            << std::endl;
+        ERROR("Fatal error while Delta-stepping: ", ex.what());
         MPI_Abort(MPI_COMM_WORLD, 1);
         return 1;
     }

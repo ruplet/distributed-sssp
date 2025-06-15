@@ -8,12 +8,12 @@
 #include "common.hpp"
 
 template<typename T>
-void append_to_stream(std::ostringstream& oss, const T& arg) {
+void append_to_stream(std::ostream& oss, const T& arg) {
     oss << arg;
 }
 
 template<typename T, typename... Args>
-void append_to_stream(std::ostringstream& oss, const T& first, const Args&... rest) {
+void append_to_stream(std::ostream& oss, const T& first, const Args&... rest) {
     oss << first << ' ';
     append_to_stream(oss, rest...);
 }

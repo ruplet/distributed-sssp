@@ -109,6 +109,7 @@ spoko testy
 
 64567e75a1b44aa146b195e97ac20022915f3e8a - ten commit wygląda sensownie dla bigcycle
 
+7d86ceda9b3d74f7dbdc9c5024dd5fbbe0726605  - ten commit przechodzi wszystkie testy
 
 ZLICZANIE:
 - number of phases, dla roznych DELTA, dla skal 28-30
