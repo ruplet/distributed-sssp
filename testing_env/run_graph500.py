@@ -42,7 +42,7 @@ def run_tests(break_on_fail, local):
                     command = "mpiexec"
                 else:
                     command = "srun"
-                execution = subprocess.run([command, "-n", str(workers), "./test_command_big.sh", solution.name, test.name], capture_output=True, timeout=TIMEOUT)
+                execution = subprocess.run([command, "-n", str(workers), "./test_command_graph500.sh", solution.name, test.name], capture_output=True, timeout=TIMEOUT)
                 if execution.returncode != 0:
                     print(f"    {test.name}: FAILED ({command})" + execution.stdout.decode('UTF-8') + "ERR:" + execution.stderr.decode('UTF-8'))
                     if break_on_fail:
@@ -59,6 +59,7 @@ def run_tests(break_on_fail, local):
                         break
                 if not failed:
                     print(f"    {test.name}: PASSED", flush=True)
+                    print('stdout:', execution.stdout)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Test runner')
