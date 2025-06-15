@@ -5,7 +5,7 @@ from pathlib import Path
 def read_graph_and_ownerships(directory: Path):
     G = nx.Graph()
     ownership = {}  # Maps vertex -> process
-    seen_edges = {}
+    # seen_edges = {}
 
     # First pass: determine ownership and edges
     for i, path in enumerate(sorted(directory.glob("*.in"))):
@@ -22,10 +22,10 @@ def read_graph_and_ownerships(directory: Path):
                 if u == v:
                     continue  # Ignore self-loops
 
-                edge = tuple(sorted((u, v)))
-                if edge not in seen_edges or w < seen_edges[edge]:
-                    seen_edges[edge] = w
-                    G.add_edge(u, v, weight=w)
+                # edge = tuple(sorted((u, v)))
+                # if edge not in seen_edges or w < seen_edges[edge]:
+                #     seen_edges[edge] = w
+                G.add_edge(u, v, weight=w)
 
     return G, ownership
 
