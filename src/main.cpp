@@ -366,7 +366,7 @@ void delta_stepping_algorithm(
         }
         long long currentK = INF;
         MPI_Allreduce(&localMinK, &currentK, 1, MPI_LONG_LONG, MPI_MIN, MPI_COMM_WORLD);
-        if (epochNo % 500 == 0 && !buckets.empty())
+        if (epochNo % 1 == 0 && !buckets.empty())
         {
             std::stringstream ss;
             ss
