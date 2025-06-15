@@ -329,9 +329,6 @@ void delta_stepping_algorithm(
     size_t epochNo = 0;
     while (true)
     {
-        if (epochNo % 500 == 0 && myRank == 0) {
-            DebugLogger::getInstance().force_log("Beginning epoch:" + std::to_string(epochNo));
-        }
         long long localMinK = INF;
         for (auto it = buckets.begin(); it != buckets.end() && it->second.empty(); it = buckets.begin())
         {
@@ -343,14 +340,14 @@ void delta_stepping_algorithm(
         }
         long long currentK = INF;
         MPI_Allreduce(&localMinK, &currentK, 1, MPI_LONG_LONG, MPI_MIN, MPI_COMM_WORLD);
-        if (!buckets.empty())
+        if (epochNo % 500 == 0 && !buckets.empty())
         {
             std::stringstream ss;
             ss
                 << "Process " << myRank << " starting epoch " << epochNo
                 << ". Bucket considered: " << (currentK == INF ? "INF" : std::to_string(currentK))
                 << "(reported my best bucket: " << localMinK << ", of " << buckets.begin()->second.size() << " nodes)";
-            DebugLogger::getInstance().log(ss.str());
+            DebugLogger::getInstance().force_log(ss.str());
         }
         else
         {
