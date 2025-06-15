@@ -12,6 +12,8 @@
 #include <limits>
 #include <iostream>
 
+#include "logger.hpp"
+
 const long long INF = std::numeric_limits<long long>::max();
 
 class InvalidData : public std::runtime_error {
@@ -216,6 +218,7 @@ public:
     /// @throws InvalidData
     // TODO: these < 0 checks can never succeed!!
     void addEdge(size_t u, size_t v, size_t weight){
+        DebugLogger::getInstance().log("adding edge " + std::to_string(u) + ", " + std::to_string(v));
         if (u == v) { return; }
         if (
             u < 0

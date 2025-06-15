@@ -1,3 +1,5 @@
+#pragma once
+#include <map>
 #include <fstream>
 #include <string>
 #include <sstream>
