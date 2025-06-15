@@ -17,4 +17,4 @@
 ./split ~/graph500/src/out_a5700_bc1900_d10000_s2_3_n5_ef16/ 5 14 . reuse
 ./split ~/graph500/src/out_a5700_bc1900_d10000_s2_3_n5_ef16/ 5 15 . reuse
 
-./split ~/graph500/src/out_a5700_bc1900_d10000_s2_3_n26_ef16/ 26 48 . reuse
+./split ~/graph500/src/out_a5700_bc1900_d10000_s2_3_n22_ef16 22 48 . reuse

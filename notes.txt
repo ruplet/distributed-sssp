@@ -116,3 +116,8 @@ ZLICZANIE:
 - number of relaxations, dla roznych DELTA, skale 28-30
 
 failing: graph500-scale-5_32_14
+Running: graph500-scale-5_32_11
+Running: graph500-scale-5_32_13
+
+bash -c 'for i in $(seq 0 13); do diff "outputs/${i}.out" "tests/graph500-scale-5_32_14/${i}.out"; done'
+

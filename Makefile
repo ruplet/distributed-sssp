@@ -123,7 +123,7 @@ graph500: $(SOLUTION_ZIP)
 	# -d $(TESTING_ENV_DIR) extracts files into this directory
 	unzip -q $(TESTING_ENV_DIR)/$(SOLUTION_ZIP) -d $(TESTING_ENV_DIR)
 
-	cd $(TESTING_ENV_DIR) && \
+	setenv TESTMAX 10200300400 ; cd $(TESTING_ENV_DIR) && \
 		sbatch sbatch_run_graph500.sh
 	# && \ echo "Waiting for edge splitter (PID=$$SPLITTER_PID) to finish..."
 
