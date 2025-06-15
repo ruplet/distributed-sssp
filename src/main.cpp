@@ -143,23 +143,27 @@ void relaxAllEdges(
     const BlockDistribution::Distribution &dist)
 {
     // --- Relaxation Step ---
-    for (auto u_global_id : activeSet)
-    {
-        auto u_dist = data.getDist(u_global_id);
-        {
-            std::stringstream ss;
-            ss << "Relaxing neighs of vertex: " << u_global_id << ". Dist of it:  " << u_dist;
-            DebugLogger::getInstance().log(ss.str());
-        }
-        if (u_dist == INF)
-        {
-            throw Fatal("We should have never entered the INF bucket!");
-        }
+    
+    std::vector<size_t> newActive;
+    // originally it was not a loop, but a single execution.
+    // my optimization: if a process owns newly activated vertices, proceed
+    while (!activeSet.empty()) {
+        // this should be related to delta, but nevermind
+        auto currentBucketBound = INF - 10;
 
-        std::vector<size_t> newActive;
-        // originally it was not a loop, but a single execution.
-        // my optimization: if a process owns newly activated vertices, proceed
-        while (!activeSet.empty()) {
+        for (auto u_global_id : activeSet)
+        {
+            auto u_dist = data.getDist(u_global_id);
+            {
+                std::stringstream ss;
+                ss << "Relaxing neighs of vertex: " << u_global_id << ". Dist of it:  " << u_dist;
+                DebugLogger::getInstance().log(ss.str());
+            }
+            if (u_dist == INF)
+            {
+                throw Fatal("We should have never entered the INF bucket!");
+            }
+
             data.forEachNeighbor(u_global_id, [&](size_t vGlobalIdx, long long w) {
                 auto potential_new_dist = u_dist + w;
 
@@ -186,12 +190,12 @@ void relaxAllEdges(
                     DebugLogger::getInstance().log(ss.str());
                 }
                 data.communicateRelax(potential_new_dist, ownerProcess, indexAtOwner);
-                if (ownerProcess == myRank) {
+                if (ownerProcess == myRank && data.getDist(vGlobalIdx) > currentBucketBound) {
                     newActive.push_back(vGlobalIdx);
                 }
             });
-            activeSet = newActive;
         }
+        activeSet = newActive;
     }
 }
 
