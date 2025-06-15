@@ -197,9 +197,9 @@ void relaxAllEdges(
                     auto prevDist = data.getDist(vGlobalIdx);
                     auto oldBucket = prevDist == INF ? INF : prevDist / delta_val;
                     auto newBucket = potential_new_dist / delta_val;
-                    DebugLogger::getInstance().force_log("Try short: " + std::to_string(vGlobalIdx) + " " + std::to_string(prevDist) + " " + std::to_string(oldBucket) + " " + std::to_string(newBucket) + " " + std::to_string(currentBucket) + " " + std::to_string(delta_val));
+                    // DebugLogger::getInstance().force_log("Try short: " + std::to_string(vGlobalIdx) + " " + std::to_string(prevDist) + " " + std::to_string(oldBucket) + " " + std::to_string(newBucket) + " " + std::to_string(currentBucket) + " " + std::to_string(delta_val));
                     if (oldBucket > currentBucket && newBucket == currentBucket) {
-                        DebugLogger::getInstance().force_log("Shortcut! " + std::to_string(vGlobalIdx));
+                        // DebugLogger::getInstance().force_log("Shortcut! " + std::to_string(vGlobalIdx));
                         data.updateDist(vGlobalIdx, potential_new_dist);
                         updateBucketInfo(buckets, vGlobalIdx, oldBucket, newBucket);
                         newActive.push_back(vGlobalIdx);
