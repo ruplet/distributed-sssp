@@ -504,6 +504,7 @@ void delta_stepping_algorithm(
 int main(int argc, char *argv[])
 {
     MPI_Init(&argc, &argv);
+    MPI_Comm_set_errhandler(MPI_COMM_WORLD, MPI_ERRORS_RETURN);
 
     // MPI_Win dist_window = MPI_WIN_NULL; // MPI Window for one-sided access to distances
     MPI_Comm_rank(MPI_COMM_WORLD, &myRank);

@@ -117,7 +117,7 @@ public:
 
     void fence()
     {
-        MPI_Win_flush_all(window);
+        // MPI_Win_flush_all(window);
         MPI_Win_fence(0, window);
     }
 
