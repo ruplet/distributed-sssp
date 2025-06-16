@@ -453,48 +453,36 @@ void delta_stepping_algorithm(
 
         if (!enable_ios)
         {
-            processBucket(buckets, currentK, data, dist, delta_val,
-                [&isInnerShort](size_t uGlobalIdx, size_t vGlobalIdx, long long weight) -> bool
-                {
+            processBucket(buckets, currentK, data, dist, delta_val, [&isInnerShort](size_t uGlobalIdx, size_t vGlobalIdx, long long weight) -> bool
+                          {
                             // here we assume the relaxation will always be made
                             if (isInnerShort(uGlobalIdx, vGlobalIdx, weight)) {
                                 relaxationsShort++;
                             } else {
                                 relaxationsLong++;
                             }
-                            return true;
-                },
-                enable_local_bypass
-            );
+                            return true; }, enable_local_bypass);
         }
         else
         {
             // SHORT PHASE; this will execute many iterations of the internal loop
-            processBucket(buckets, currentK, data, dist, delta_val,
-                [&isInnerShort](size_t uGlobalIdx, size_t vGlobalIdx, long long weight) -> bool
-                {
+            processBucket(buckets, currentK, data, dist, delta_val, [&isInnerShort](size_t uGlobalIdx, size_t vGlobalIdx, long long weight) -> bool
+                          {
                             // here we assume the relaxation will always be made
                             if (isInnerShort(uGlobalIdx, vGlobalIdx, weight)) {
                                 relaxationsShort++;
                                 return true;
                             }
-                            return false;
-                },
-                enable_local_bypass
-            );
+                            return false; }, enable_local_bypass);
             // LONG PHASE; this will be just a single iteration
-            processBucket(buckets, currentK, data, dist, delta_val,
-                [&isInnerShort](size_t uGlobalIdx, size_t vGlobalIdx, long long weight) -> bool
-                {
+            processBucket(buckets, currentK, data, dist, delta_val, [&isInnerShort](size_t uGlobalIdx, size_t vGlobalIdx, long long weight) -> bool
+                          {
                             // here we assume the relaxation will always be made
                             if (isInnerShort(uGlobalIdx, vGlobalIdx, weight)) {
                                 return false;
                             }
                             relaxationsLong++;
-                            return true;
-                },
-                enable_local_bypass
-            );
+                            return true; }, enable_local_bypass);
         }
         setActiveSet(buckets, currentK, {});
     } // end of while(true) epoch loop
@@ -662,7 +650,8 @@ int main(int argc, char *argv[])
     double start_time1 = MPI_Wtime();
     auto dataOpt = process_input_and_load_graph_from_stream(myRank, input_filename, assume_nomultiedge);
     double end_time1 = MPI_Wtime();
-    if (myRank == 0) std::cout << "Parsing data took: " << end_time1 - start_time1 << "s\n";
+    if (myRank == 0)
+        std::cout << "Parsing data took: " << end_time1 - start_time1 << "s\n";
 
     if (!dataOpt.has_value())
     {
@@ -732,15 +721,26 @@ int main(int argc, char *argv[])
     }
     MPI_Barrier(MPI_COMM_WORLD); // Ensure all processes done before anyone exits/prints final time
     double end_time = MPI_Wtime();
+
+    long long globalRelaxationsShort = 0;
+    long long globalRelaxationsLong = 0;
+    long long globalRelaxationsBypassed = 0;
+    long long globalTotalPhases = 0;
+
+    // Reduce (sum) the counters across all processes
+    MPI_Reduce(&relaxationsShort, &globalRelaxationsShort, 1, MPI_LONG_LONG, MPI_SUM, 0, MPI_COMM_WORLD);
+    MPI_Reduce(&relaxationsLong, &globalRelaxationsLong, 1, MPI_LONG_LONG, MPI_SUM, 0, MPI_COMM_WORLD);
+    MPI_Reduce(&relaxationsBypassed, &globalRelaxationsBypassed, 1, MPI_LONG_LONG, MPI_SUM, 0, MPI_COMM_WORLD);
+    MPI_Reduce(&totalPhases, &globalTotalPhases, 1, MPI_LONG_LONG, MPI_SUM, 0, MPI_COMM_WORLD);
+
     if (myRank == 0)
     {
         std::cout << "Delta-stepping (one-sided) finished.\n";
         std::cout << "Time: " << (end_time - start_time) << "s." << std::endl;
-        std::cout << "At barriers: " << timeAtBarrier << std::endl;
-        std::cout << "Short relaxations: " << relaxationsShort << std::endl;
-        std::cout << "from which bypassed: " << relaxationsBypassed << std::endl;
-        std::cout << "Long relaxations: " << relaxationsLong << std::endl;
-        std::cout << "Total phases: " << totalPhases << std::endl;
+        std::cout << "Short relaxations: " << globalRelaxationsShort << std::endl;
+        std::cout << "  from which bypassed: " << globalRelaxationsBypassed << std::endl;
+        std::cout << "Long relaxations: " << globalRelaxationsLong << std::endl;
+        std::cout << "Total phases: " << globalTotalPhases << std::endl;
     }
 
     for (size_t i = 0; i < data.getNResponsible(); ++i)

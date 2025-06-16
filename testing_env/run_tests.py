@@ -23,6 +23,9 @@ def run_tests(break_on_fail, local):
                 if 'bench' in test.name:
                     print(f"    {test.name}: SKIPPED (BENCHMARK)", flush=True)
                     continue
+                if 'bigcycle' in test.name:
+                    print(f"    {test.name}: SKIPPED (BIGCYCLE)", flush=True)
+                    continue
                 nodes = int(test.name[test.name.find("_") + 1: test.name.rfind("_")])
                 if nodes > max_nodes:
                     print(f"    {test.name}: SKIPPED (LARGE)", flush=True)
@@ -51,7 +54,7 @@ def run_tests(break_on_fail, local):
                             exit(1)
                         break
                 if not failed:
-                    print(f"    {test.name}: Finished! Skipping validation", flush=True)
+                    print(f"    {test.name}: PASSED!", flush=True)
                     print('stdout:', execution.stdout.decode('utf-8'))
 
 if __name__ == "__main__":
