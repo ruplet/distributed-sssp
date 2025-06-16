@@ -5,6 +5,7 @@ import threading
 import os
 import filecmp
 import sys
+import codecs
 
 TIMEOUT = 7200  # seconds
 test_max_str = os.getenv('TESTMAX')
