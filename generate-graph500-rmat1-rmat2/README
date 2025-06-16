@@ -7,11 +7,24 @@ in graph500/src, modify Makefile to set correct compiler (for Okeanos, "CC")
 copy run_graph500.sh from this folder to graph500/src
 
 then run:
-
+make
 bash run_graph500.sh
+
+it's fine when you timeout / oom / interrupt while validating the graph
+it's important for it to get created and saved to disk,
+validation can be interrupted (it takes a lot of time)
+
+to change from rmat1 to rmat2:
+look at run_graph500.sh,
+check which file in graph500 src you need to modify to change A, BC, D.
+change them both in graph500/generator and in run_graph500.sh
+rerun make!
+then you can generate graphs again
+
 
 make-connected.cpp is to be run in a test which has already been split
 (so a valid input to our original problem, folder with files 0.in, 1.in, ...)
 run it there with argument X denoting numbre of files
 
 it will create a cycle between all the nodes in the edge files.
+
