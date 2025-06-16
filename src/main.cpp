@@ -12,6 +12,20 @@
 #include "parse_data.hpp"
 #include "logger.hpp"
 
+#define MPI_CALL(call)                                                     \
+    do {                                                                   \
+        int err = (call);                                                  \
+        if (err != MPI_SUCCESS) {                                          \
+            char err_string[MPI_MAX_ERROR_STRING];                         \
+            int resultlen;                                                 \
+            MPI_Error_string(err, err_string, &resultlen);                 \
+            fprintf(stderr, "MPI error in %s at %s:%d: %s\n",              \
+                    #call, __FILE__, __LINE__, err_string);                \
+            MPI_Abort(MPI_COMM_WORLD, err);                                \
+        }                                                                  \
+    } while (0)
+
+
 enum class LoggingLevel
 {
     None,
@@ -68,7 +82,7 @@ bool anyoneHasWork(const std::vector<size_t> &activeSet)
     }
 
     int global_has_work = 0;
-    MPI_Allreduce(&local_has_work, &global_has_work, 1, MPI_INT, MPI_MAX, MPI_COMM_WORLD);
+    MPI_CALL(MPI_Allreduce(&local_has_work, &global_has_work, 1, MPI_INT, MPI_MAX, MPI_COMM_WORLD));
     if (global_has_work)
     {
         return true;
@@ -414,7 +428,7 @@ void delta_stepping_algorithm(
             localMinK = buckets.begin()->first;
         }
         long long currentK = INF;
-        MPI_Allreduce(&localMinK, &currentK, 1, MPI_LONG_LONG, MPI_MIN, MPI_COMM_WORLD);
+        MPI_CALL(MPI_Allreduce(&localMinK, &currentK, 1, MPI_LONG_LONG, MPI_MIN, MPI_COMM_WORLD));
 
         if (epochNo % progress_freq == 0)
         {
@@ -728,10 +742,10 @@ int main(int argc, char *argv[])
     long long globalTotalPhases = 0;
 
     // Reduce (sum) the counters across all processes
-    MPI_Reduce(&relaxationsShort, &globalRelaxationsShort, 1, MPI_LONG_LONG, MPI_SUM, 0, MPI_COMM_WORLD);
-    MPI_Reduce(&relaxationsLong, &globalRelaxationsLong, 1, MPI_LONG_LONG, MPI_SUM, 0, MPI_COMM_WORLD);
-    MPI_Reduce(&relaxationsBypassed, &globalRelaxationsBypassed, 1, MPI_LONG_LONG, MPI_SUM, 0, MPI_COMM_WORLD);
-    MPI_Reduce(&totalPhases, &globalTotalPhases, 1, MPI_LONG_LONG, MPI_SUM, 0, MPI_COMM_WORLD);
+    MPI_CALL(MPI_Reduce(&relaxationsShort, &globalRelaxationsShort, 1, MPI_LONG_LONG, MPI_SUM, 0, MPI_COMM_WORLD));
+    MPI_CALL(MPI_Reduce(&relaxationsLong, &globalRelaxationsLong, 1, MPI_LONG_LONG, MPI_SUM, 0, MPI_COMM_WORLD));
+    MPI_CALL(MPI_Reduce(&relaxationsBypassed, &globalRelaxationsBypassed, 1, MPI_LONG_LONG, MPI_SUM, 0, MPI_COMM_WORLD));
+    MPI_CALL(MPI_Reduce(&totalPhases, &globalTotalPhases, 1, MPI_LONG_LONG, MPI_SUM, 0, MPI_COMM_WORLD));
 
     if (myRank == 0)
     {

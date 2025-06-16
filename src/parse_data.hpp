@@ -14,6 +14,20 @@
 
 #include "logger.hpp"
 
+#define MPI_CALL(call)                                                     \
+    do {                                                                   \
+        int err = (call);                                                  \
+        if (err != MPI_SUCCESS) {                                          \
+            char err_string[MPI_MAX_ERROR_STRING];                         \
+            int resultlen;                                                 \
+            MPI_Error_string(err, err_string, &resultlen);                 \
+            fprintf(stderr, "MPI error in %s at %s:%d: %s\n",              \
+                    #call, __FILE__, __LINE__, err_string);                \
+            MPI_Abort(MPI_COMM_WORLD, err);                                \
+        }                                                                  \
+    } while (0)
+
+
 const long long INF = std::numeric_limits<long long>::max();
 
 class InvalidData : public std::runtime_error
@@ -118,32 +132,15 @@ public:
     void fence()
     {
         // MPI_Win_flush_all(window);
-        int err = MPI_Win_fence(0, window);
-        if (err != MPI_SUCCESS)
-        {
-            char err_string[MPI_MAX_ERROR_STRING];
-            int err_len;
-            MPI_Error_string(err, err_string, &err_len);
-            // std::cerr << "Rank : MPI_Win_fence failed: " << err_string << std::endl;
-            throw InvalidData(std::string("Rank : MPI_Win_fence failed: ") + err_string);
-        }
+        MPI_CALL(MPI_Win_fence(0, window));
     }
 
     void communicateRelax(long long newDistance, int ownerProcess, int ownerIndex)
     {
-        int err = MPI_Accumulate(
+        MPI_CALL(MPI_Accumulate(
             &newDistance, 1, MPI_LONG_LONG,
             ownerProcess, ownerIndex, 1, MPI_LONG_LONG,
-            MPI_MIN, window);
-
-        if (err != MPI_SUCCESS)
-        {
-            char err_string[MPI_MAX_ERROR_STRING];
-            int err_len;
-            MPI_Error_string(err, err_string, &err_len);
-            throw InvalidData(std::string("Rank ") +
-                              ": MPI_Accumulate failed: " + err_string);
-        }
+            MPI_MIN, window));
     }
 
     struct Update

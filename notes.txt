@@ -126,3 +126,7 @@ MAM KURWA DEADLOCK Z PIZDY JAKIS
 bash -c 'for f in testing_env/debug_log_*.txt; do echo -n "$f"; tail -n 1 "$f"; done' | sort | grep 'epoch: 2' | wc -l
 768
 
+
+
+TESTY wygenerowane:
+RMAT1: ef16, scale 10-29 incl.
