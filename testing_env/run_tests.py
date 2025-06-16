@@ -4,7 +4,7 @@ import subprocess
 import os
 import filecmp
 
-max_nodes = int(os.environ.get("TESTMAX", "30000"))
+max_nodes = int(os.environ.get("TESTMAX", "70000"))
 
 def run_tests(break_on_fail, local):
     Path("outputs").mkdir(parents=True, exist_ok=True)
@@ -51,7 +51,8 @@ def run_tests(break_on_fail, local):
                             exit(1)
                         break
                 if not failed:
-                    print(f"    {test.name}: PASSED", flush=True)
+                    print(f"    {test.name}: Finished! Skipping validation", flush=True)
+                    print('stdout:', execution.stdout.decode('utf-8'))
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Test runner')
