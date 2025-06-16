@@ -8,6 +8,9 @@ ALL : sssp_okeanos
 
 .PHONY: test clean_test_env local
 
+quota:
+	lfs quota -uh $$USER /lu/tetyda/home/
+
 watch:
 	tail -f testing_env/output.txt
 
