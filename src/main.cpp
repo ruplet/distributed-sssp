@@ -605,6 +605,8 @@ int main(int argc, char *argv[])
     }
 
     PROGRESSN("Starting to parse data!");
+    PROGRESSN("Log level: >= progress");
+    DEBUGN("Log level: >= debug");
 
     auto dataOpt = process_input_and_load_graph_from_stream(myRank, input_filename);
     if (!dataOpt.has_value())
