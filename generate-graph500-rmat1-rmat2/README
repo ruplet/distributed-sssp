@@ -1,1 +1,11 @@
 CC -O3 split.cpp -o split
+
+clone graph500 in this folder:
+https://github.com/graph500/graph500.git
+in graph500/src, modify Makefile to set correct compiler (for Okeanos, "CC")
+
+copy run_graph500.sh from this folder to graph500/src
+
+then run:
+
+bash run_graph500.sh
