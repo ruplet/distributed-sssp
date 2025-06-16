@@ -2,8 +2,8 @@
 #SBATCH --job-name sssp-tests
 #SBATCH --output output.txt
 #SBATCH --account "g101-2284"
-#SBATCH --ntasks-per-node 12
-#SBATCH --nodes 64
+#SBATCH --ntasks-per-node 24
+#SBATCH --nodes 32
 #SBATCH --time 00:12:00
 
 module load common/python/3.11
