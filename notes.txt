@@ -121,3 +121,8 @@ Running: graph500-scale-5_32_13
 
 bash -c 'for i in $(seq 0 13); do diff "outputs/${i}.out" "tests/graph500-scale-5_32_14/${i}.out"; done'
 
+
+MAM KURWA DEADLOCK Z PIZDY JAKIS
+bash -c 'for f in testing_env/debug_log_*.txt; do echo -n "$f"; tail -n 1 "$f"; done' | sort | grep 'epoch: 2' | wc -l
+768
+
