@@ -45,8 +45,8 @@ def run_tests(break_on_fail, local):
                 execution = subprocess.run([
                     command, "-n", str(workers),
                     "./test_command.sh", solution.name, test.name, "10000",
-                    # "--local-bypass",
-                    "--logging", "progress",
+                    "--local-bypass",
+                    "--logging", "debug",
                     ], capture_output=True, timeout=TIMEOUT)
                 if execution.returncode != 0:
                     print(f"    {test.name}: FAILED ({command})" + execution.stdout.decode('UTF-8') + "ERR:" + execution.stderr.decode('UTF-8'))
