@@ -14,21 +14,6 @@
 
 #include "logger.hpp"
 
-#define MPI_CALL(call)                                        \
-    do                                                        \
-    {                                                         \
-        int err = (call);                                     \
-        if (err != MPI_SUCCESS)                               \
-        {                                                     \
-            char err_string[MPI_MAX_ERROR_STRING];            \
-            int resultlen;                                    \
-            MPI_Error_string(err, err_string, &resultlen);    \
-            fprintf(stderr, "MPI error in %s at %s:%d: %s\n", \
-                    #call, __FILE__, __LINE__, err_string);   \
-            fflush(stderr);                                   \
-            MPI_Abort(MPI_COMM_WORLD, err);                   \
-        }                                                     \
-    } while (0)
 
 const long long INF = std::numeric_limits<long long>::max();
 

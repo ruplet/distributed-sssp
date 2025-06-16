@@ -43,13 +43,27 @@
         }                                                 \
     } while (0)
 
-#define ERROR(...)                                            \
-    do                                                        \
-    {                                                         \
-        append_to_stream(std::cerr, "ERROR", "(");            \
-        append_to_stream(std::cerr, __FILE__, ":", __LINE__); \
-        append_to_stream(std::cerr, ")", __VA_ARGS__);        \
-        std::cerr << std::endl;                               \
+#define ERROR(...)                                                                     \
+    do                                                                                 \
+    {                                                                                  \
+        if (true)                                                                      \
+        {                                                                              \
+            DebugLogger::getInstance().logn("ERROR", __FILE__, __LINE__, __VA_ARGS__); \
+        }                                                                              \
+    } while (0)
+
+#define MPI_CALL(call)                                      \
+    do                                                      \
+    {                                                       \
+        int err = (call);                                   \
+        if (err != MPI_SUCCESS)                             \
+        {                                                   \
+            char err_string[MPI_MAX_ERROR_STRING];          \
+            int resultlen;                                  \
+            MPI_Error_string(err, err_string, &resultlen);  \
+            ERROR("MPI ERROR in ", #call, ":", err_string); \
+            MPI_Abort(MPI_COMM_WORLD, err);                 \
+        }                                                   \
     } while (0)
 
 template <typename T>
