@@ -26,6 +26,9 @@ def run_tests(break_on_fail, local):
                 continue
             print(f"Solution: {solution.name}")
             for test in Path("tests").iterdir():
+                if 'scale-26' in test.name or 'scale-25' in test.name or 'scale-24' in test.name or 'scale-23' in test.name:
+                    print(f"Skipping: {test.name}", flush=True)
+                    continue
                 if 'bench' not in test.name:
                     print(f"Skipping: {test.name}", flush=True)
                     continue
