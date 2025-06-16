@@ -71,24 +71,24 @@
 . .venv/bin/activate && python gen.py --arity 2 --height 10 --num-procs 5 --edge-factor 15
 . .venv/bin/activate && python gen.py --arity 2 --height 10 --num-procs 5 --edge-factor 16
 
-. .venv/bin/activate && python gen.py --arity 3 --height 9 --num-procs 48 --edge-factor 10 --seed 40
-. .venv/bin/activate && python gen.py --arity 3 --height 9 --num-procs 48 --edge-factor 10 --seed 41
-. .venv/bin/activate && python gen.py --arity 3 --height 9 --num-procs 48 --edge-factor 10 --seed 42
-. .venv/bin/activate && python gen.py --arity 3 --height 9 --num-procs 48 --edge-factor 10 --seed 43
-. .venv/bin/activate && python gen.py --arity 3 --height 9 --num-procs 48 --edge-factor 10 --seed 44
-. .venv/bin/activate && python gen.py --arity 3 --height 9 --num-procs 48 --edge-factor 10 --seed 45
-. .venv/bin/activate && python gen.py --arity 3 --height 9 --num-procs 48 --edge-factor 10 --seed 46
-. .venv/bin/activate && python gen.py --arity 3 --height 9 --num-procs 48 --edge-factor 10 --seed 47
-. .venv/bin/activate && python gen.py --arity 3 --height 9 --num-procs 48 --edge-factor 10 --seed 48
-. .venv/bin/activate && python gen.py --arity 3 --height 9 --num-procs 48 --edge-factor 10 --seed 49
+. .venv/bin/activate && python gen.py --arity 3 --height 9 --num-procs 768 --edge-factor 10 --seed 40
+. .venv/bin/activate && python gen.py --arity 3 --height 9 --num-procs 768 --edge-factor 10 --seed 41
+. .venv/bin/activate && python gen.py --arity 3 --height 9 --num-procs 768 --edge-factor 10 --seed 42
+. .venv/bin/activate && python gen.py --arity 3 --height 9 --num-procs 768 --edge-factor 10 --seed 43
+. .venv/bin/activate && python gen.py --arity 3 --height 9 --num-procs 768 --edge-factor 10 --seed 44
+. .venv/bin/activate && python gen.py --arity 3 --height 9 --num-procs 768 --edge-factor 10 --seed 45
+. .venv/bin/activate && python gen.py --arity 3 --height 9 --num-procs 768 --edge-factor 10 --seed 46
+. .venv/bin/activate && python gen.py --arity 3 --height 9 --num-procs 768 --edge-factor 10 --seed 47
+. .venv/bin/activate && python gen.py --arity 3 --height 9 --num-procs 768 --edge-factor 10 --seed 48
+. .venv/bin/activate && python gen.py --arity 3 --height 9 --num-procs 768 --edge-factor 10 --seed 49
 
-. .venv/bin/activate && python gen.py --arity 2 --height 15 --num-procs 48 --edge-factor 2 --seed 40
-. .venv/bin/activate && python gen.py --arity 2 --height 15 --num-procs 48 --edge-factor 2 --seed 41
-. .venv/bin/activate && python gen.py --arity 2 --height 15 --num-procs 48 --edge-factor 2 --seed 42
-. .venv/bin/activate && python gen.py --arity 2 --height 15 --num-procs 48 --edge-factor 2 --seed 43
-. .venv/bin/activate && python gen.py --arity 2 --height 15 --num-procs 48 --edge-factor 2 --seed 44
-. .venv/bin/activate && python gen.py --arity 2 --height 15 --num-procs 48 --edge-factor 2 --seed 45
-. .venv/bin/activate && python gen.py --arity 2 --height 15 --num-procs 48 --edge-factor 2 --seed 46
-. .venv/bin/activate && python gen.py --arity 2 --height 15 --num-procs 48 --edge-factor 2 --seed 47
-. .venv/bin/activate && python gen.py --arity 2 --height 15 --num-procs 48 --edge-factor 2 --seed 48
-. .venv/bin/activate && python gen.py --arity 2 --height 15 --num-procs 48 --edge-factor 2 --seed 49
+. .venv/bin/activate && python gen.py --arity 2 --height 15 --num-procs 768 --edge-factor 2 --seed 40
+. .venv/bin/activate && python gen.py --arity 2 --height 15 --num-procs 768 --edge-factor 2 --seed 41
+. .venv/bin/activate && python gen.py --arity 2 --height 15 --num-procs 768 --edge-factor 2 --seed 42
+. .venv/bin/activate && python gen.py --arity 2 --height 15 --num-procs 768 --edge-factor 2 --seed 43
+. .venv/bin/activate && python gen.py --arity 2 --height 15 --num-procs 768 --edge-factor 2 --seed 44
+. .venv/bin/activate && python gen.py --arity 2 --height 15 --num-procs 768 --edge-factor 2 --seed 45
+. .venv/bin/activate && python gen.py --arity 2 --height 15 --num-procs 768 --edge-factor 2 --seed 46
+. .venv/bin/activate && python gen.py --arity 2 --height 15 --num-procs 768 --edge-factor 2 --seed 47
+. .venv/bin/activate && python gen.py --arity 2 --height 15 --num-procs 768 --edge-factor 2 --seed 48
+. .venv/bin/activate && python gen.py --arity 2 --height 15 --num-procs 768 --edge-factor 2 --seed 49
