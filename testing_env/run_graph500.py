@@ -52,7 +52,7 @@ def run_tests(break_on_fail, local):
                 if execution.returncode != 0:
                     print(f"    {test.name}: FAILED ({command})" + execution.stdout.decode('UTF-8') + "ERR:" + execution.stderr.decode('UTF-8'))
                     if break_on_fail:
-                        print(execution.stdout)
+                        print(execution.stdout.decode('utf-8'))
                         exit(1)
                     continue
                 failed = False
