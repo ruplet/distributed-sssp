@@ -2,7 +2,7 @@
 #SBATCH --job-name sssp-tests
 #SBATCH --output output.txt
 #SBATCH --account "g101-2284"
-#SBATCH --ntasks-per-node 24
+#SBATCH --ntasks-per-node 12
 #SBATCH --nodes 64
 #SBATCH --time 00:08:00
 

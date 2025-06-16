@@ -278,6 +278,8 @@ void processBucket(
             break;
         }
         // We now know that at least one process has work, so ALL processes must participate in the phase.
+        totalPhases++;
+        phaseNo++;
 
         {
             DEBUG("Process", myRank, "starting phase", phaseNo, "for k=", currentK);
@@ -737,6 +739,7 @@ int main(int argc, char *argv[])
         std::cout << "Short relaxations: " << relaxationsShort << std::endl;
         std::cout << "from which bypassed: " << relaxationsBypassed << std::endl;
         std::cout << "Long relaxations: " << relaxationsLong << std::endl;
+        std::cout << "Total phases: " << totalPhases << std::endl;
     }
 
     for (size_t i = 0; i < data.getNResponsible(); ++i)
