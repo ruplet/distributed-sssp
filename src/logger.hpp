@@ -84,6 +84,7 @@ public:
             if (!log_file.is_open())
             {
                 log_file.open(filename);
+                log_file << std::unitbuf;
             }
         }
     }
