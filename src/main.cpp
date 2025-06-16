@@ -665,6 +665,7 @@ int main(int argc, char *argv[])
     DEBUGN("Log level: >= debug");
     std::cout.setf(std::ios::unitbuf); // auto-flush std::cout
     std::cerr.setf(std::ios::unitbuf); // auto-flush std::cerr
+    std::cerr << "std::cerr test";
 
     double start_time1 = MPI_Wtime();
     auto dataOpt = process_input_and_load_graph_from_stream(myRank, input_filename, assume_nomultiedge);
