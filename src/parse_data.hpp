@@ -131,6 +131,12 @@ public:
         std::memcpy(winMemory, distToRoot.data(), winSize);
     }
 
+    void fence_start()
+    {
+        // MPI_Win_flush_all(window);
+        MPI_CALL(MPI_Win_fence(0, window));
+    }
+
     void fence()
     {
         // MPI_Win_flush_all(window);
