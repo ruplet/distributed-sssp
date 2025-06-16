@@ -100,3 +100,16 @@ for scale 22 it's 3s
 for scale 23 it's 8s
 for scale 26 it's 40s
 
+
+
+Graph500:
+
+ta biblioteka zwraca 48 bitów per node-id.
+ale tylko <SCALE> dolnych bitów jest ważna!
+
+dla scale=9, powinno byc 512 nodeow.
+node_ids = sorted(set(int.from_bytes(x, byteorder='little') & 0x1ff  for e in es for x in e))
+len(set(node_ids)) == 294
+jest mniej, bo niektore wierzcholki nie dostaly zadnej krawedzi po prostu
+
+

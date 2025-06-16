@@ -36,6 +36,16 @@ a random `n`-ary tree, to which we then add random edges between any two existin
 These are the "nicest" tests we present here, as they contain no self-loops, no multi-edges,
 are connected and have a very well-defined number of vertices and edges.
 
-## 
+
+## Hardware
+
+At ICM, Okeanos has 1084 computational nodes.
+It is Cray XC40 with Cray Aries network with dragonfly topology.
+Each node has 24 cores (2x 12-core Intel Xeon E5-2690 v3 Haswell) and 128GB of RAM
+hyperthreading x2 possible
+lustre file system
+suse linux enterprise server os
+slurm queue system
+
 
 
