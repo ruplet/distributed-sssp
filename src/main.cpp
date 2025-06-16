@@ -661,7 +661,7 @@ int main(int argc, char *argv[])
     double start_time1 = MPI_Wtime();
     auto dataOpt = process_input_and_load_graph_from_stream(myRank, input_filename, assume_nomultiedge);
     double end_time1 = MPI_Wtime();
-    std::cout << "Parsing data took: " << end_time1 - start_time1 << "s\n";
+    if (myRank == 0) std::cout << "Parsing data took: " << end_time1 - start_time1 << "s\n";
 
     if (!dataOpt.has_value())
     {
