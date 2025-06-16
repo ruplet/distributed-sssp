@@ -18,46 +18,56 @@ else:
 
 def read_stream(pipe, output_list, prefix="", chunk_size=1, encoding='utf-8'):
     """
-    Reads bytes from a pipe, decodes them, and processes them line by line.
-    Handles cases where lines might not end with a newline by accumulating
-    characters until a newline is found or the stream ends.
-    Prints each line/chunk to the console immediately with a prefix.
+    Reads bytes from a pipe, decodes them, and prints them immediately as they arrive.
+    Also reconstructs lines for storage. This ensures the most real-time feedback
+    for non-newline-terminated output, potentially printing character-by-character
+    if chunk_size is small.
     """
     decoder = codecs.getincrementaldecoder(encoding)()
-    current_line_buffer = "" # Buffer to accumulate characters until a newline
+    current_line_buffer = "" # Buffer to reconstruct full lines for output_list
 
     while True:
-        # Read a small chunk of bytes from the pipe
-        byte_chunk = pipe.read(chunk_size)
+        try:
+            # Read a small chunk of bytes from the pipe
+            byte_chunk = pipe.read(chunk_size)
+        except ValueError: # Handle I/O operation on closed pipe (can happen during termination)
+            break
+        except Exception as e:
+            print(f"Error reading from pipe: {e}", file=sys.stderr)
+            break
+
         if not byte_chunk: # End-of-file (EOF) reached
             break
 
         # Decode the bytes into a string
         decoded_chunk = decoder.decode(byte_chunk)
+
+        # CRUCIAL CHANGE: Print the decoded chunk immediately without waiting for a newline.
+        # Use end='' to prevent 'print' from adding its own newline,
+        # ensuring output appears exactly as received.
+        print(f"{prefix}{decoded_chunk}", end='', flush=True)
+
+        # Add the decoded chunk to the buffer for full line reconstruction for `output_list`
         current_line_buffer += decoded_chunk
 
-        # Process any complete lines in the buffer
-        # `partition('\n')` splits at the first newline, returning (before, newline, after)
+        # Process any complete lines in the buffer for the `output_list`
+        # This ensures that `output_list` contains logical lines,
+        # even if they were printed as smaller chunks.
         while '\n' in current_line_buffer:
+            # partition('\n') splits at the first newline, returning (before, newline, after)
             line, _, current_line_buffer = current_line_buffer.partition('\n')
-            full_line_to_print = line + '\n' # Re-add newline for consistent printing and storage
-            print(f"{prefix}{full_line_to_print.strip()}", flush=True)
-            output_list.append(full_line_to_print)
-
-        # Heuristic: If the buffer grows too large without a newline, print it
-        # This prevents very long lines without newlines from being delayed indefinitely.
-        # Adjust the threshold (e.g., 256) as needed based on expected output characteristics.
-        if len(current_line_buffer) > 256:
-            print(f"{prefix}{current_line_buffer.strip()}", flush=True)
-            output_list.append(current_line_buffer)
-            current_line_buffer = "" # Clear the buffer after printing
+            output_list.append(line + '\n') # Store the full line including the newline
 
     # After the loop, if there's any remaining content in the buffer (no trailing newline at EOF)
+    # This content has already been printed chunk by chunk. We just append it to the output_list
+    # for completeness, representing a final, potentially incomplete line.
     if current_line_buffer:
-        print(f"{prefix}{current_line_buffer.strip()}", flush=True)
         output_list.append(current_line_buffer)
 
-    pipe.close() # Close the pipe when done reading all content
+    try:
+        pipe.close() # Close the pipe when done reading all content
+    except Exception as e:
+        print(f"Error closing pipe: {e}", file=sys.stderr)
 
 def run_tests(break_on_fail, local):
     """
