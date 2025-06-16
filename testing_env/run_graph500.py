@@ -42,12 +42,16 @@ def run_tests(break_on_fail, local):
                     command = "mpiexec"
                 else:
                     command = "srun"
-                execution = subprocess.run([
+                
+                cmd = [
                     command, "-n", str(workers),
-                    "./test_command.sh", solution.name, test.name, "10000",
+                    "./test_command.sh", solution.name, test.name, "40",
+                    "--no-ios",
                     "--nolocal-bypass",
-                    "--logging", "debug",
-                    ], capture_output=True, timeout=TIMEOUT)
+                    "--logging", "progress",
+                    ]
+                execution = subprocess.run(cmd, capture_output=True, timeout=TIMEOUT)
+                print('Executing:', ' '.join(cmd))
                 if execution.returncode != 0:
                     print(f"    {test.name}: FAILED ({command})" + execution.stdout.decode('UTF-8') + "ERR:" + execution.stderr.decode('UTF-8'))
                     if break_on_fail:
