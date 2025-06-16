@@ -9,3 +9,9 @@ copy run_graph500.sh from this folder to graph500/src
 then run:
 
 bash run_graph500.sh
+
+make-connected.cpp is to be run in a test which has already been split
+(so a valid input to our original problem, folder with files 0.in, 1.in, ...)
+run it there with argument X denoting numbre of files
+
+it will create a cycle between all the nodes in the edge files.
