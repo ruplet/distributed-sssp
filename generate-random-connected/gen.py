@@ -202,6 +202,9 @@ if __name__ == "__main__":
     parser.add_argument('--edge-factor', type=int, default=2,
                         help="Average number of edges per node.")
 
+    parser.add_argument('--skip-validation', action='store_false', dest='validation',
+                        help="Skip producing reference values by nx.Dijkstra.")
+
     args = parser.parse_args()
 
     random.seed(args.seed)
@@ -211,6 +214,7 @@ if __name__ == "__main__":
     TREE_ARITY = args.arity
     TREE_HEIGHT = args.height
     NUM_PROCESSES = args.num_procs
+    VALIDATION = args.validation  # True unless --skip-validation is passed
     
     # Calculate the total number of vertices based on the tree parameters
     NUM_VERTICES = calculate_num_vertices_from_tree(TREE_ARITY, TREE_HEIGHT)
@@ -249,7 +253,7 @@ if __name__ == "__main__":
     print(f"Calculating shortest paths from root node {ROOT_NODE} using NetworkX...")
     
     # Calculate shortest paths using NetworkX's Dijkstra
-    shortest_paths_serial = dijkstra_nx(graph, ROOT_NODE)
+    shortest_paths_serial = dijkstra_nx(graph, ROOT_NODE) if VALIDATION else {node: 0 for node in graph.nodes}
     
     print(f"\nShortest path lengths from root node {ROOT_NODE} (serial Dijkstra):")
     # Print distances, sorted by node ID for readability
