@@ -238,7 +238,6 @@ void relaxAllEdges(
             auto potential_new_dist = u_dist + w;
 
             if (!edgeConsidered(u_global_id, vGlobalIdx, w)) {
-                ERROR("FATAL");
                 DEBUGN("Skipping relaxation of", u_global_id, vGlobalIdx, "as is not relevant");
                 return;
             }
