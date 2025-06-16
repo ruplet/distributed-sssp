@@ -29,7 +29,6 @@ unsigned long long int relaxationsShort = 0;
 unsigned long long int relaxationsLong = 0;
 std::vector<unsigned long long int> nRelaxationsInPhase;
 
-
 class VertexOwnershipException : public std::runtime_error
 {
 public:
@@ -214,7 +213,7 @@ void relaxAllEdgesLocalBypass(
 }
 
 void relaxAllEdges(
-    const std::vector<size_t>& activeSet,
+    const std::vector<size_t> &activeSet,
     const std::function<bool(size_t, size_t, long long)> &edgeConsidered,
     Data &data,
     const BlockDistribution::Distribution &dist)
@@ -229,7 +228,8 @@ void relaxAllEdges(
             throw Fatal("We should have never entered the INF bucket!");
         }
 
-        data.forEachNeighbor(u_global_id, [&](size_t vGlobalIdx, long long w) {
+        data.forEachNeighbor(u_global_id, [&](size_t vGlobalIdx, long long w)
+                             {
             auto potential_new_dist = u_dist + w;
 
             if (!edgeConsidered(u_global_id, vGlobalIdx, w)) {
@@ -272,27 +272,23 @@ void processBucket(
         // If the global sum is 0, NO process has work for 'currentK'. ALL break the phase loop.
         if (!anyoneHasWork(activeSet))
         {
-            std::stringstream ss;
-            ss << "Process " << myRank << " no more work for k=" << currentK;
-            DEBUGN(ss.str());
+            DEBUGN("Process", myRank, "no more work for k=", currentK);
             break;
         }
         // We now know that at least one process has work, so ALL processes must participate in the phase.
 
         {
-            std::stringstream ss;
-            ss << "Process " << myRank << " starting phase " << phaseNo << " for k=" << currentK;
-            ss << ". Active vertices: [";
+            DEBUG("Process", myRank, "starting phase", phaseNo, "for k=", currentK);
+            DEBUG(". Active vertices: [");
             if (!activeSet.empty() && activeSet.size() < 1000)
             {
-                ss << activeSet[0];
+                DEBUG(activeSet[0]);
                 for (auto it = activeSet.begin() + 1; it != activeSet.end(); ++it)
                 {
-                    ss << ", " << *it;
+                    DEBUG(",", *it);
                 }
             }
-            ss << "]";
-            DEBUGN(ss.str());
+            DEBUGN("]");
         }
 
         // FENCE 1
@@ -301,9 +297,12 @@ void processBucket(
         data.fence();
         DEBUGN("FENCE SYNC 1: done! Performing relaxations...");
 
-        if (enable_local_bypass) {
+        if (enable_local_bypass)
+        {
             relaxAllEdgesLocalBypass(activeSet, edgeConsidered, data, dist, buckets, delta_val);
-        } else {
+        }
+        else
+        {
             relaxAllEdges(activeSet, edgeConsidered, data, dist);
         }
 
@@ -321,12 +320,7 @@ void processBucket(
             auto vGlobalIdx = update.vGlobalIdx;
             auto prevDist = update.prevDist;
             auto newDist = update.newDist;
-            {
-                std::stringstream ss;
-                ss << "Update registered: " << vGlobalIdx
-                   << "changed from " << prevDist << " to " << newDist;
-                DEBUGN(ss.str());
-            }
+            DEBUGN("Update registered:", vGlobalIdx, "changed from", prevDist, "to", newDist);
 
             auto oldBucket = prevDist == INF ? INF : prevDist / delta_val;
             auto newBucket = newDist / delta_val;
@@ -335,30 +329,22 @@ void processBucket(
 
             if (newBucket == currentK)
             {
-                {
-                    std::stringstream ss;
-                    ss << "New active node: " << vGlobalIdx;
-                    DEBUGN(ss.str());
-                }
+                DEBUGN("New active node:", vGlobalIdx);
                 activeSet.push_back(vGlobalIdx);
             }
         }
         DEBUGN("updates: done!");
+        DEBUG("Finishing phase. Updates processed.");
+        DEBUG(" Active vertices: [");
+        if (!activeSet.empty())
         {
-            std::stringstream ss;
-            ss << "Finishing phase. Updates processed.";
-            ss << " Active vertices: [";
-            if (!activeSet.empty())
+            DEBUG(activeSet[0]);
+            for (auto it = activeSet.begin() + 1; it != activeSet.end(); ++it)
             {
-                ss << activeSet[0];
-                for (auto it = activeSet.begin() + 1; it != activeSet.end(); ++it)
-                {
-                    ss << ", " << *it;
-                }
+                DEBUG(",", *it);
             }
-            ss << "]";
-            DEBUGN(ss.str());
         }
+        DEBUGN("]");
     } // end of while(true) phase loop
 }
 
@@ -377,26 +363,22 @@ void delta_stepping_algorithm(
     (void)enable_hybridization;
     std::map<long long, std::vector<size_t>> buckets;
 
+    DEBUGN("Process", myRank, "processing", data.getNResponsible(), "vertices!");
+    if (data.getNResponsible() < 1000)
     {
-        std::stringstream ss;
-        ss << "Process " << myRank << " processing " << data.getNResponsible() << " vertices!";
-
-        if (data.getNResponsible() < 1000)
+        for (size_t localVertexId = 0; localVertexId < data.getNResponsible(); ++localVertexId)
         {
-            for (size_t localVertexId = 0; localVertexId < data.getNResponsible(); ++localVertexId)
+            auto owned = data.getFirstResponsibleGlobalIdx() + localVertexId;
+            DEBUG("\nVertex:", owned, "neighbours: [");
+            auto curNeighs = data.getNeigh()[localVertexId];
+            for (size_t i = 0; i < curNeighs.size(); ++i)
             {
-                auto owned = data.getFirstResponsibleGlobalIdx() + localVertexId;
-                ss << "\nVertex: " << owned << " neighbours: [";
-                auto curNeighs = data.getNeigh()[localVertexId];
-                for (size_t i = 0; i < curNeighs.size(); ++i)
-                {
-                    ss << curNeighs[i].first << "(@" << curNeighs[i].second << "), ";
-                }
-                ss << "]";
+                DEBUG(curNeighs[i].first, "(@", curNeighs[i].second, "), ");
             }
+            DEBUG("]");
         }
-        DEBUGN(ss.str());
     }
+    DEBUGN("");
 
     if (data.isOwned(root_rt_global_id))
     {
@@ -643,8 +625,8 @@ int main(int argc, char *argv[])
     if (distNResp != data.getNResponsible())
     {
         ERROR("Rank", myRank,
-            ": mismatch in number of vertices owned by process: ",
-            distNResp, "!=", data.getNResponsible());
+              ": mismatch in number of vertices owned by process: ",
+              distNResp, "!=", data.getNResponsible());
         MPI_Abort(MPI_COMM_WORLD, 1);
         return 1;
     }
@@ -661,7 +643,7 @@ int main(int argc, char *argv[])
     if (respProcFst != myRank || respProcLst != myRank)
     {
         ERROR("Rank", myRank, ": mismatch in owner of vertices: ",
-            respProcFst, "or", respProcLst, "!=", myRank);
+              respProcFst, "or", respProcLst, "!=", myRank);
         MPI_Abort(MPI_COMM_WORLD, 1);
         return 1;
     }
@@ -680,8 +662,8 @@ int main(int argc, char *argv[])
     try
     {
         delta_stepping_algorithm(data, dist, 0, delta_param, progress_freq,
-            enable_ios_optimizations, enable_pruning, enable_local_bypass,
-        enable_hybridization);
+                                 enable_ios_optimizations, enable_pruning, enable_local_bypass,
+                                 enable_hybridization);
     }
     catch (Fatal &ex)
     {
