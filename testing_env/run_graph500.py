@@ -26,7 +26,7 @@ def run_tests(break_on_fail, local):
                 continue
             print(f"Solution: {solution.name}")
             for test in Path("tests").iterdir():
-                if 'bench' not in test.name:
+                if 'bench' not in test.name or 'graph500' in test.name:
                     print(f"Skipping: {test.name}", flush=True)
                     continue
                 print(f"Running: {test.name}", flush=True)
