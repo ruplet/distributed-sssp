@@ -5,7 +5,8 @@
 
 std::optional<Data> process_input_and_load_graph_from_stream(
     int myRank,
-    const std::string& input_filename
+    const std::string& input_filename,
+    bool assume_nomultiedge
 ) {
     std::ifstream instream(input_filename);
     if (!instream.is_open()) {
@@ -56,7 +57,10 @@ std::optional<Data> process_input_and_load_graph_from_stream(
                 std::cerr << "Rank " << myRank << ": Fail parse edge" << std::endl;
                 return {};
             }
-            data.addEdge(u, v, weight);
+            data.addEdgeFast(u, v, weight);
+        }
+        if (!assume_nomultiedge) {
+            data.trimMultiEdges();
         }
 
         return data;

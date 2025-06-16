@@ -25,9 +25,10 @@ const int DEFAULT_PROGESS_FREQ = 10;
 LoggingLevel logging_level = LoggingLevel::Progress;
 int myRank, nProcessorsGlobal;
 unsigned long long int totalPhases = 0;
+unsigned long long int relaxationsBypassed = 0;
 unsigned long long int relaxationsShort = 0;
 unsigned long long int relaxationsLong = 0;
-std::vector<unsigned long long int> nRelaxationsInPhase;
+double timeAtBarrier = 0;
 
 class VertexOwnershipException : public std::runtime_error
 {
@@ -201,6 +202,7 @@ void relaxAllEdgesLocalBypass(
                     DEBUGN("Try short:", vGlobalIdx, prevDist, oldBucket, newBucket, currentBucket, delta_val);
                     if (oldBucket > currentBucket && newBucket == currentBucket) {
                         DEBUGN("Shortcut!", vGlobalIdx);
+                        relaxationsBypassed++;
                         data.updateDist(vGlobalIdx, potential_new_dist);
                         updateBucketInfo(buckets, vGlobalIdx, oldBucket, newBucket);
                         newActive.push_back(vGlobalIdx);
@@ -292,10 +294,15 @@ void processBucket(
         }
 
         // FENCE 1
-        DEBUGN("FENCE SYNC 1: waiting...");
-        data.syncWindowToActual();
-        data.fence();
-        DEBUGN("FENCE SYNC 1: done! Performing relaxations...");
+        {
+            DEBUGN("FENCE SYNC 1: waiting...");
+            data.syncWindowToActual();
+            double start = MPI_Wtime();
+            data.fence();
+            double end = MPI_Wtime();
+            timeAtBarrier += end - start;
+            DEBUGN("FENCE SYNC 1: done! Performing relaxations...");
+        }
 
         if (enable_local_bypass)
         {
@@ -307,9 +314,14 @@ void processBucket(
         }
 
         // --- FENCE 2 ---
-        DEBUGN("FENCE SYNC 2: waiting...");
-        data.fence();
-        DEBUGN("FENCE SYNC 2: done!");
+        {
+            DEBUGN("FENCE SYNC 2: waiting...");
+            double start = MPI_Wtime();
+            data.fence();
+            double end = MPI_Wtime();
+            timeAtBarrier += end - start;
+            DEBUGN("FENCE SYNC 2: done!");
+        }
 
         // we will only preserve updates vertices
         activeSet.clear();
@@ -430,27 +442,57 @@ void delta_stepping_algorithm(
             break;
         }
 
+        auto isInnerShort = [&data, delta_val, currentK](size_t uGlobalIdx, [[maybe_unused]] size_t vGlobalIdx, long long weight) -> bool
+        {
+            auto u_dist = data.getDist(uGlobalIdx);
+            auto potential_new_dist = u_dist + weight;
+            return weight < delta_val && potential_new_dist <= (currentK + 1) * delta_val - 1;
+        };
+
         if (!enable_ios)
         {
-            processBucket(buckets, currentK, data, dist, delta_val, [](size_t, size_t, long long) -> bool
-                          { return true; }, enable_local_bypass);
+            processBucket(buckets, currentK, data, dist, delta_val,
+                [&isInnerShort](size_t uGlobalIdx, size_t vGlobalIdx, long long weight) -> bool
+                {
+                            // here we assume the relaxation will always be made
+                            if (isInnerShort(uGlobalIdx, vGlobalIdx, weight)) {
+                                relaxationsShort++;
+                            } else {
+                                relaxationsLong++;
+                            }
+                            return true;
+                },
+                enable_local_bypass
+            );
         }
         else
         {
-            auto isInnerShort = [&data, delta_val, currentK](size_t uGlobalIdx, [[maybe_unused]] size_t vGlobalIdx, long long weight) -> bool
-            {
-                auto u_dist = data.getDist(uGlobalIdx);
-                auto potential_new_dist = u_dist + weight;
-                return weight < delta_val && potential_new_dist <= (currentK + 1) * delta_val - 1;
-            };
-
-            auto isNotInnerShort = [&isInnerShort](size_t uGlobalIdx, size_t vGlobalIdx, long long weight) -> bool
-            {
-                return !isInnerShort(uGlobalIdx, vGlobalIdx, weight);
-            };
-
-            processBucket(buckets, currentK, data, dist, delta_val, isInnerShort, enable_local_bypass);
-            processBucket(buckets, currentK, data, dist, delta_val, isNotInnerShort, enable_local_bypass);
+            // SHORT PHASE; this will execute many iterations of the internal loop
+            processBucket(buckets, currentK, data, dist, delta_val,
+                [&isInnerShort](size_t uGlobalIdx, size_t vGlobalIdx, long long weight) -> bool
+                {
+                            // here we assume the relaxation will always be made
+                            if (isInnerShort(uGlobalIdx, vGlobalIdx, weight)) {
+                                relaxationsShort++;
+                                return true;
+                            }
+                            return false;
+                },
+                enable_local_bypass
+            );
+            // LONG PHASE; this will be just a single iteration
+            processBucket(buckets, currentK, data, dist, delta_val,
+                [&isInnerShort](size_t uGlobalIdx, size_t vGlobalIdx, long long weight) -> bool
+                {
+                            // here we assume the relaxation will always be made
+                            if (isInnerShort(uGlobalIdx, vGlobalIdx, weight)) {
+                                return false;
+                            }
+                            relaxationsLong++;
+                            return true;
+                },
+                enable_local_bypass
+            );
         }
         setActiveSet(buckets, currentK, {});
     } // end of while(true) epoch loop
@@ -484,6 +526,7 @@ int main(int argc, char *argv[])
             std::cerr << "  --pruning / --nopruning  Enable or disable pruning optimization (default: enabled)\n";
             std::cerr << "  --local-bypass / --nolocal-bypass  Enable or disable dynamically adding just relaxed nodes to active set inside one processor (default: enabled)\n";
             std::cerr << "  --hybrid / --nohybrid    Enable or disable hybridization optimization (default: enabled)\n";
+            std::cerr << "  --assume-nomultiedge     Skip removing multi-edges from the input graph (default: disabled)\n";
             std::cerr << "  --logging <level>        Set logging level: none | progress | debug (default: progress)\n";
             std::cerr << "  --progress-freq <int>    Report progress once every N epochs (default: 10)\n";
             std::cerr << std::endl;
@@ -509,6 +552,7 @@ int main(int argc, char *argv[])
     bool enable_pruning = true;
     bool enable_local_bypass = true;
     bool enable_hybridization = true;
+    bool assume_nomultiedge = false;
 
     int progress_freq = DEFAULT_PROGESS_FREQ;
 
@@ -547,6 +591,10 @@ int main(int argc, char *argv[])
         else if (arg == "--nohybrid")
         {
             enable_hybridization = false;
+        }
+        else if (arg == "--assume-nomultiedge")
+        {
+            assume_nomultiedge = true;
         }
         else if (arg == "--logging")
         {
@@ -608,7 +656,11 @@ int main(int argc, char *argv[])
     PROGRESSN("Log level: >= progress");
     DEBUGN("Log level: >= debug");
 
-    auto dataOpt = process_input_and_load_graph_from_stream(myRank, input_filename);
+    double start_time1 = MPI_Wtime();
+    auto dataOpt = process_input_and_load_graph_from_stream(myRank, input_filename, assume_nomultiedge);
+    double end_time1 = MPI_Wtime();
+    std::cout << "Parsing data took: " << end_time1 - start_time1 << "s\n";
+
     if (!dataOpt.has_value())
     {
         ERROR("Unable to parse data!");
@@ -679,7 +731,12 @@ int main(int argc, char *argv[])
     double end_time = MPI_Wtime();
     if (myRank == 0)
     {
-        std::cout << "Delta-stepping (one-sided) finished. Time: " << (end_time - start_time) << "s." << std::endl;
+        std::cout << "Delta-stepping (one-sided) finished.\n";
+        std::cout << "Time: " << (end_time - start_time) << "s." << std::endl;
+        std::cout << "At barriers: " << timeAtBarrier << std::endl;
+        std::cout << "Short relaxations: " << relaxationsShort << std::endl;
+        std::cout << "from which bypassed: " << relaxationsBypassed << std::endl;
+        std::cout << "Long relaxations: " << relaxationsLong << std::endl;
     }
 
     for (size_t i = 0; i < data.getNResponsible(); ++i)

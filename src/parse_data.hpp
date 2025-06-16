@@ -226,8 +226,7 @@ public:
 
     /// @brief Add new edge to stored data if responsible for any of the end vertices. Ignore if not owned!
     /// @throws InvalidData
-    // TODO: these < 0 checks can never succeed!!
-    void addEdge(size_t u, size_t v, size_t weight)
+    void addEdgeFast(size_t u, size_t v, size_t weight)
     {
         if (u == v)
         {
@@ -246,33 +245,58 @@ public:
         if (isOwned(u))
         {
             auto &neighbors = neighOfLocal[*globalToLocalIdx(u)];
-            auto it = std::find_if(neighbors.begin(), neighbors.end(),
-                                   [v](const std::pair<uint64_t, uint8_t> &p)
-                                   { return p.first == v; });
+            // auto it = std::find_if(neighbors.begin(), neighbors.end(),
+            //                        [v](const std::pair<uint64_t, uint8_t> &p)
+            //                        { return p.first == v; });
 
-            if (it == neighbors.end())
-            {
+            // if (it == neighbors.end())
+            // {
                 neighbors.push_back({v, weight});
-            }
-            else if (weight < it->second)
-            {
-                it->second = weight;
-            }
+            // }
+            // else if (weight < it->second)
+            // {
+            //     it->second = weight;
+            // }
         }
         if (isOwned(v))
         {
             auto &neighbors = neighOfLocal[*globalToLocalIdx(v)];
-            auto it = std::find_if(neighbors.begin(), neighbors.end(),
-                                   [u](const std::pair<uint64_t, uint8_t> &p)
-                                   { return p.first == u; });
+            // auto it = std::find_if(neighbors.begin(), neighbors.end(),
+            //                        [u](const std::pair<uint64_t, uint8_t> &p)
+            //                        { return p.first == u; });
 
-            if (it == neighbors.end())
-            {
+            // if (it == neighbors.end())
+            // {
                 neighbors.push_back({u, weight});
-            }
-            else if (weight < it->second)
+            // }
+            // else if (weight < it->second)
+            // {
+                // it->second = weight;
+            // }
+        }
+    }
+
+    void trimMultiEdges()
+    {
+        for (auto &neighbors : neighOfLocal)
+        {
+            std::unordered_map<size_t, long long> deduped;
+
+            for (const auto &[target, weight] : neighbors)
             {
-                it->second = weight;
+                auto it = deduped.find(target);
+                if (it == deduped.end() || weight < it->second)
+                {
+                    deduped[target] = weight;
+                }
+            }
+
+            neighbors.clear();
+            neighbors.reserve(deduped.size());
+
+            for (const auto &[target, weight] : deduped)
+            {
+                neighbors.emplace_back(target, weight);
             }
         }
     }
@@ -285,4 +309,5 @@ public:
 
 std::optional<Data> process_input_and_load_graph_from_stream(
     int myRank,
-    const std::string &input_filename);
+    const std::string &input_filename,
+    bool assume_nomultiedge);
