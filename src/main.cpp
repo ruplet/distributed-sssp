@@ -333,6 +333,7 @@ void processBucket(
 
         // --- FENCE 2 ---
         {
+            data.communicateRelax(INF, myRank, 0);
             DEBUGN("FENCE SYNC 2: waiting... epoch:", totalPhases);
             double start = MPI_Wtime();
             data.fence();
