@@ -20,6 +20,9 @@ def run_tests(break_on_fail, local):
             print(f"Solution: {solution.name}")
             for test in Path("tests").iterdir():
                 print(f"Running: {test.name}", flush=True)
+                if 'bench' in test.name:
+                    print(f"    {test.name}: SKIPPED (BENCHMARK)", flush=True)
+                    continue
                 nodes = int(test.name[test.name.find("_") + 1: test.name.rfind("_")])
                 if nodes > max_nodes:
                     print(f"    {test.name}: SKIPPED (LARGE)", flush=True)
