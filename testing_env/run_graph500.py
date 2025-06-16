@@ -65,7 +65,7 @@ def run_tests(break_on_fail, local):
                 #         break
                 if not failed:
                     print(f"    {test.name}: Finished! Skipping validation", flush=True)
-                    print('stdout:', execution.stdout)
+                    print('stdout:', execution.stdout.decode('utf-8'))
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Test runner')
