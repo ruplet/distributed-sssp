@@ -151,7 +151,7 @@ void relaxAllEdgesLocalBypass(
     const std::function<bool(size_t, size_t, long long)> &edgeConsidered,
     Data &data,
     const BlockDistribution::Distribution &dist,
-    // std::map<long long, std::vector<size_t>> &buckets,
+    std::map<long long, std::vector<size_t>> &buckets,
     long long delta_val
 )
 {
@@ -206,11 +206,11 @@ void relaxAllEdgesLocalBypass(
                         DEBUGN("Shortcut!", vGlobalIdx);
                         relaxationsBypassed++;
                         data.updateDist(vGlobalIdx, potential_new_dist);
-                        // updateBucketInfo(buckets, vGlobalIdx, oldBucket, newBucket);
+                        updateBucketInfo(buckets, vGlobalIdx, oldBucket, newBucket);
                         newActive.push_back(vGlobalIdx);
+                    } else {
+                        data.selfRelax(potential_new_dist, vGlobalIdx);
                     }
-                    
-                    data.selfRelax(potential_new_dist, vGlobalIdx);
                     // data.communicateRelax(potential_new_dist, ownerProcess, indexAtOwner);
                 } else {
                     data.communicateRelax(potential_new_dist, ownerProcess, indexAtOwner);
@@ -317,8 +317,8 @@ void processBucket(
 
         if (enable_local_bypass)
         {
-            // relaxAllEdgesLocalBypass(activeSet, edgeConsidered, data, dist, buckets, delta_val);
-            relaxAllEdgesLocalBypass(activeSet, edgeConsidered, data, dist, delta_val);
+            relaxAllEdgesLocalBypass(activeSet, edgeConsidered, data, dist, buckets, delta_val);
+            // relaxAllEdgesLocalBypass(activeSet, edgeConsidered, data, dist, delta_val);
             // relaxAllEdgesLocalBypass(activeSet, edgeConsidered, data, dist);
         }
         else
