@@ -334,7 +334,7 @@ void processBucket(
             data.fence();
             double end = MPI_Wtime();
             timeAtBarrier += end - start;
-            DEBUGN("FENCE SYNC 2: done!");
+            PROGRESSN("FENCE SYNC 2: done!");
         }
 
         // we will only preserve updates vertices
