@@ -70,7 +70,8 @@ public:
           winMemory(nullptr),
           window(MPI_WIN_NULL),
           winDisp(sizeof(long long)),
-          winSize(nLocalResponsible_ * sizeof(long long))
+          winSize(nLocalResponsible_ * sizeof(long long)),
+          selfUpdates(selfUpdates)
     {
         if (nVerticesGlobal == 0 || lastResponsibleGlobalIdx() < firstResponsibleGlobalIdx || lastResponsibleGlobalIdx() >= nVerticesGlobal || distToRoot.size() != neighOfLocal.size() || distToRoot[0] != INF)
         {
@@ -108,7 +109,8 @@ public:
           winMemory(other.winMemory),
           window(other.window),
           winDisp(other.winDisp),
-          winSize(other.winSize)
+          winSize(other.winSize),
+          selfUpdates(selfUpdates)
     {
         other.window = MPI_WIN_NULL;
         other.winMemory = nullptr;
