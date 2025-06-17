@@ -197,17 +197,17 @@ void relaxAllEdgesLocalBypass(
 
                 // NOTE: this will bypass syncing window to dist afterwards!
                 if (ownerProcess == myRank) {
-                    auto prevDist = data.getDist(vGlobalIdx);
-                    auto oldBucket = prevDist == INF ? INF : prevDist / delta_val;
-                    auto newBucket = potential_new_dist / delta_val;
-                    DEBUGN("Try short:", vGlobalIdx, prevDist, oldBucket, newBucket, currentBucket, delta_val);
-                    if (oldBucket > currentBucket && newBucket == currentBucket) {
-                        DEBUGN("Shortcut!", vGlobalIdx);
-                        relaxationsBypassed++;
+                    // auto prevDist = data.getDist(vGlobalIdx);
+                    // auto oldBucket = prevDist == INF ? INF : prevDist / delta_val;
+                    // auto newBucket = potential_new_dist / delta_val;
+                    // DEBUGN("Try short:", vGlobalIdx, prevDist, oldBucket, newBucket, currentBucket, delta_val);
+                    // if (oldBucket > currentBucket && newBucket == currentBucket) {
+                        // DEBUGN("Shortcut!", vGlobalIdx);
+                        // relaxationsBypassed++;
                         // data.updateDist(vGlobalIdx, potential_new_dist);
                         // updateBucketInfo(buckets, vGlobalIdx, oldBucket, newBucket);
-                        newActive.push_back(vGlobalIdx);
-                    }
+                        // newActive.push_back(vGlobalIdx);
+                    // }
                     
                     data.selfRelax(potential_new_dist, vGlobalIdx);
                     // data.communicateRelax(potential_new_dist, ownerProcess, indexAtOwner);
