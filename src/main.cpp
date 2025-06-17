@@ -772,13 +772,13 @@ int main(int argc, char *argv[])
     long long globalRelaxationsShort = 0;
     long long globalRelaxationsLong = 0;
     long long globalRelaxationsBypassed = 0;
-    long long globalPhasesBeforeBellman = 0;
+    // long long globalPhasesBeforeBellman = 0;
 
     // Reduce (sum) the counters across all processes
     MPI_CALL(MPI_Reduce(&relaxationsShort, &globalRelaxationsShort, 1, MPI_LONG_LONG, MPI_SUM, 0, MPI_COMM_WORLD));
     MPI_CALL(MPI_Reduce(&relaxationsLong, &globalRelaxationsLong, 1, MPI_LONG_LONG, MPI_SUM, 0, MPI_COMM_WORLD));
     MPI_CALL(MPI_Reduce(&relaxationsBypassed, &globalRelaxationsBypassed, 1, MPI_LONG_LONG, MPI_SUM, 0, MPI_COMM_WORLD));
-    MPI_CALL(MPI_Reduce(&phasesBeforeBellman, &globalPhasesBeforeBellman, 1, MPI_LONG_LONG, MPI_SUM, 0, MPI_COMM_WORLD));
+    // MPI_CALL(MPI_Reduce(&phasesBeforeBellman, &globalPhasesBeforeBellman, 1, MPI_LONG_LONG, MPI_SUM, 0, MPI_COMM_WORLD));
 
     if (myRank == 0)
     {
@@ -788,7 +788,7 @@ int main(int argc, char *argv[])
         std::cout << "  from which bypassed: " << globalRelaxationsBypassed << std::endl;
         std::cout << "Long relaxations: " << globalRelaxationsLong << std::endl;
         std::cout << "Total phases: " << totalPhases << std::endl;
-        std::cout << "Last bucket before bellman: " << globalPhasesBeforeBellman << std::endl;
+        std::cout << "Last phase before bellman: " << phasesBeforeBellman << std::endl;
     }
 
     for (size_t i = 0; i < data.getNResponsible(); ++i)
