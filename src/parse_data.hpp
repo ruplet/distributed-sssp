@@ -110,7 +110,7 @@ public:
           window(other.window),
           winDisp(other.winDisp),
           winSize(other.winSize),
-          selfUpdates(std::move(selfUpdates))
+          selfUpdates(std::move(other.selfUpdates))
     {
         other.window = MPI_WIN_NULL;
         other.winMemory = nullptr;
