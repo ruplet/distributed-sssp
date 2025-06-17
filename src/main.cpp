@@ -557,8 +557,8 @@ int main(int argc, char *argv[])
 
             std::cerr << "Optional flags:\n";
             std::cerr << "  --ios / --noios          Enable or disable IOS optimizations (default: enabled)\n";
-            std::cerr << "  --pruning / --nopruning  Enable or disable pruning optimization (default: enabled)\n";
-            std::cerr << "  --local-bypass / --nolocal-bypass  Enable or disable dynamically adding just relaxed nodes to active set inside one processor (default: enabled)\n";
+            std::cerr << "  --pruning / --nopruning  Enable or disable pruning optimization (default: disabled)\n";
+            std::cerr << "  --local-bypass / --nolocal-bypass  Enable or disable dynamically adding just relaxed nodes to active set inside one processor (default: disabled)\n";
             std::cerr << "  --hybrid / --nohybrid    Enable or disable hybridization optimization (default: enabled)\n";
             std::cerr << "  --assume-nomultiedge     Skip removing multi-edges from the input graph (default: disabled)\n";
             std::cerr << "  --logging <level>        Set logging level: none | progress | debug (default: progress)\n";
@@ -582,10 +582,10 @@ int main(int argc, char *argv[])
     }
 
     // === New flags ===
-    bool enable_ios_optimizations = false;
+    bool enable_ios_optimizations = true;
     bool enable_pruning = false;
     bool enable_local_bypass = false;
-    bool enable_hybridization = false;
+    bool enable_hybridization = true;
     bool assume_nomultiedge = false;
 
     int progress_freq = DEFAULT_PROGESS_FREQ;
@@ -772,7 +772,7 @@ int main(int argc, char *argv[])
     long long globalRelaxationsShort = 0;
     long long globalRelaxationsLong = 0;
     long long globalRelaxationsBypassed = 0;
-    // long long globalPhasesBeforeBellman = 0;
+    // long long globalPhasesBeitforeBellman = 0;
 
     // Reduce (sum) the counters across all processes
     MPI_CALL(MPI_Reduce(&relaxationsShort, &globalRelaxationsShort, 1, MPI_LONG_LONG, MPI_SUM, 0, MPI_COMM_WORLD));
