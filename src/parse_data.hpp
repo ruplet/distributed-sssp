@@ -53,6 +53,14 @@ class Data
     MPI_Aint winSize;
 
 public:
+    struct Update
+    {
+        size_t vGlobalIdx;
+        long long prevDist;
+        long long newDist;
+    };
+    std::vector<Update> selfUpdates;
+
     Data(size_t firstResponsibleGlobalIdx_, size_t nLocalResponsible_, size_t nVerticesGlobal_)
         : firstResponsibleGlobalIdx(firstResponsibleGlobalIdx_),
           nLocalResponsible(nLocalResponsible_),
@@ -136,16 +144,18 @@ public:
             MPI_MIN, window));
     }
 
-    struct Update
-    {
-        size_t vGlobalIdx;
-        long long prevDist;
-        long long newDist;
-    };
+    void selfRelax(long long potential_new_dist, size_t vGlobalIdx) {
+        Update upd;
+        upd.vGlobalIdx = vGlobalIdx;
+        upd.newDist = potential_new_dist;
+        upd.prevDist = getDist(vGlobalIdx);
+        selfUpdates.emplace_back(upd);
+    }
 
     std::vector<Update> getUpdatesAndSyncDataToWin()
     {
-        std::vector<Update> updates;
+        std::vector<Update> updates = selfUpdates;
+        selfUpdates.clear();
         for (size_t i = 0; i < nLocalResponsible; ++i)
         {
             auto new_dist = static_cast<long long *>(winMemory)[i];
