@@ -48,4 +48,18 @@ suse linux enterprise server os
 slurm queue system
 
 
+# Correctness
+We thoroughly verified the correctness of the code.
+Unoptimized program (plain delta-stepping) and code with different optimizations enabled was tested against:
+
+RandomTree:
+Arity Height NProc EF
+2   10  5 2-16
+2 15 768 2 x10 seeds
+Arity 3, Height 6 (1093 nodes), 5 procs, x10 seeds
+Arity 2, Height 7 (255 nodes), ef 2, procs = 1 to 42
+Arity 3, H 9, E10, Nproc 768 x10 seeds
+
+BigCycle: 
+
 

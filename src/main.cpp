@@ -150,9 +150,9 @@ void relaxAllEdgesLocalBypass(
     std::vector<size_t> activeSet, // by copy!
     const std::function<bool(size_t, size_t, long long)> &edgeConsidered,
     Data &data,
-    const BlockDistribution::Distribution &dist
+    const BlockDistribution::Distribution &dist,
     // std::map<long long, std::vector<size_t>> &buckets,
-    // long long delta_val
+    long long delta_val
 )
 {
     // --- Relaxation Step ---
@@ -162,7 +162,7 @@ void relaxAllEdgesLocalBypass(
     // my optimization: if a process owns newly activated vertices, proceed
     while (!activeSet.empty())
     {
-        // auto currentBucket = activeSet[0] / delta_val;
+        auto currentBucket = activeSet[0] / delta_val;
         newActive.clear();
 
         for (auto u_global_id : activeSet)
@@ -198,17 +198,17 @@ void relaxAllEdgesLocalBypass(
 
                 // NOTE: this will bypass syncing window to dist afterwards!
                 if (ownerProcess == myRank) {
-                    // auto prevDist = data.getDist(vGlobalIdx);
-                    // auto oldBucket = prevDist == INF ? INF : prevDist / delta_val;
-                    // auto newBucket = potential_new_dist / delta_val;
-                    // DEBUGN("Try short:", vGlobalIdx, prevDist, oldBucket, newBucket, currentBucket, delta_val);
-                    // if (oldBucket > currentBucket && newBucket == currentBucket) {
-                        // DEBUGN("Shortcut!", vGlobalIdx);
-                        // relaxationsBypassed++;
+                    auto prevDist = data.getDist(vGlobalIdx);
+                    auto oldBucket = prevDist == INF ? INF : prevDist / delta_val;
+                    auto newBucket = potential_new_dist / delta_val;
+                    DEBUGN("Try short:", vGlobalIdx, prevDist, oldBucket, newBucket, currentBucket, delta_val);
+                    if (oldBucket > currentBucket && newBucket == currentBucket) {
+                        DEBUGN("Shortcut!", vGlobalIdx);
+                        relaxationsBypassed++;
                         // data.updateDist(vGlobalIdx, potential_new_dist);
                         // updateBucketInfo(buckets, vGlobalIdx, oldBucket, newBucket);
-                        // newActive.push_back(vGlobalIdx);
-                    // }
+                        newActive.push_back(vGlobalIdx);
+                    }
                     
                     data.selfRelax(potential_new_dist, vGlobalIdx);
                     // data.communicateRelax(potential_new_dist, ownerProcess, indexAtOwner);
@@ -318,8 +318,8 @@ void processBucket(
         if (enable_local_bypass)
         {
             // relaxAllEdgesLocalBypass(activeSet, edgeConsidered, data, dist, buckets, delta_val);
-            // relaxAllEdgesLocalBypass(activeSet, edgeConsidered, data, dist, delta_val);
-            relaxAllEdgesLocalBypass(activeSet, edgeConsidered, data, dist);
+            relaxAllEdgesLocalBypass(activeSet, edgeConsidered, data, dist, delta_val);
+            // relaxAllEdgesLocalBypass(activeSet, edgeConsidered, data, dist);
         }
         else
         {
