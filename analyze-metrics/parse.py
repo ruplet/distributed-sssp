@@ -1,5 +1,6 @@
 import re
 from pprint import pprint
+import sys
 
 def parse_metrics_from_log(log_path):
     results = {}
@@ -61,6 +62,10 @@ def parse_metrics_from_log(log_path):
 
 # Example usage
 if __name__ == "__main__":
-    log_file_path = "your_log_file.txt"  # Change this to your log file path
+    if len(sys.argv) != 2:
+        print(f"Usage: {sys.argv[0]} <logfile>")
+        sys.exit(1)
+
+    log_file_path = sys.argv[1]
     metrics_dict = parse_metrics_from_log(log_file_path)
     pprint(metrics_dict)
