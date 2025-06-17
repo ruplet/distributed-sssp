@@ -28,6 +28,7 @@ unsigned long long int totalPhases = 0;
 unsigned long long int relaxationsBypassed = 0;
 unsigned long long int relaxationsShort = 0;
 unsigned long long int relaxationsLong = 0;
+unsigned long long int phasesBeforeBellman = 0;
 double timeAtBarrier = 0;
 
 class VertexOwnershipException : public std::runtime_error
@@ -515,6 +516,7 @@ void delta_stepping_algorithm(
 
         settledVerticesGlobal += global_settled_currentK;
         if (enable_hybridization && settledVerticesGlobal >= HYBRIDIZATION_THRESHOLD * data.getNVerticesGlobal()) {
+            phasesBeforeBellman = totalPhases;
             isBellmanFord = true;
             std::vector<size_t> bellmanBucket;
             for (auto it = buckets.begin(); it != buckets.end(); it = buckets.begin())
@@ -770,11 +772,13 @@ int main(int argc, char *argv[])
     long long globalRelaxationsShort = 0;
     long long globalRelaxationsLong = 0;
     long long globalRelaxationsBypassed = 0;
+    long long globalPhasesBeforeBellman = 0;
 
     // Reduce (sum) the counters across all processes
     MPI_CALL(MPI_Reduce(&relaxationsShort, &globalRelaxationsShort, 1, MPI_LONG_LONG, MPI_SUM, 0, MPI_COMM_WORLD));
     MPI_CALL(MPI_Reduce(&relaxationsLong, &globalRelaxationsLong, 1, MPI_LONG_LONG, MPI_SUM, 0, MPI_COMM_WORLD));
     MPI_CALL(MPI_Reduce(&relaxationsBypassed, &globalRelaxationsBypassed, 1, MPI_LONG_LONG, MPI_SUM, 0, MPI_COMM_WORLD));
+    MPI_CALL(MPI_Reduce(&phasesBeforeBellman, &globalPhasesBeforeBellman, 1, MPI_LONG_LONG, MPI_SUM, 0, MPI_COMM_WORLD));
 
     if (myRank == 0)
     {
@@ -784,6 +788,7 @@ int main(int argc, char *argv[])
         std::cout << "  from which bypassed: " << globalRelaxationsBypassed << std::endl;
         std::cout << "Long relaxations: " << globalRelaxationsLong << std::endl;
         std::cout << "Total phases: " << totalPhases << std::endl;
+        std::cout << "Last bucket before bellman: " << globalPhasesBeforeBellman << std::endl;
     }
 
     for (size_t i = 0; i < data.getNResponsible(); ++i)
