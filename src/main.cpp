@@ -176,7 +176,7 @@ void relaxAllEdgesLocalBypass(
             }
 
             data.forEachNeighbor(u_global_id, [&](size_t vGlobalIdx, long long w)
-                                 {
+            {
                 auto potential_new_dist = u_dist + w;
 
                 if (!edgeConsidered(u_global_id, vGlobalIdx, w)) {
@@ -204,12 +204,19 @@ void relaxAllEdgesLocalBypass(
                     if (oldBucket > currentBucket && newBucket == currentBucket) {
                         DEBUGN("Shortcut!", vGlobalIdx);
                         relaxationsBypassed++;
-                        data.updateDist(vGlobalIdx, potential_new_dist);
-                        updateBucketInfo(buckets, vGlobalIdx, oldBucket, newBucket);
                         newActive.push_back(vGlobalIdx);
                     }
-                }
-                data.communicateRelax(potential_new_dist, ownerProcess, indexAtOwner); });
+                    
+                    if (potential_new_dist < prevDist) {
+                        data.updateDist(vGlobalIdx, potential_new_dist);
+                    }
+                    if (newBucket < oldBucket) {
+                        updateBucketInfo(buckets, vGlobalIdx, oldBucket, newBucket);
+                    }
+                } else {
+                    data.communicateRelax(potential_new_dist, ownerProcess, indexAtOwner);
+                } 
+            });
         }
         activeSet = newActive;
     }
@@ -233,7 +240,7 @@ void relaxAllEdges(
         }
 
         data.forEachNeighbor(u_global_id, [&](size_t vGlobalIdx, long long w)
-                             {
+        {
             auto potential_new_dist = u_dist + w;
 
             if (!edgeConsidered(u_global_id, vGlobalIdx, w)) {
@@ -252,7 +259,8 @@ void relaxAllEdges(
             DEBUGN("Sending update to process: ", ownerProcess, "(displacement:",
                 indexAtOwner, "). New dist of", vGlobalIdx, "=", potential_new_dist);
 
-            data.communicateRelax(potential_new_dist, ownerProcess, indexAtOwner); });
+            data.communicateRelax(potential_new_dist, ownerProcess, indexAtOwner);
+        });
     }
 }
 
