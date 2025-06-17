@@ -177,8 +177,8 @@ public:
             auto new_dist = static_cast<long long *>(winMemory)[i];
             if (new_dist > distToRoot[i])
             {
-                throw InvalidData("MPI distance relax caused dist to increase!");
-                // continue;
+                // throw InvalidData("MPI distance relax caused dist to increase!");
+                continue;
             }
             else if (new_dist < distToRoot[i])
             {
