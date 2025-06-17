@@ -457,6 +457,7 @@ void delta_stepping_algorithm(
         }
         epochNo++;
 
+        // this will not catch Bellman-Ford termination. it's catched at the end of loop.
         if (currentK == INF)
         {
             DEBUGN("Termination condition met. Exiting.");
@@ -502,6 +503,10 @@ void delta_stepping_algorithm(
                             }
                             relaxationsLong++;
                             return true; }, enable_local_bypass);
+        }
+
+        if (isBellmanFord) {
+            break;
         }
 
         long long local_settled_currentK = static_cast<long long>(getActiveSet(buckets, currentK).size());
