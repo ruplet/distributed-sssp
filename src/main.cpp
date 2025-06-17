@@ -209,8 +209,8 @@ void relaxAllEdgesLocalBypass(
                         newActive.push_back(vGlobalIdx);
                     }
                     
-                    // data.selfRelax(potential_new_dist, vGlobalIdx);
-                    data.communicateRelax(potential_new_dist, ownerProcess, indexAtOwner);
+                    data.selfRelax(potential_new_dist, vGlobalIdx);
+                    // data.communicateRelax(potential_new_dist, ownerProcess, indexAtOwner);
                 } else {
                     data.communicateRelax(potential_new_dist, ownerProcess, indexAtOwner);
                 } 

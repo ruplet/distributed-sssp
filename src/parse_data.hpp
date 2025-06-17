@@ -146,17 +146,18 @@ public:
             MPI_MIN, window));
     }
 
-    // void selfRelax(long long potential_new_dist, size_t vGlobalIdx) {
-    //     Update upd;
-    //     upd.vGlobalIdx = vGlobalIdx;
-    //     upd.newDist = potential_new_dist;
-    //     upd.prevDist = getDist(vGlobalIdx);
-    //     selfUpdates.emplace_back(upd);
-    // }
+    void selfRelax(long long potential_new_dist, size_t vGlobalIdx) {
+        Update upd;
+        upd.vGlobalIdx = vGlobalIdx;
+        upd.newDist = potential_new_dist;
+        upd.prevDist = getDist(vGlobalIdx);
+        distToRoot[vGlobalIdx - firstResponsibleGlobalIdx] = potential_new_dist;
+        selfUpdates.push_back(upd);
+    }
 
     std::vector<Update> getUpdatesAndSyncDataToWin()
     {
-        std::vector<Update> updates;// = selfUpdates;
+        std::vector<Update> updates = selfUpdates;
         selfUpdates.clear();
         for (size_t i = 0; i < nLocalResponsible; ++i)
         {
