@@ -150,9 +150,10 @@ void relaxAllEdgesLocalBypass(
     std::vector<size_t> activeSet, // by copy!
     const std::function<bool(size_t, size_t, long long)> &edgeConsidered,
     Data &data,
-    const BlockDistribution::Distribution &dist,
+    const BlockDistribution::Distribution &dist
     // std::map<long long, std::vector<size_t>> &buckets,
-    long long delta_val)
+    // long long delta_val
+)
 {
     // --- Relaxation Step ---
 
@@ -161,7 +162,7 @@ void relaxAllEdgesLocalBypass(
     // my optimization: if a process owns newly activated vertices, proceed
     while (!activeSet.empty())
     {
-        auto currentBucket = activeSet[0] / delta_val;
+        // auto currentBucket = activeSet[0] / delta_val;
         newActive.clear();
 
         for (auto u_global_id : activeSet)
@@ -317,7 +318,8 @@ void processBucket(
         if (enable_local_bypass)
         {
             // relaxAllEdgesLocalBypass(activeSet, edgeConsidered, data, dist, buckets, delta_val);
-            relaxAllEdgesLocalBypass(activeSet, edgeConsidered, data, dist, delta_val);
+            // relaxAllEdgesLocalBypass(activeSet, edgeConsidered, data, dist, delta_val);
+            relaxAllEdgesLocalBypass(activeSet, edgeConsidered, data, dist);
         }
         else
         {
