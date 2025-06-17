@@ -156,7 +156,7 @@ public:
 
     std::vector<Update> getUpdatesAndSyncDataToWin()
     {
-        // std::vector<Update> updates = selfUpdates;
+        std::vector<Update> updates;// = selfUpdates;
         // selfUpdates.clear();
         for (size_t i = 0; i < nLocalResponsible; ++i)
         {
