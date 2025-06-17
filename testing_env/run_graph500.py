@@ -48,7 +48,7 @@ def run_tests(break_on_fail, local):
                 
                 cmd = [
                     command, "-n", str(workers),
-                    "./test_command.sh", solution.name, test.name, "40",
+                    "./test_command.sh", solution.name, test.name, "25",
                     "--noios",
                     "--nolocal-bypass",
                     "--logging", "progress",
