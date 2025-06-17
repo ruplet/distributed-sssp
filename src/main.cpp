@@ -205,7 +205,7 @@ void relaxAllEdgesLocalBypass(
                     if (oldBucket > currentBucket && newBucket == currentBucket) {
                         DEBUGN("Shortcut!", vGlobalIdx);
                         relaxationsBypassed++;
-                        // data.updateDist(vGlobalIdx, potential_new_dist);
+                        data.updateDist(vGlobalIdx, potential_new_dist);
                         // updateBucketInfo(buckets, vGlobalIdx, oldBucket, newBucket);
                         newActive.push_back(vGlobalIdx);
                     }
