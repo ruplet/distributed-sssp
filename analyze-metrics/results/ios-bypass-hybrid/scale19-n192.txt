@@ -1,0 +1,12 @@
+Running: rmat1-bench-rmat1-bench-graph500-scale-19_524288_192
+Executing: srun -n 192 ./test_command.sh LOGIN69 rmat1-bench-rmat1-bench-graph500-scale-19_524288_192 10 --ios --local-bypass --hybrid --logging progress
+    rmat1-bench-rmat1-bench-graph500-scale-19_524288_192: Finished! Skipping validation
+stdout: Parsing data took: 5.44343s
+Delta-stepping (one-sided) finished.
+Time: 114.326s.
+Short relaxations: 272514
+  from which bypassed: 292
+Long relaxations: 1327492
+Total phases: 54
+Last phase before bellman: 0
+

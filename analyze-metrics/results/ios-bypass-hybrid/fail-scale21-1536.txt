@@ -1,0 +1,5 @@
+> ./split graph500/src/out_a5700_bc1900_d10000_s2_3_n21_ef16/ 21 1536 rmat1 reuse
+DEBUG: Parsed scale value: 21
+Error: Could not open output file/FIFO rmat1/graph500-scale-21_2097152_1536/1021.in
+
+limit of descriptors open at once!

@@ -1,0 +1,12 @@
+srun -n 96 --tasks-per-node 24 -N 4 --cpus-per-task 1 --time 10:00 -- test_command.sh LOGIN69 rmat1-bench-graph500-scale-20_1048576_96/
+srun: job 1394074 queued and waiting for resources
+srun: job 1394074 has been allocated resources
+Parsing data took: 11.2121s
+Delta-stepping (one-sided) finished.
+Time: 508.59s.
+Short relaxations: 653890
+  from which bypassed: 0
+Long relaxations: 3925983
+Total phases: 29
+Last phase before bellman: 0
+

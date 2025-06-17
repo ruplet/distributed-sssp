@@ -1,0 +1,20 @@
+ srun -n 768 --tasks-per-node 24 -N 32 --cpus-per-task 1 --time 10:00 -- test_command.sh LOGIN69 rmat1-bench-graph500-scale-21_2097152_768
+srun: job 1394094 queued and waiting for resources
+srun: job 1394094 has been allocated resources
+Parsing data took: 23.0866s
+
+
+
+
+srun: Force Terminated job 1394094
+srun: Job step aborted: Waiting up to 32 seconds for job step to finish.
+std::cerr testslurmstepd: error: *** STEP 1394094.0 ON nid00056 CANCELLED AT 2025-06-17T16:37:01 DUE TO TIME LIMIT ***
+srun: error: nid00330: tasks 648-671: Terminated
+srun: launch/slurm: _step_signal: Terminating StepId=1394094.0
+srun: error: nid00176: tasks 432-455: Terminated
+srun: error: nid00098: tasks 24-47: Terminated
+srun: error: nid00109: tasks 288-311: Terminated
+srun: error: nid00107: tasks 240-263: Terminated
+srun: error: nid00099: tasks 48-71: Terminated
+srun: error: nid00328: tasks 600-623: Terminated
+
