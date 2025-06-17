@@ -135,3 +135,17 @@ Short relaxations: 46269
   from which bypassed: 0
 Long relaxations: 2052865
 Total phases: 7056
+
+
+
+PO DODANIU SELF-RELAX:
+> srun -n 24 --time 10:00 --tasks-per-node 24 --cpus-per-task 1 --nodes 1 -- ./test_command.sh LOGIN69 random-scale16-ef16-s42_65536_24/
+srun: job 1393664 queued and waiting for resources
+srun: job 1393664 has been allocated resources
+Parsing data took: 0.0719039s
+Delta-stepping (one-sided) finished.
+Time: 6.14703s.
+Short relaxations: 23031
+  from which bypassed: 0
+Long relaxations: 1024182
+Total phases: 3144

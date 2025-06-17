@@ -551,10 +551,10 @@ int main(int argc, char *argv[])
     }
 
     // === New flags ===
-    bool enable_ios_optimizations = true;
-    bool enable_pruning = true;
-    bool enable_local_bypass = true;
-    bool enable_hybridization = true;
+    bool enable_ios_optimizations = false;
+    bool enable_pruning = false;
+    bool enable_local_bypass = false;
+    bool enable_hybridization = false;
     bool assume_nomultiedge = false;
 
     int progress_freq = DEFAULT_PROGESS_FREQ;
