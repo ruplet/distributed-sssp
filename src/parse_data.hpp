@@ -59,7 +59,7 @@ public:
         long long prevDist;
         long long newDist;
     };
-    std::vector<Update> selfUpdates;
+    // std::vector<Update> selfUpdates;
 
     Data(size_t firstResponsibleGlobalIdx_, size_t nLocalResponsible_, size_t nVerticesGlobal_)
         : firstResponsibleGlobalIdx(firstResponsibleGlobalIdx_),
@@ -70,8 +70,8 @@ public:
           winMemory(nullptr),
           window(MPI_WIN_NULL),
           winDisp(sizeof(long long)),
-          winSize(nLocalResponsible_ * sizeof(long long)),
-          selfUpdates()
+          winSize(nLocalResponsible_ * sizeof(long long))
+        //   selfUpdates()
     {
         if (nVerticesGlobal == 0 || lastResponsibleGlobalIdx() < firstResponsibleGlobalIdx || lastResponsibleGlobalIdx() >= nVerticesGlobal || distToRoot.size() != neighOfLocal.size() || distToRoot[0] != INF)
         {
@@ -109,8 +109,8 @@ public:
           winMemory(other.winMemory),
           window(other.window),
           winDisp(other.winDisp),
-          winSize(other.winSize),
-          selfUpdates(std::move(other.selfUpdates))
+          winSize(other.winSize)
+        //   selfUpdates(std::move(other.selfUpdates))
     {
         other.window = MPI_WIN_NULL;
         other.winMemory = nullptr;
@@ -146,18 +146,18 @@ public:
             MPI_MIN, window));
     }
 
-    void selfRelax(long long potential_new_dist, size_t vGlobalIdx) {
-        Update upd;
-        upd.vGlobalIdx = vGlobalIdx;
-        upd.newDist = potential_new_dist;
-        upd.prevDist = getDist(vGlobalIdx);
-        selfUpdates.emplace_back(upd);
-    }
+    // void selfRelax(long long potential_new_dist, size_t vGlobalIdx) {
+    //     Update upd;
+    //     upd.vGlobalIdx = vGlobalIdx;
+    //     upd.newDist = potential_new_dist;
+    //     upd.prevDist = getDist(vGlobalIdx);
+    //     selfUpdates.emplace_back(upd);
+    // }
 
     std::vector<Update> getUpdatesAndSyncDataToWin()
     {
-        std::vector<Update> updates = selfUpdates;
-        selfUpdates.clear();
+        // std::vector<Update> updates = selfUpdates;
+        // selfUpdates.clear();
         for (size_t i = 0; i < nLocalResponsible; ++i)
         {
             auto new_dist = static_cast<long long *>(winMemory)[i];
