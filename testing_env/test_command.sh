@@ -14,4 +14,4 @@ TEST_NAME="$2"
 shift 2  # Remove $1 and $2 from the list, leave remaining args
 
 # Run the binary with appropriate input/output and forwarded optional args
-stdbuf -o0 -e0 ./$BINARY_SUBDIR/sssp "tests/$TEST_NAME/$RANK.in" "outputs/$RANK.out" "$@"
+./$BINARY_SUBDIR/sssp "tests/$TEST_NAME/$RANK.in" "outputs/$RANK.out" "$@"

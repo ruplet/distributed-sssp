@@ -59,7 +59,7 @@ public:
         long long prevDist;
         long long newDist;
     };
-    // std::vector<Update> selfUpdates;
+    std::vector<Update> selfUpdates;
 
     Data(size_t firstResponsibleGlobalIdx_, size_t nLocalResponsible_, size_t nVerticesGlobal_)
         : firstResponsibleGlobalIdx(firstResponsibleGlobalIdx_),
@@ -70,8 +70,8 @@ public:
           winMemory(nullptr),
           window(MPI_WIN_NULL),
           winDisp(sizeof(long long)),
-          winSize(nLocalResponsible_ * sizeof(long long))
-        //   selfUpdates()
+          winSize(nLocalResponsible_ * sizeof(long long)),
+          selfUpdates()
     {
         if (nVerticesGlobal == 0 || lastResponsibleGlobalIdx() < firstResponsibleGlobalIdx || lastResponsibleGlobalIdx() >= nVerticesGlobal || distToRoot.size() != neighOfLocal.size() || distToRoot[0] != INF)
         {
@@ -109,8 +109,8 @@ public:
           winMemory(other.winMemory),
           window(other.window),
           winDisp(other.winDisp),
-          winSize(other.winSize)
-        //   selfUpdates(std::move(other.selfUpdates))
+          winSize(other.winSize),
+          selfUpdates(std::move(other.selfUpdates))
     {
         other.window = MPI_WIN_NULL;
         other.winMemory = nullptr;
@@ -157,14 +157,14 @@ public:
     std::vector<Update> getUpdatesAndSyncDataToWin()
     {
         std::vector<Update> updates;// = selfUpdates;
-        // selfUpdates.clear();
+        selfUpdates.clear();
         for (size_t i = 0; i < nLocalResponsible; ++i)
         {
             auto new_dist = static_cast<long long *>(winMemory)[i];
             if (new_dist > distToRoot[i])
             {
-                throw InvalidData("MPI distance relax caused dist to increase!");
-                // continue;
+                // throw InvalidData("MPI distance relax caused dist to increase!");
+                continue;
             }
             else if (new_dist < distToRoot[i])
             {
