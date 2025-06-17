@@ -157,8 +157,21 @@ public:
 
     std::vector<Update> getUpdatesAndSyncDataToWin()
     {
-        std::vector<Update> updates = selfUpdates;
+        std::vector<Update> updates;
+
+        for (auto update: selfUpdates) {
+            auto vGlobalIdx = update.vGlobalIdx;
+            // auto prevDist = update.prevDist;
+            auto newDist = update.newDist;
+
+            auto localIdx = vGlobalIdx - firstResponsibleGlobalIdx;
+            auto remoteBest = static_cast<long long *>(winMemory)[localIdx];
+            if (newDist < remoteBest) {
+                static_cast<long long *>(winMemory)[localIdx] = newDist;
+            }
+        }
         selfUpdates.clear();
+
         for (size_t i = 0; i < nLocalResponsible; ++i)
         {
             auto new_dist = static_cast<long long *>(winMemory)[i];
