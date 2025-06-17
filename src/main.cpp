@@ -21,7 +21,7 @@ enum class LoggingLevel
 
 const long long DEFAULT_DELTA = 10;
 const int DEFAULT_PROGESS_FREQ = 10;
-// const float HYBRIDIZATION_THRESHOLD = 0.4;
+const float HYBRIDIZATION_THRESHOLD = 0.4;
 LoggingLevel logging_level = LoggingLevel::Progress;
 int myRank, nProcessorsGlobal;
 unsigned long long int totalPhases = 0;
@@ -406,6 +406,9 @@ void delta_stepping_algorithm(
     }
     DEBUGN("");
 
+    bool isBellmanFord = false;
+    unsigned long long int settledVerticesGlobal = 0;
+
     if (data.isOwned(root_rt_global_id))
     {
         data.updateDist(root_rt_global_id, 0);
@@ -416,6 +419,10 @@ void delta_stepping_algorithm(
     size_t epochNo = 0;
     while (true)
     {
+        if (isBellmanFord) {
+            delta_val = INF;
+        }
+        
         long long localMinK = INF;
         for (auto it = buckets.begin(); it != buckets.end() && it->second.empty(); it = buckets.begin())
         {
@@ -496,7 +503,24 @@ void delta_stepping_algorithm(
                             relaxationsLong++;
                             return true; }, enable_local_bypass);
         }
-        setActiveSet(buckets, currentK, {});
+
+        long long local_settled_currentK = static_cast<long long>(getActiveSet(buckets, currentK).size());
+        long long global_settled_currentK;
+        MPI_CALL(MPI_Allreduce(&local_settled_currentK, &global_settled_currentK, 1, MPI_LONG_LONG_INT, MPI_SUM, MPI_COMM_WORLD));
+
+        settledVerticesGlobal += global_settled_currentK;
+        if (enable_hybridization && settledVerticesGlobal >= HYBRIDIZATION_THRESHOLD * data.getNVerticesGlobal()) {
+            isBellmanFord = true;
+            std::vector<size_t> bellmanBucket;
+            for (auto it = buckets.begin(); it != buckets.end(); it = buckets.begin())
+            {
+                bellmanBucket.insert(bellmanBucket.end(), it->second.begin(), it->second.end());
+                buckets.erase(it);
+            }
+            setActiveSet(buckets, 0, bellmanBucket);
+        } else {
+            setActiveSet(buckets, currentK, {});
+        }
     } // end of while(true) epoch loop
     return;
 }
