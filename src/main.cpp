@@ -151,7 +151,7 @@ void relaxAllEdgesLocalBypass(
     const std::function<bool(size_t, size_t, long long)> &edgeConsidered,
     Data &data,
     const BlockDistribution::Distribution &dist,
-    std::map<long long, std::vector<size_t>> &buckets,
+    // std::map<long long, std::vector<size_t>> &buckets,
     long long delta_val)
 {
     // --- Relaxation Step ---
@@ -316,8 +316,8 @@ void processBucket(
 
         if (enable_local_bypass)
         {
-            relaxAllEdgesLocalBypass(activeSet, edgeConsidered, data, dist, buckets, delta_val);
-            // relaxAllEdgesLocalBypass(activeSet, edgeConsidered, data, dist, delta_val);
+            // relaxAllEdgesLocalBypass(activeSet, edgeConsidered, data, dist, buckets, delta_val);
+            relaxAllEdgesLocalBypass(activeSet, edgeConsidered, data, dist, delta_val);
         }
         else
         {
