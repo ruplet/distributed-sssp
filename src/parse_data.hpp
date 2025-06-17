@@ -151,7 +151,7 @@ public:
         upd.vGlobalIdx = vGlobalIdx;
         upd.newDist = potential_new_dist;
         upd.prevDist = getDist(vGlobalIdx);
-        distToRoot[vGlobalIdx - firstResponsibleGlobalIdx] = potential_new_dist;
+        // distToRoot[vGlobalIdx - firstResponsibleGlobalIdx] = potential_new_dist;
         selfUpdates.push_back(upd);
     }
 
