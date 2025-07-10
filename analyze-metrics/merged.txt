@@ -1,0 +1,2076 @@
+TESTMAX not set. Setting to 10100200300
+Solution: LOGIN69
+Skipping: random-ar3-h9-e295240-s46_29524_768
+Skipping: bigcycle_100100_24
+Skipping: random-ar2-h10-e32752-s42_2047_5
+Skipping: random-ar3-h9-e295240-s44_29524_768
+Skipping: random-ar2-h10-e10235-s42_2047_5
+Skipping: random-ar3-h6-e2186-s4_1093_5
+Skipping: random-ar2-h7-e510-s42_255_37
+Skipping: random-ar2-h10-e20470-s42_2047_5
+Skipping: random-ar2-h7-e510-s42_255_14
+Skipping: bigcycle_10_2
+Skipping: random-ar3-h6-e2186-s1_1093_5
+Skipping: random-ar2-h7-e510-s42_255_31
+Skipping: bigcycle_4_1
+Skipping: random-ar2-h7-e510-s42_255_29
+Skipping: bigcycle_1000000_24
+Skipping: random-ar2-h7-e510-s42_255_5
+Skipping: random-ar3-h6-e2186-s2_1093_5
+Skipping: random-ar3-h6-e2186-s9_1093_5
+Skipping: random-ar2-h7-e510-s42_255_26
+Skipping: random-ar3-h9-e295240-s42_29524_768
+Skipping: random-ar3-h6-e2186-s7_1093_5
+Skipping: random-ar2-h10-e26611-s42_2047_5
+Skipping: random-ar3-h9-e295240-s41_29524_768
+Running: rmat1-bench-rmat1-bench-graph500-scale-19_524288_192
+Executing: srun -n 192 ./test_command.sh LOGIN69 rmat1-bench-rmat1-bench-graph500-scale-19_524288_192 10 --ios --nolocal-bypass --logging progress
+    rmat1-bench-rmat1-bench-graph500-scale-19_524288_192: Finished! Skipping validation
+stdout: Parsing data took: 5.48609s
+Delta-stepping (one-sided) finished.
+Time: 12.922s.
+Short relaxations: 272461
+  from which bypassed: 0
+Long relaxations: 1327492
+Total phases: 55
+
+Skipping: random-ar2-h7-e510-s42_255_39
+Skipping: random-ar2-h10-e6141-s42_2047_5
+Skipping: random-ar2-h10-e30705-s42_2047_5
+Skipping: random-ar2-h7-e510-s42_255_9
+Skipping: random-ar2-h7-e510-s42_255_27
+Skipping: random-ar2-h7-e510-s42_255_1
+Skipping: random-ar2-h10-e24564-s42_2047_5
+Running: rmat1-bench-rmat1-bench-graph500-scale-15_32768_12
+Executing: srun -n 12 ./test_command.sh LOGIN69 rmat1-bench-rmat1-bench-graph500-scale-15_32768_12 10 --ios --nolocal-bypass --logging progress
+    rmat1-bench-rmat1-bench-graph500-scale-15_32768_12: Finished! Skipping validation
+stdout: Parsing data took: 0.322892s
+Delta-stepping (one-sided) finished.
+Time: 0.123035s.
+Short relaxations: 7422
+  from which bypassed: 0
+Long relaxations: 22032
+Total phases: 53
+
+Skipping: random-ar2-h7-e510-s42_255_3
+Skipping: path_20_4
+Skipping: random-ar3-h9-e295240-s45_29524_768
+Skipping: random-ar2-h7-e510-s42_255_13
+Skipping: random-ar2-h7-e510-s42_255_35
+Skipping: random-ar3-h9-e295240-s48_29524_768
+Skipping: random-ar2-h10-e28658-s42_2047_5
+Skipping: bigcycle_100_1
+Skipping: random-ar2-h15-e131070-s47_65535_768
+Skipping: random-ar2-h7-e510-s42_255_12
+Skipping: random-ar2-h7-e510-s42_255_16
+Skipping: random-ar2-h7-e510-s42_255_8
+Skipping: bigcycle_100200300_48
+Skipping: random-ar2-h10-e4094-s42_2047_5
+Skipping: random-ar3-h9-e295240-s43_29524_768
+Skipping: random-ar2-h7-e510-s42_255_2
+Skipping: random-ar2-h7-e510-s42_255_40
+Skipping: random-ar3-h6-e2186-s3_1093_5
+Skipping: random-ar2-h7-e510-s42_255_41
+Skipping: random-ar2-h15-e131070-s42_65535_768
+Skipping: random-ar3-h6-e2186-s8_1093_5
+Skipping: random-ar2-h7-e510-s42_255_20
+Skipping: random-ar2-h7-e510-s42_255_23
+Skipping: random-ar2-h15-e131070-s44_65535_768
+Skipping: random-ar3-h6-e2186-s6_1093_5
+Skipping: random-ar2-h20-e33554416-s42_2097151_24
+Skipping: bigcycle_5_1
+Skipping: random-ar2-h7-e510-s42_255_7
+Skipping: random-ar2-h7-e510-s42_255_34
+Skipping: random-ar2-h7-e510-s42_255_28
+Skipping: random-ar2-h7-e510-s42_255_33
+Skipping: random-ar2-h7-e510-s42_255_42
+Skipping: random-ar2-h15-e131070-s40_65535_768
+Skipping: random-ar2-h15-e131070-s45_65535_768
+Skipping: random-ar2-h10-e12282-s42_2047_5
+Running: rmat1-bench-rmat1-bench-graph500-scale-16_65536_24
+Executing: srun -n 24 ./test_command.sh LOGIN69 rmat1-bench-rmat1-bench-graph500-scale-16_65536_24 10 --ios --nolocal-bypass --logging progress
+    rmat1-bench-rmat1-bench-graph500-scale-16_65536_24: Finished! Skipping validation
+stdout: Parsing data took: 0.607737s
+Delta-stepping (one-sided) finished.
+Time: 0.456263s.
+Short relaxations: 14049
+  from which bypassed: 0
+Long relaxations: 42653
+Total phases: 53
+
+Skipping: bigcycle_120_4
+Skipping: random-ar2-h15-e131070-s46_65535_768
+Skipping: random-ar2-h7-e510-s42_255_4
+Skipping: random-ar2-h7-e510-s42_255_11
+Skipping: random-ar2-h7-e510-s42_255_6
+Skipping: random-ar2-h10-e16376-s42_2047_5
+Skipping: random-ar2-h7-e510-s42_255_15
+Skipping: random-ar2-h15-e131070-s49_65535_768
+Skipping: bigcycle_12_3
+Skipping: bigcycle_1100200_48
+Skipping: random-ar2-h15-e131070-s48_65535_768
+Skipping: random-ar3-h6-e2186-s10_1093_5
+Skipping: bigcycle_10100200_48
+Skipping: random-ar2-h10-e18423-s42_2047_5
+Skipping: random-ar2-h7-e510-s42_255_21
+Skipping: random-ar2-h15-e131070-s41_65535_768
+Skipping: bigcycle_17019_27
+Skipping: random-ar3-h9-e295240-s47_29524_768
+Skipping: bigcycle_4300400500_72
+Skipping: bigcycle_5_2
+Skipping: random-ar2-h7-e510-s42_255_25
+Skipping: random-ar3-h9-e295240-s49_29524_768
+Skipping: random-ar2-h7-e510-s42_255_32
+Skipping: random-ar2-h10-e14329-s42_2047_5
+Skipping: random-ar2-h7-e510-s42_255_22
+Skipping: random-ar2-h10-e8188-s42_2047_5
+Skipping: random-ar2-h7-e510-s42_255_30
+Skipping: random-ar3-h9-e295240-s40_29524_768
+Skipping: bigcycle_10_3
+Skipping: random-ar2-h7-e510-s42_255_38
+Skipping: random-ar2-h7-e510-s42_255_19
+Skipping: random-ar2-h10-e22517-s42_2047_5
+Skipping: random-ar2-h7-e510-s42_255_18
+Skipping: random-ar3-h6-e2186-s5_1093_5
+Skipping: random-ar2-h7-e510-s42_255_10
+Skipping: bigcycle_1200_6
+Running: rmat1-bench-rmat1-bench-graph500-scale-17_131072_48
+Executing: srun -n 48 ./test_command.sh LOGIN69 rmat1-bench-rmat1-bench-graph500-scale-17_131072_48 10 --ios --nolocal-bypass --logging progress
+    rmat1-bench-rmat1-bench-graph500-scale-17_131072_48: Finished! Skipping validation
+stdout: Parsing data took: 1.32423s
+Delta-stepping (one-sided) finished.
+Time: 0.987058s.
+Short relaxations: 40792
+  from which bypassed: 0
+Long relaxations: 140512
+Total phases: 55
+
+Skipping: random-ar2-h7-e510-s42_255_17
+Running: rmat1-bench-rmat1-bench-graph500-scale-18_262144_96
+Executing: srun -n 96 ./test_command.sh LOGIN69 rmat1-bench-rmat1-bench-graph500-scale-18_262144_96 10 --ios --nolocal-bypass --logging progress
+    rmat1-bench-rmat1-bench-graph500-scale-18_262144_96: Finished! Skipping validation
+stdout: Parsing data took: 2.80927s
+Delta-stepping (one-sided) finished.
+Time: 3.60769s.
+Short relaxations: 108529
+  from which bypassed: 0
+Long relaxations: 442938
+Total phases: 55
+
+Running: rmat1-bench-rmat1-bench-graph500-scale-14_16384_6
+Executing: srun -n 6 ./test_command.sh LOGIN69 rmat1-bench-rmat1-bench-graph500-scale-14_16384_6 10 --ios --nolocal-bypass --logging progress
+    rmat1-bench-rmat1-bench-graph500-scale-14_16384_6: Finished! Skipping validation
+stdout: Parsing data took: 0.151554s
+Delta-stepping (one-sided) finished.
+Time: 0.0307617s.
+Short relaxations: 3975
+  from which bypassed: 0
+Long relaxations: 11307
+Total phases: 53
+
+Skipping: random_20_4
+Skipping: random-ar2-h7-e510-s42_255_24
+Skipping: random-ar2-h15-e131070-s43_65535_768
+Skipping: random-ar2-h7-e510-s42_255_36
+TESTMAX not set. Setting to 10100200300
+Solution: LOGIN69
+Skipping: random-ar3-h9-e295240-s46_29524_768
+Skipping: bigcycle_100100_24
+Skipping: random-ar2-h10-e32752-s42_2047_5
+Skipping: random-ar3-h9-e295240-s44_29524_768
+Skipping: random-ar2-h10-e10235-s42_2047_5
+Skipping: random-ar3-h6-e2186-s4_1093_5
+Skipping: random-ar2-h7-e510-s42_255_37
+Skipping: random-ar2-h10-e20470-s42_2047_5
+Skipping: random-ar2-h7-e510-s42_255_14
+Skipping: bigcycle_10_2
+Skipping: random-ar3-h6-e2186-s1_1093_5
+Skipping: random-ar2-h7-e510-s42_255_31
+Skipping: bigcycle_4_1
+Skipping: random-ar2-h7-e510-s42_255_29
+Skipping: bigcycle_1000000_24
+Skipping: random-ar2-h7-e510-s42_255_5
+Skipping: random-ar3-h6-e2186-s2_1093_5
+Skipping: random-ar3-h6-e2186-s9_1093_5
+Skipping: random-ar2-h7-e510-s42_255_26
+Skipping: random-ar3-h9-e295240-s42_29524_768
+Skipping: random-ar3-h6-e2186-s7_1093_5
+Skipping: random-ar2-h10-e26611-s42_2047_5
+Skipping: random-ar3-h9-e295240-s41_29524_768
+Running: rmat1-bench-rmat1-bench-graph500-scale-19_524288_192
+Executing: srun -n 192 ./test_command.sh LOGIN69 rmat1-bench-rmat1-bench-graph500-scale-19_524288_192 10 --ios --nolocal-bypass --logging progress
+    rmat1-bench-rmat1-bench-graph500-scale-19_524288_192: Finished! Skipping validation
+stdout: Parsing data took: 5.18558s
+Delta-stepping (one-sided) finished.
+Time: 17.3694s.
+Short relaxations: 272461
+  from which bypassed: 0
+Long relaxations: 1327492
+Total phases: 55
+
+Skipping: random-ar2-h7-e510-s42_255_39
+Skipping: random-ar2-h10-e6141-s42_2047_5
+Skipping: random-ar2-h10-e30705-s42_2047_5
+Skipping: random-ar2-h7-e510-s42_255_9
+Skipping: random-ar2-h7-e510-s42_255_27
+Skipping: random-ar2-h7-e510-s42_255_1
+Skipping: random-ar2-h10-e24564-s42_2047_5
+Running: rmat1-bench-rmat1-bench-graph500-scale-15_32768_12
+Executing: srun -n 12 ./test_command.sh LOGIN69 rmat1-bench-rmat1-bench-graph500-scale-15_32768_12 10 --ios --nolocal-bypass --logging progress
+    rmat1-bench-rmat1-bench-graph500-scale-15_32768_12: Finished! Skipping validation
+stdout: Parsing data took: 0.322186s
+Delta-stepping (one-sided) finished.
+Time: 0.169562s.
+Short relaxations: 7422
+  from which bypassed: 0
+Long relaxations: 22032
+Total phases: 53
+
+Skipping: random-ar2-h7-e510-s42_255_3
+Skipping: path_20_4
+Skipping: random-ar3-h9-e295240-s45_29524_768
+Skipping: random-ar2-h7-e510-s42_255_13
+Skipping: random-ar2-h7-e510-s42_255_35
+Skipping: random-ar3-h9-e295240-s48_29524_768
+Skipping: random-ar2-h10-e28658-s42_2047_5
+Skipping: bigcycle_100_1
+Skipping: random-ar2-h15-e131070-s47_65535_768
+Skipping: random-ar2-h7-e510-s42_255_12
+Skipping: random-ar2-h7-e510-s42_255_16
+Skipping: random-ar2-h7-e510-s42_255_8
+Skipping: bigcycle_100200300_48
+Skipping: random-ar2-h10-e4094-s42_2047_5
+Skipping: random-ar3-h9-e295240-s43_29524_768
+Skipping: random-ar2-h7-e510-s42_255_2
+Skipping: random-ar2-h7-e510-s42_255_40
+Skipping: random-ar3-h6-e2186-s3_1093_5
+Skipping: random-ar2-h7-e510-s42_255_41
+Skipping: random-ar2-h15-e131070-s42_65535_768
+Skipping: random-ar3-h6-e2186-s8_1093_5
+Skipping: random-ar2-h7-e510-s42_255_20
+Skipping: random-ar2-h7-e510-s42_255_23
+Skipping: random-ar2-h15-e131070-s44_65535_768
+Skipping: random-ar3-h6-e2186-s6_1093_5
+Skipping: random-ar2-h20-e33554416-s42_2097151_24
+Skipping: bigcycle_5_1
+Skipping: random-ar2-h7-e510-s42_255_7
+Skipping: random-ar2-h7-e510-s42_255_34
+Skipping: random-ar2-h7-e510-s42_255_28
+Skipping: random-ar2-h7-e510-s42_255_33
+Skipping: random-ar2-h7-e510-s42_255_42
+Skipping: random-ar2-h15-e131070-s40_65535_768
+Skipping: random-ar2-h15-e131070-s45_65535_768
+Skipping: random-ar2-h10-e12282-s42_2047_5
+Running: rmat1-bench-rmat1-bench-graph500-scale-16_65536_24
+Executing: srun -n 24 ./test_command.sh LOGIN69 rmat1-bench-rmat1-bench-graph500-scale-16_65536_24 10 --ios --nolocal-bypass --logging progress
+    rmat1-bench-rmat1-bench-graph500-scale-16_65536_24: Finished! Skipping validation
+stdout: Parsing data took: 0.593575s
+Delta-stepping (one-sided) finished.
+Time: 0.791242s.
+Short relaxations: 14049
+  from which bypassed: 0
+Long relaxations: 42653
+Total phases: 53
+
+Skipping: bigcycle_120_4
+Skipping: random-ar2-h15-e131070-s46_65535_768
+Skipping: random-ar2-h7-e510-s42_255_4
+Skipping: random-ar2-h7-e510-s42_255_11
+Skipping: random-ar2-h7-e510-s42_255_6
+Skipping: random-ar2-h10-e16376-s42_2047_5
+Skipping: random-ar2-h7-e510-s42_255_15
+Skipping: random-ar2-h15-e131070-s49_65535_768
+Skipping: bigcycle_12_3
+Skipping: bigcycle_1100200_48
+Skipping: random-ar2-h15-e131070-s48_65535_768
+Skipping: random-ar3-h6-e2186-s10_1093_5
+Skipping: bigcycle_10100200_48
+Skipping: random-ar2-h10-e18423-s42_2047_5
+Skipping: random-ar2-h7-e510-s42_255_21
+Skipping: random-ar2-h15-e131070-s41_65535_768
+Skipping: bigcycle_17019_27
+Skipping: random-ar3-h9-e295240-s47_29524_768
+Skipping: bigcycle_4300400500_72
+Skipping: bigcycle_5_2
+Skipping: random-ar2-h7-e510-s42_255_25
+Skipping: random-ar3-h9-e295240-s49_29524_768
+Skipping: random-ar2-h7-e510-s42_255_32
+Skipping: random-ar2-h10-e14329-s42_2047_5
+Skipping: random-ar2-h7-e510-s42_255_22
+Skipping: random-ar2-h10-e8188-s42_2047_5
+Skipping: random-ar2-h7-e510-s42_255_30
+Skipping: random-ar3-h9-e295240-s40_29524_768
+Skipping: bigcycle_10_3
+Skipping: random-ar2-h7-e510-s42_255_38
+Skipping: random-ar2-h7-e510-s42_255_19
+Skipping: random-ar2-h10-e22517-s42_2047_5
+Skipping: random-ar2-h7-e510-s42_255_18
+Skipping: random-ar3-h6-e2186-s5_1093_5
+Skipping: random-ar2-h7-e510-s42_255_10
+Skipping: bigcycle_1200_6
+Running: rmat1-bench-rmat1-bench-graph500-scale-17_131072_48
+Executing: srun -n 48 ./test_command.sh LOGIN69 rmat1-bench-rmat1-bench-graph500-scale-17_131072_48 10 --ios --nolocal-bypass --logging progress
+    rmat1-bench-rmat1-bench-graph500-scale-17_131072_48: Finished! Skipping validation
+stdout: Parsing data took: 1.24676s
+Delta-stepping (one-sided) finished.
+Time: 1.25185s.
+Short relaxations: 40792
+  from which bypassed: 0
+Long relaxations: 140512
+Total phases: 55
+
+Skipping: random-ar2-h7-e510-s42_255_17
+Running: rmat1-bench-rmat1-bench-graph500-scale-18_262144_96
+Executing: srun -n 96 ./test_command.sh LOGIN69 rmat1-bench-rmat1-bench-graph500-scale-18_262144_96 10 --ios --nolocal-bypass --logging progress
+    rmat1-bench-rmat1-bench-graph500-scale-18_262144_96: Finished! Skipping validation
+stdout: Parsing data took: 2.4722s
+Delta-stepping (one-sided) finished.
+Time: 2.47979s.
+Short relaxations: 108529
+  from which bypassed: 0
+Long relaxations: 442938
+Total phases: 55
+
+Running: rmat1-bench-rmat1-bench-graph500-scale-14_16384_6
+Executing: srun -n 6 ./test_command.sh LOGIN69 rmat1-bench-rmat1-bench-graph500-scale-14_16384_6 10 --ios --nolocal-bypass --logging progress
+    rmat1-bench-rmat1-bench-graph500-scale-14_16384_6: Finished! Skipping validation
+stdout: Parsing data took: 0.151005s
+Delta-stepping (one-sided) finished.
+Time: 0.0315301s.
+Short relaxations: 3975
+  from which bypassed: 0
+Long relaxations: 11307
+Total phases: 53
+
+Skipping: random_20_4
+Skipping: random-ar2-h7-e510-s42_255_24
+Skipping: random-ar2-h15-e131070-s43_65535_768
+Skipping: random-ar2-h7-e510-s42_255_36
+TESTMAX not set. Setting to 10100200300
+Solution: LOGIN69
+Skipping: bigcycle_100100_24
+Skipping: random-ar2-h10-e32752-s42_2047_5
+Skipping: random-ar2-h10-e10235-s42_2047_5
+Skipping: random-ar3-h6-e2186-s4_1093_5
+Skipping: random-ar2-h7-e510-s42_255_37
+Skipping: random-ar2-h10-e20470-s42_2047_5
+Skipping: random-ar2-h7-e510-s42_255_14
+Skipping: bigcycle_10_2
+Skipping: random-ar3-h6-e2186-s1_1093_5
+Skipping: random-ar2-h7-e510-s42_255_31
+Skipping: bigcycle_4_1
+Skipping: random-ar2-h7-e510-s42_255_29
+Skipping: bigcycle_1000000_24
+Skipping: random-ar2-h7-e510-s42_255_5
+Skipping: random-ar3-h6-e2186-s2_1093_5
+Skipping: random-ar3-h6-e2186-s9_1093_5
+Skipping: random-ar2-h7-e510-s42_255_26
+Skipping: random-ar3-h6-e2186-s7_1093_5
+Skipping: random-ar2-h10-e26611-s42_2047_5
+Running: rmat1-bench-rmat1-bench-graph500-scale-19_524288_192
+Executing: srun -n 192 ./test_command.sh LOGIN69 rmat1-bench-rmat1-bench-graph500-scale-19_524288_192 10 --noios --local-bypass --logging progress
+    rmat1-bench-rmat1-bench-graph500-scale-19_524288_192: Finished! Skipping validation
+stdout: Parsing data took: 5.46987s
+Delta-stepping (one-sided) finished.
+Time: 62.3219s.
+Short relaxations: 272514
+  from which bypassed: 292
+Long relaxations: 1364767
+Total phases: 28
+
+Skipping: random-ar2-h7-e510-s42_255_39
+Skipping: random-ar2-h10-e6141-s42_2047_5
+Skipping: random-ar2-h10-e30705-s42_2047_5
+Skipping: random-ar2-h7-e510-s42_255_9
+Skipping: random-ar2-h7-e510-s42_255_27
+Skipping: random-ar2-h7-e510-s42_255_1
+Skipping: random-ar2-h10-e24564-s42_2047_5
+Running: rmat1-bench-rmat1-bench-graph500-scale-15_32768_12
+Executing: srun -n 12 ./test_command.sh LOGIN69 rmat1-bench-rmat1-bench-graph500-scale-15_32768_12 10 --noios --local-bypass --logging progress
+    rmat1-bench-rmat1-bench-graph500-scale-15_32768_12: Finished! Skipping validation
+stdout: Parsing data took: 0.326746s
+Delta-stepping (one-sided) finished.
+Time: 0.395206s.
+Short relaxations: 7422
+  from which bypassed: 353
+Long relaxations: 22032
+Total phases: 27
+
+Skipping: random-ar2-h7-e510-s42_255_3
+Skipping: path_20_4
+Skipping: random-ar2-h7-e510-s42_255_13
+Skipping: random-ar2-h7-e510-s42_255_35
+Skipping: random-ar2-h10-e28658-s42_2047_5
+Skipping: bigcycle_100_1
+Skipping: random-ar2-h7-e510-s42_255_12
+Skipping: random-ar2-h7-e510-s42_255_16
+Skipping: random-ar2-h7-e510-s42_255_8
+Skipping: bigcycle_100200300_48
+Skipping: random-ar2-h10-e4094-s42_2047_5
+Skipping: random-ar2-h7-e510-s42_255_2
+Skipping: random-ar2-h7-e510-s42_255_40
+Skipping: random-ar3-h6-e2186-s3_1093_5
+Skipping: random-ar2-h7-e510-s42_255_41
+Skipping: random-ar3-h6-e2186-s8_1093_5
+Skipping: random-ar2-h7-e510-s42_255_20
+Skipping: random-ar2-h7-e510-s42_255_23
+Skipping: random-ar3-h6-e2186-s6_1093_5
+Skipping: random-ar2-h20-e33554416-s42_2097151_24
+Skipping: bigcycle_5_1
+Skipping: random-ar2-h7-e510-s42_255_7
+Skipping: random-ar2-h7-e510-s42_255_34
+Skipping: random-ar2-h7-e510-s42_255_28
+Skipping: random-ar2-h7-e510-s42_255_33
+Skipping: random-ar2-h7-e510-s42_255_42
+Skipping: random-ar2-h10-e12282-s42_2047_5
+Running: rmat1-bench-rmat1-bench-graph500-scale-16_65536_24
+Executing: srun -n 24 ./test_command.sh LOGIN69 rmat1-bench-rmat1-bench-graph500-scale-16_65536_24 10 --noios --local-bypass --logging progress
+    rmat1-bench-rmat1-bench-graph500-scale-16_65536_24: Finished! Skipping validation
+stdout: Parsing data took: 0.622748s
+Delta-stepping (one-sided) finished.
+Time: 1.4871s.
+Short relaxations: 14049
+  from which bypassed: 366
+Long relaxations: 42653
+Total phases: 27
+
+Skipping: bigcycle_120_4
+Skipping: random-ar2-h7-e510-s42_255_4
+Skipping: random-ar2-h7-e510-s42_255_11
+Skipping: random-ar2-h7-e510-s42_255_6
+Skipping: random-ar2-h10-e16376-s42_2047_5
+Skipping: random-ar2-h7-e510-s42_255_15
+Skipping: bigcycle_12_3
+Skipping: bigcycle_1100200_48
+Skipping: random-ar3-h6-e2186-s10_1093_5
+Skipping: bigcycle_10100200_48
+Skipping: random-ar2-h10-e18423-s42_2047_5
+Skipping: random-ar2-h7-e510-s42_255_21
+Skipping: bigcycle_17019_27
+Skipping: bigcycle_4300400500_72
+Skipping: bigcycle_5_2
+Skipping: random-ar2-h7-e510-s42_255_25
+Skipping: random-ar2-h7-e510-s42_255_32
+Skipping: random-ar2-h10-e14329-s42_2047_5
+Skipping: random-ar2-h7-e510-s42_255_22
+Skipping: random-ar2-h10-e8188-s42_2047_5
+Skipping: random-ar2-h7-e510-s42_255_30
+Skipping: bigcycle_10_3
+Skipping: random-ar2-h7-e510-s42_255_38
+Skipping: random-ar2-h7-e510-s42_255_19
+Skipping: random-ar2-h10-e22517-s42_2047_5
+Skipping: random-ar2-h7-e510-s42_255_18
+Skipping: random-ar3-h6-e2186-s5_1093_5
+Skipping: random-ar2-h7-e510-s42_255_10
+Skipping: bigcycle_1200_6
+Running: rmat1-bench-rmat1-bench-graph500-scale-17_131072_48
+Executing: srun -n 48 ./test_command.sh LOGIN69 rmat1-bench-rmat1-bench-graph500-scale-17_131072_48 10 --noios --local-bypass --logging progress
+    rmat1-bench-rmat1-bench-graph500-scale-17_131072_48: Finished! Skipping validation
+stdout: Parsing data took: 1.29104s
+Delta-stepping (one-sided) finished.
+Time: 3.81142s.
+Short relaxations: 40792
+  from which bypassed: 332
+Long relaxations: 142132
+Total phases: 28
+
+Skipping: random-ar2-h7-e510-s42_255_17
+Running: rmat1-bench-rmat1-bench-graph500-scale-18_262144_96
+Executing: srun -n 96 ./test_command.sh LOGIN69 rmat1-bench-rmat1-bench-graph500-scale-18_262144_96 10 --noios --local-bypass --logging progress
+    rmat1-bench-rmat1-bench-graph500-scale-18_262144_96: Finished! Skipping validation
+stdout: Parsing data took: 2.7415s
+Delta-stepping (one-sided) finished.
+Time: 9.90766s.
+Short relaxations: 108550
+  from which bypassed: 307
+Long relaxations: 452387
+Total phases: 28
+
+Running: rmat1-bench-rmat1-bench-graph500-scale-14_16384_6
+Executing: srun -n 6 ./test_command.sh LOGIN69 rmat1-bench-rmat1-bench-graph500-scale-14_16384_6 10 --noios --local-bypass --logging progress
+    rmat1-bench-rmat1-bench-graph500-scale-14_16384_6: Finished! Skipping validation
+stdout: Parsing data took: 0.173571s
+Delta-stepping (one-sided) finished.
+Time: 0.0501876s.
+Short relaxations: 3975
+  from which bypassed: 393
+Long relaxations: 11307
+Total phases: 27
+
+Skipping: random_20_4
+Skipping: random-ar2-h7-e510-s42_255_24
+Skipping: random-ar2-h7-e510-s42_255_36
+> srun -n 384 --tasks-per-node 24 -N 16 --cpus-per-task 1 --time 10:00 -- test_command.sh LOGIN69 rmat1-bench-graph500-scale-21_2097152_384
+srun: job 1394098 queued and waiting for resources
+srun: job 1394098 has been allocated resources
+Parsing data took: 22.9732s
+
+srun: Force Terminated job 1394098
+srun: Job step aborted: Waiting up to 32 seconds for job step to finish.
+std::cerr testslurmstepd: error: *** STEP 1394098.0 ON nid00008 CANCELLED AT 2025-06-17T16:49:31 DUE TO TIME LIMIT ***
+srun: error: nid00010: tasks 48-71: Terminated
+srun: launch/slurm: _step_signal: Terminating StepId=1394098.0
+srun: error: nid00109: tasks 336-359: Terminated
+srun: error: nid00107: tasks 288-311: Terminated
+srun: error: nid00108: tasks 312-335: Terminated
+srun: error: nid00105: tasks 240-263: Terminated
+srun: error: nid00110: tasks 360-383: Terminated
+srun: error: nid00100: tasks 120-143: Terminated
+srun: error: nid00106: tasks 264-287: Terminated
+srun: error: nid00104: tasks 216-239: Terminated
+srun: error: nid00102: tasks 168-191: Terminated
+srun: error: nid00099: tasks 96-119: Terminated
+srun: error: nid00103: tasks 192-215: Terminated
+srun: error: nid00101: tasks 144-167: Terminated
+srun: error: nid00098: tasks 72-95: Terminated
+srun: error: nid00009: tasks 24-47: Terminated
+srun: error: nid00008: tasks 0-23: Terminated
+
+> srun -n 384 --tasks-per-node 24 -N 16 --cpus-per-task 1 --time 06:00 -- test_command.sh LOGIN69 rmat1-bench-graph500-scale-19_524288_384
+srun: job 1394063 queued and waiting for resources
+srun: job 1394063 has been allocated resources
+Parsing data took: 5.41112s
+Delta-stepping (one-sided) finished.
+Time: 31.0581s.
+Short relaxations: 272461
+  from which bypassed: 0
+Long relaxations: 1364602
+Total phases: 29
+Last phase before bellman: 0
+run -n 384 --tasks-per-node 12 -N 32 --cpus-per-task 1 --time 10:00 -- test_command.sh LOGIN69 rmat1-bench-graph500-scale-20_1048576_384
+srun: job 1394091 queued and waiting for resources
+srun: job 1394091 has been allocated resources
+Parsing data took: 11.0543s
+Delta-stepping (one-sided) finished.
+Time: 213.658s.
+Short relaxations: 653890
+  from which bypassed: 0
+Long relaxations: 3925983
+Total phases: 29
+Last phase before bellman: 0
+
+ srun -n 96 --tasks-per-node 48 -N 2 --cpus-per-task 1 --time 10:00 -- test_command.sh LOGIN69 rmat1-bench-graph500-scale-19_524288_96
+srun: job 1394068 queued and waiting for resources
+srun: job 1394068 has been allocated resources
+Parsing data took: 10.9592s
+Delta-stepping (one-sided) finished.
+Time: 38.9787s.
+Short relaxations: 272461
+  from which bypassed: 0
+Long relaxations: 1364602
+Total phases: 29
+Last phase before bellman: 0
+
+ srun -n 192 --tasks-per-node 24 -N 8 --cpus-per-task 1 --time 10:00 -- test_command.sh LOGIN69 rmat1-bench-graph500-scale-20_1048576_192
+srun: job 1394078 queued and waiting for resources
+srun: job 1394078 has been allocated resources
+Parsing data took: 11.1247s
+^[[A
+
+Delta-stepping (one-sided) finished.
+Time: 229.854s.
+Short relaxations: 653890
+  from which bypassed: 0
+Long relaxations: 3925983
+Total phases: 29
+Last phase before bellman: 0
+
+> srun -n 384 --tasks-per-node 24 -N 16 --cpus-per-task 1 --time 10:00 -- test_command.sh LOGIN69 rmat1-bench-graph500-scale-20_1048576_384
+srun: job 1394082 queued and waiting for resources
+srun: job 1394082 has been allocated resources
+Parsing data took: 11.1425s
+Delta-stepping (one-sided) finished.
+Time: 218.595s.
+Short relaxations: 653890
+  from which bypassed: 0
+Long relaxations: 3925983
+Total phases: 29
+Last phase before bellman: 0
+
+TESTMAX not set. Setting to 10100200300
+Solution: LOGIN69
+Skipping: bigcycle_100100_24
+Skipping: random-ar2-h10-e32752-s42_2047_5
+Skipping: random-ar2-h10-e10235-s42_2047_5
+Skipping: random-ar3-h6-e2186-s4_1093_5
+Skipping: random-ar2-h7-e510-s42_255_37
+Skipping: random-ar2-h10-e20470-s42_2047_5
+Skipping: random-ar2-h7-e510-s42_255_14
+Skipping: bigcycle_10_2
+Skipping: random-ar3-h6-e2186-s1_1093_5
+Skipping: random-ar2-h7-e510-s42_255_31
+Skipping: bigcycle_4_1
+Skipping: random-ar2-h7-e510-s42_255_29
+Skipping: bigcycle_1000000_24
+Skipping: random-ar2-h7-e510-s42_255_5
+Skipping: random-ar3-h6-e2186-s2_1093_5
+Skipping: random-ar3-h6-e2186-s9_1093_5
+Skipping: random-ar2-h7-e510-s42_255_26
+Skipping: random-ar3-h6-e2186-s7_1093_5
+Skipping: random-ar2-h10-e26611-s42_2047_5
+Running: rmat1-bench-rmat1-bench-graph500-scale-19_524288_192
+Executing: srun -n 192 ./test_command.sh LOGIN69 rmat1-bench-rmat1-bench-graph500-scale-19_524288_192 10 --ios --local-bypass --hybrid --logging progress
+    rmat1-bench-rmat1-bench-graph500-scale-19_524288_192: Finished! Skipping validation
+stdout: Parsing data took: 5.47221s
+Delta-stepping (one-sided) finished.
+Time: 14.5331s.
+Short relaxations: 272514
+  from which bypassed: 292
+Long relaxations: 1327492
+Total phases: 54
+Last phase before bellman: 0
+
+Skipping: random-ar2-h7-e510-s42_255_39
+Skipping: random-ar2-h10-e6141-s42_2047_5
+Skipping: random-ar2-h10-e30705-s42_2047_5
+Skipping: random-ar2-h7-e510-s42_255_9
+Skipping: random-ar2-h7-e510-s42_255_27
+Skipping: random-ar2-h7-e510-s42_255_1
+Skipping: random-ar2-h10-e24564-s42_2047_5
+Running: rmat1-bench-rmat1-bench-graph500-scale-15_32768_12
+Executing: srun -n 12 ./test_command.sh LOGIN69 rmat1-bench-rmat1-bench-graph500-scale-15_32768_12 10 --ios --local-bypass --hybrid --logging progress
+    rmat1-bench-rmat1-bench-graph500-scale-15_32768_12: Finished! Skipping validation
+stdout: Parsing data took: 0.327511s
+Delta-stepping (one-sided) finished.
+Time: 0.138788s.
+Short relaxations: 9143
+  from which bypassed: 353
+Long relaxations: 20532
+Total phases: 37
+Last phase before bellman: 35
+
+Skipping: random-ar2-h7-e510-s42_255_3
+Skipping: path_20_4
+Skipping: random-ar2-h7-e510-s42_255_13
+Skipping: random-ar2-h7-e510-s42_255_35
+Skipping: random-ar2-h10-e28658-s42_2047_5
+Skipping: bigcycle_100_1
+Skipping: random-ar2-h7-e510-s42_255_12
+Skipping: random-ar2-h7-e510-s42_255_16
+Skipping: random-ar2-h7-e510-s42_255_8
+Skipping: bigcycle_100200300_48
+Skipping: random-ar2-h10-e4094-s42_2047_5
+Skipping: random-ar2-h7-e510-s42_255_2
+Skipping: random-ar2-h7-e510-s42_255_40
+Skipping: random-ar3-h6-e2186-s3_1093_5
+Skipping: random-ar2-h7-e510-s42_255_41
+Skipping: random-ar3-h6-e2186-s8_1093_5
+Skipping: random-ar2-h7-e510-s42_255_20
+Skipping: random-ar2-h7-e510-s42_255_23
+Skipping: random-ar3-h6-e2186-s6_1093_5
+Skipping: random-ar2-h20-e33554416-s42_2097151_24
+Skipping: bigcycle_5_1
+Skipping: random-ar2-h7-e510-s42_255_7
+Skipping: random-ar2-h7-e510-s42_255_34
+Skipping: random-ar2-h7-e510-s42_255_28
+Skipping: random-ar2-h7-e510-s42_255_33
+Skipping: random-ar2-h7-e510-s42_255_42
+Skipping: random-ar2-h10-e12282-s42_2047_5
+Running: rmat1-bench-rmat1-bench-graph500-scale-16_65536_24
+Executing: srun -n 24 ./test_command.sh LOGIN69 rmat1-bench-rmat1-bench-graph500-scale-16_65536_24 10 --ios --local-bypass --hybrid --logging progress
+    rmat1-bench-rmat1-bench-graph500-scale-16_65536_24: Finished! Skipping validation
+stdout: Parsing data took: 0.663483s
+Delta-stepping (one-sided) finished.
+Time: 0.511249s.
+Short relaxations: 16529
+  from which bypassed: 366
+Long relaxations: 40541
+Total phases: 41
+Last phase before bellman: 39
+
+Skipping: bigcycle_120_4
+Skipping: random-ar2-h7-e510-s42_255_4
+Skipping: random-ar2-h7-e510-s42_255_11
+Skipping: random-ar2-h7-e510-s42_255_6
+Skipping: random-ar2-h10-e16376-s42_2047_5
+Skipping: random-ar2-h7-e510-s42_255_15
+Skipping: bigcycle_12_3
+Skipping: bigcycle_1100200_48
+Skipping: random-ar3-h6-e2186-s10_1093_5
+Skipping: bigcycle_10100200_48
+Skipping: random-ar2-h10-e18423-s42_2047_5
+Skipping: random-ar2-h7-e510-s42_255_21
+Skipping: bigcycle_17019_27
+Skipping: bigcycle_4300400500_72
+Skipping: bigcycle_5_2
+Skipping: random-ar2-h7-e510-s42_255_25
+Skipping: random-ar2-h7-e510-s42_255_32
+Skipping: random-ar2-h10-e14329-s42_2047_5
+Skipping: random-ar2-h7-e510-s42_255_22
+Skipping: random-ar2-h10-e8188-s42_2047_5
+Skipping: random-ar2-h7-e510-s42_255_30
+Skipping: bigcycle_10_3
+Skipping: random-ar2-h7-e510-s42_255_38
+Skipping: random-ar2-h7-e510-s42_255_19
+Skipping: random-ar2-h10-e22517-s42_2047_5
+Skipping: random-ar2-h7-e510-s42_255_18
+Skipping: random-ar3-h6-e2186-s5_1093_5
+Skipping: random-ar2-h7-e510-s42_255_10
+Skipping: bigcycle_1200_6
+Running: rmat1-bench-rmat1-bench-graph500-scale-17_131072_48
+Executing: srun -n 48 ./test_command.sh LOGIN69 rmat1-bench-rmat1-bench-graph500-scale-17_131072_48 10 --ios --local-bypass --hybrid --logging progress
+    rmat1-bench-rmat1-bench-graph500-scale-17_131072_48: Finished! Skipping validation
+stdout: Parsing data took: 1.37869s
+Delta-stepping (one-sided) finished.
+Time: 1.22346s.
+Short relaxations: 43013
+  from which bypassed: 332
+Long relaxations: 138944
+Total phases: 50
+Last phase before bellman: 48
+
+Skipping: random-ar2-h7-e510-s42_255_17
+Running: rmat1-bench-rmat1-bench-graph500-scale-18_262144_96
+Executing: srun -n 96 ./test_command.sh LOGIN69 rmat1-bench-rmat1-bench-graph500-scale-18_262144_96 10 --ios --local-bypass --hybrid --logging progress
+    rmat1-bench-rmat1-bench-graph500-scale-18_262144_96: Finished! Skipping validation
+stdout: Parsing data took: 2.7727s
+Delta-stepping (one-sided) finished.
+Time: 2.69936s.
+Short relaxations: 109209
+  from which bypassed: 307
+Long relaxations: 442938
+Total phases: 56
+Last phase before bellman: 54
+
+Running: rmat1-bench-rmat1-bench-graph500-scale-14_16384_6
+Executing: srun -n 6 ./test_command.sh LOGIN69 rmat1-bench-rmat1-bench-graph500-scale-14_16384_6 10 --ios --local-bypass --hybrid --logging progress
+    rmat1-bench-rmat1-bench-graph500-scale-14_16384_6: Finished! Skipping validation
+stdout: Parsing data took: 0.16935s
+Delta-stepping (one-sided) finished.
+Time: 0.0291667s.
+Short relaxations: 5117
+  from which bypassed: 393
+Long relaxations: 10302
+Total phases: 33
+Last phase before bellman: 31
+
+Skipping: random_20_4
+Skipping: random-ar2-h7-e510-s42_255_24
+Skipping: random-ar2-h7-e510-s42_255_36
+Running: rmat1-bench-rmat1-bench-graph500-scale-19_524288_192
+Executing: srun -n 192 ./test_command.sh LOGIN69 rmat1-bench-rmat1-bench-graph500-scale-19_524288_192 10 --ios --local-bypass --hybrid --logging progress
+    rmat1-bench-rmat1-bench-graph500-scale-19_524288_192: Finished! Skipping validation
+stdout: Parsing data took: 5.44343s
+Delta-stepping (one-sided) finished.
+Time: 114.326s.
+Short relaxations: 272514
+  from which bypassed: 292
+Long relaxations: 1327492
+Total phases: 54
+Last phase before bellman: 0
+
+srun -n 96 --tasks-per-node 24 -N 4 --cpus-per-task 1 --time 10:00 -- test_command.sh LOGIN69 rmat1-bench-graph500-scale-20_1048576_96/
+srun: job 1394074 queued and waiting for resources
+srun: job 1394074 has been allocated resources
+Parsing data took: 11.2121s
+Delta-stepping (one-sided) finished.
+Time: 508.59s.
+Short relaxations: 653890
+  from which bypassed: 0
+Long relaxations: 3925983
+Total phases: 29
+Last phase before bellman: 0
+
+srun -n 48 --tasks-per-node 24 -N 2 --cpus-per-task 1 --time 10:00 -- test_command.sh LOGIN69 rmat1-bench-graph500-scale-19_524288_48
+srun: job 1394065 queued and waiting for resources
+srun: job 1394065 has been allocated resources
+Parsing data took: 5.50021s
+Delta-stepping (one-sided) finished.
+Time: 85.2086s.
+Short relaxations: 272461
+  from which bypassed: 0
+Long relaxations: 1364602
+Total phases: 29
+Last phase before bellman: 0
+ srun -n 768 --tasks-per-node 24 -N 32 --cpus-per-task 1 --time 10:00 -- test_command.sh LOGIN69 rmat1-bench-graph500-scale-21_2097152_768
+srun: job 1394094 queued and waiting for resources
+srun: job 1394094 has been allocated resources
+Parsing data took: 23.0866s
+
+
+
+
+srun: Force Terminated job 1394094
+srun: Job step aborted: Waiting up to 32 seconds for job step to finish.
+std::cerr testslurmstepd: error: *** STEP 1394094.0 ON nid00056 CANCELLED AT 2025-06-17T16:37:01 DUE TO TIME LIMIT ***
+srun: error: nid00330: tasks 648-671: Terminated
+srun: launch/slurm: _step_signal: Terminating StepId=1394094.0
+srun: error: nid00176: tasks 432-455: Terminated
+srun: error: nid00098: tasks 24-47: Terminated
+srun: error: nid00109: tasks 288-311: Terminated
+srun: error: nid00107: tasks 240-263: Terminated
+srun: error: nid00099: tasks 48-71: Terminated
+srun: error: nid00328: tasks 600-623: Terminated
+
+> ./split graph500/src/out_a5700_bc1900_d10000_s2_3_n21_ef16/ 21 1536 rmat1 reuse
+DEBUG: Parsed scale value: 21
+Error: Could not open output file/FIFO rmat1/graph500-scale-21_2097152_1536/1021.in
+
+limit of descriptors open at once!
+ srun -n 96 --tasks-per-node 12 -N 8 --cpus-per-task 1 --time 10:00 -- test_command.sh LOGIN69 rmat1-bench-graph500-scale-19_524288_96
+srun: job 1394069 queued and waiting for resources
+srun: job 1394069 has been allocated resources
+Parsing data took: 5.44846s
+Delta-stepping (one-sided) finished.
+Time: 21.5577s.
+Short relaxations: 272461
+  from which bypassed: 0
+Long relaxations: 1364602
+Total phases: 29
+Last phase before bellman: 0
+
+srun -n 96 --tasks-per-node 24 -N 4 --cpus-per-task 1 --time 10:00 -- test_command.sh LOGIN69 rmat1-bench-graph500-scale-19_524288_96
+srun: job 1394064 queued and waiting for resources
+srun: job 1394064 has been allocated resources
+Parsing data took: 5.46277s
+Delta-stepping (one-sided) finished.
+Time: 20.5275s.
+Short relaxations: 272461
+  from which bypassed: 0
+Long relaxations: 1364602
+Total phases: 29
+Last phase before bellman: 0
+TESTMAX not set. Setting to 10100200300
+Solution: LOGIN69
+Skipping: bigcycle_100100_24
+Skipping: random-ar2-h10-e32752-s42_2047_5
+Skipping: random-ar2-h10-e10235-s42_2047_5
+Skipping: random-ar3-h6-e2186-s4_1093_5
+Skipping: random-ar2-h7-e510-s42_255_37
+Skipping: random-ar2-h10-e20470-s42_2047_5
+Skipping: random-ar2-h7-e510-s42_255_14
+Skipping: bigcycle_10_2
+Skipping: random-ar3-h6-e2186-s1_1093_5
+Skipping: random-ar2-h7-e510-s42_255_31
+Skipping: bigcycle_4_1
+Skipping: random-ar2-h7-e510-s42_255_29
+Skipping: bigcycle_1000000_24
+Skipping: random-ar2-h7-e510-s42_255_5
+Skipping: random-ar3-h6-e2186-s2_1093_5
+Skipping: random-ar3-h6-e2186-s9_1093_5
+Skipping: random-ar2-h7-e510-s42_255_26
+Skipping: random-ar3-h6-e2186-s7_1093_5
+Skipping: random-ar2-h10-e26611-s42_2047_5
+Running: rmat1-bench-rmat1-bench-graph500-scale-19_524288_192
+Executing: srun -n 192 ./test_command.sh LOGIN69 rmat1-bench-rmat1-bench-graph500-scale-19_524288_192 10 --ios --local-bypass --logging progress
+    rmat1-bench-rmat1-bench-graph500-scale-19_524288_192: Finished! Skipping validation
+stdout: Parsing data took: 5.49341s
+Delta-stepping (one-sided) finished.
+Time: 14.1665s.
+Short relaxations: 272514
+  from which bypassed: 292
+Long relaxations: 1327492
+Total phases: 54
+
+Skipping: random-ar2-h7-e510-s42_255_39
+Skipping: random-ar2-h10-e6141-s42_2047_5
+Skipping: random-ar2-h10-e30705-s42_2047_5
+Skipping: random-ar2-h7-e510-s42_255_9
+Skipping: random-ar2-h7-e510-s42_255_27
+Skipping: random-ar2-h7-e510-s42_255_1
+Skipping: random-ar2-h10-e24564-s42_2047_5
+Running: rmat1-bench-rmat1-bench-graph500-scale-15_32768_12
+Executing: srun -n 12 ./test_command.sh LOGIN69 rmat1-bench-rmat1-bench-graph500-scale-15_32768_12 10 --ios --local-bypass --logging progress
+    rmat1-bench-rmat1-bench-graph500-scale-15_32768_12: Finished! Skipping validation
+stdout: Parsing data took: 0.325726s
+Delta-stepping (one-sided) finished.
+Time: 0.131227s.
+Short relaxations: 7422
+  from which bypassed: 353
+Long relaxations: 22032
+Total phases: 53
+
+Skipping: random-ar2-h7-e510-s42_255_3
+Skipping: path_20_4
+Skipping: random-ar2-h7-e510-s42_255_13
+Skipping: random-ar2-h7-e510-s42_255_35
+Skipping: random-ar2-h10-e28658-s42_2047_5
+Skipping: bigcycle_100_1
+Skipping: random-ar2-h7-e510-s42_255_12
+Skipping: random-ar2-h7-e510-s42_255_16
+Skipping: random-ar2-h7-e510-s42_255_8
+Skipping: bigcycle_100200300_48
+Skipping: random-ar2-h10-e4094-s42_2047_5
+Skipping: random-ar2-h7-e510-s42_255_2
+Skipping: random-ar2-h7-e510-s42_255_40
+Skipping: random-ar3-h6-e2186-s3_1093_5
+Skipping: random-ar2-h7-e510-s42_255_41
+Skipping: random-ar3-h6-e2186-s8_1093_5
+Skipping: random-ar2-h7-e510-s42_255_20
+Skipping: random-ar2-h7-e510-s42_255_23
+Skipping: random-ar3-h6-e2186-s6_1093_5
+Skipping: random-ar2-h20-e33554416-s42_2097151_24
+Skipping: bigcycle_5_1
+Skipping: random-ar2-h7-e510-s42_255_7
+Skipping: random-ar2-h7-e510-s42_255_34
+Skipping: random-ar2-h7-e510-s42_255_28
+Skipping: random-ar2-h7-e510-s42_255_33
+Skipping: random-ar2-h7-e510-s42_255_42
+Skipping: random-ar2-h10-e12282-s42_2047_5
+Running: rmat1-bench-rmat1-bench-graph500-scale-16_65536_24
+Executing: srun -n 24 ./test_command.sh LOGIN69 rmat1-bench-rmat1-bench-graph500-scale-16_65536_24 10 --ios --local-bypass --logging progress
+    rmat1-bench-rmat1-bench-graph500-scale-16_65536_24: Finished! Skipping validation
+stdout: Parsing data took: 0.613764s
+Delta-stepping (one-sided) finished.
+Time: 0.488745s.
+Short relaxations: 14049
+  from which bypassed: 366
+Long relaxations: 42653
+Total phases: 53
+
+Skipping: bigcycle_120_4
+Skipping: random-ar2-h7-e510-s42_255_4
+Skipping: random-ar2-h7-e510-s42_255_11
+Skipping: random-ar2-h7-e510-s42_255_6
+Skipping: random-ar2-h10-e16376-s42_2047_5
+Skipping: random-ar2-h7-e510-s42_255_15
+Skipping: bigcycle_12_3
+Skipping: bigcycle_1100200_48
+Skipping: random-ar3-h6-e2186-s10_1093_5
+Skipping: bigcycle_10100200_48
+Skipping: random-ar2-h10-e18423-s42_2047_5
+Skipping: random-ar2-h7-e510-s42_255_21
+Skipping: bigcycle_17019_27
+Skipping: bigcycle_4300400500_72
+Skipping: bigcycle_5_2
+Skipping: random-ar2-h7-e510-s42_255_25
+Skipping: random-ar2-h7-e510-s42_255_32
+Skipping: random-ar2-h10-e14329-s42_2047_5
+Skipping: random-ar2-h7-e510-s42_255_22
+Skipping: random-ar2-h10-e8188-s42_2047_5
+Skipping: random-ar2-h7-e510-s42_255_30
+Skipping: bigcycle_10_3
+Skipping: random-ar2-h7-e510-s42_255_38
+Skipping: random-ar2-h7-e510-s42_255_19
+Skipping: random-ar2-h10-e22517-s42_2047_5
+Skipping: random-ar2-h7-e510-s42_255_18
+Skipping: random-ar3-h6-e2186-s5_1093_5
+Skipping: random-ar2-h7-e510-s42_255_10
+Skipping: bigcycle_1200_6
+Running: rmat1-bench-rmat1-bench-graph500-scale-17_131072_48
+Executing: srun -n 48 ./test_command.sh LOGIN69 rmat1-bench-rmat1-bench-graph500-scale-17_131072_48 10 --ios --local-bypass --logging progress
+    rmat1-bench-rmat1-bench-graph500-scale-17_131072_48: Finished! Skipping validation
+stdout: Parsing data took: 1.29338s
+Delta-stepping (one-sided) finished.
+Time: 1.12545s.
+Short relaxations: 40792
+  from which bypassed: 332
+Long relaxations: 140512
+Total phases: 54
+
+Skipping: random-ar2-h7-e510-s42_255_17
+Running: rmat1-bench-rmat1-bench-graph500-scale-18_262144_96
+Executing: srun -n 96 ./test_command.sh LOGIN69 rmat1-bench-rmat1-bench-graph500-scale-18_262144_96 10 --ios --local-bypass --logging progress
+    rmat1-bench-rmat1-bench-graph500-scale-18_262144_96: Finished! Skipping validation
+stdout: Parsing data took: 2.78433s
+Delta-stepping (one-sided) finished.
+Time: 2.60541s.
+Short relaxations: 108550
+  from which bypassed: 307
+Long relaxations: 442938
+Total phases: 54
+
+Running: rmat1-bench-rmat1-bench-graph500-scale-14_16384_6
+Executing: srun -n 6 ./test_command.sh LOGIN69 rmat1-bench-rmat1-bench-graph500-scale-14_16384_6 10 --ios --local-bypass --logging progress
+    rmat1-bench-rmat1-bench-graph500-scale-14_16384_6: Finished! Skipping validation
+stdout: Parsing data took: 0.151597s
+Delta-stepping (one-sided) finished.
+Time: 0.0206478s.
+Short relaxations: 3975
+  from which bypassed: 393
+Long relaxations: 11307
+Total phases: 53
+
+Skipping: random_20_4
+Skipping: random-ar2-h7-e510-s42_255_24
+Skipping: random-ar2-h7-e510-s42_255_36
+TESTMAX not set. Setting to 10100200300
+Solution: LOGIN69
+Skipping: random-ar3-h9-e295240-s46_29524_768
+Skipping: bigcycle_100100_24
+Skipping: random-ar2-h10-e32752-s42_2047_5
+Skipping: random-ar3-h9-e295240-s44_29524_768
+Skipping: random-ar2-h10-e10235-s42_2047_5
+Skipping: random-ar3-h6-e2186-s4_1093_5
+Skipping: random-ar2-h7-e510-s42_255_37
+Skipping: random-ar2-h10-e20470-s42_2047_5
+Skipping: random-ar2-h7-e510-s42_255_14
+Skipping: bigcycle_10_2
+Skipping: random-ar3-h6-e2186-s1_1093_5
+Skipping: random-ar2-h7-e510-s42_255_31
+Skipping: bigcycle_4_1
+Skipping: random-ar2-h7-e510-s42_255_29
+Skipping: bigcycle_1000000_24
+Skipping: random-ar2-h7-e510-s42_255_5
+Skipping: random-ar3-h6-e2186-s2_1093_5
+Skipping: random-ar3-h6-e2186-s9_1093_5
+Skipping: random-ar2-h7-e510-s42_255_26
+Skipping: random-ar3-h9-e295240-s42_29524_768
+Skipping: random-ar3-h6-e2186-s7_1093_5
+Skipping: random-ar2-h10-e26611-s42_2047_5
+Skipping: random-ar3-h9-e295240-s41_29524_768
+Running: rmat1-bench-rmat1-bench-graph500-scale-19_524288_192
+Executing: srun -n 192 ./test_command.sh LOGIN69 rmat1-bench-rmat1-bench-graph500-scale-19_524288_192 25 --noios --nolocal-bypass --logging progress
+    rmat1-bench-rmat1-bench-graph500-scale-19_524288_192: Finished! Skipping validation
+stdout: Parsing data took: 5.11537s
+Delta-stepping (one-sided) finished.
+Time: 21.1692s.
+Short relaxations: 513813
+  from which bypassed: 0
+Long relaxations: 1195000
+Total phases: 14
+
+Skipping: random-ar2-h7-e510-s42_255_39
+Skipping: random-ar2-h10-e6141-s42_2047_5
+Skipping: random-ar2-h10-e30705-s42_2047_5
+Skipping: random-ar2-h7-e510-s42_255_9
+Skipping: random-ar2-h7-e510-s42_255_27
+Skipping: random-ar2-h7-e510-s42_255_1
+Skipping: random-ar2-h10-e24564-s42_2047_5
+Running: rmat1-bench-rmat1-bench-graph500-scale-15_32768_12
+Executing: srun -n 12 ./test_command.sh LOGIN69 rmat1-bench-rmat1-bench-graph500-scale-15_32768_12 25 --noios --nolocal-bypass --logging progress
+    rmat1-bench-rmat1-bench-graph500-scale-15_32768_12: Finished! Skipping validation
+stdout: Parsing data took: 0.34048s
+Delta-stepping (one-sided) finished.
+Time: 0.370015s.
+Short relaxations: 11707
+  from which bypassed: 0
+Long relaxations: 17747
+Total phases: 12
+
+Skipping: random-ar2-h7-e510-s42_255_3
+Skipping: path_20_4
+Skipping: random-ar3-h9-e295240-s45_29524_768
+Skipping: random-ar2-h7-e510-s42_255_13
+Skipping: random-ar2-h7-e510-s42_255_35
+Skipping: random-ar3-h9-e295240-s48_29524_768
+Skipping: random-ar2-h10-e28658-s42_2047_5
+Skipping: bigcycle_100_1
+Skipping: random-ar2-h15-e131070-s47_65535_768
+Skipping: random-ar2-h7-e510-s42_255_12
+Skipping: random-ar2-h7-e510-s42_255_16
+Skipping: random-ar2-h7-e510-s42_255_8
+Skipping: bigcycle_100200300_48
+Skipping: random-ar2-h10-e4094-s42_2047_5
+Skipping: random-ar3-h9-e295240-s43_29524_768
+Skipping: random-ar2-h7-e510-s42_255_2
+Skipping: random-ar2-h7-e510-s42_255_40
+Skipping: random-ar3-h6-e2186-s3_1093_5
+Skipping: random-ar2-h7-e510-s42_255_41
+Skipping: random-ar2-h15-e131070-s42_65535_768
+Skipping: random-ar3-h6-e2186-s8_1093_5
+Skipping: random-ar2-h7-e510-s42_255_20
+Skipping: random-ar2-h7-e510-s42_255_23
+Skipping: random-ar2-h15-e131070-s44_65535_768
+Skipping: random-ar3-h6-e2186-s6_1093_5
+Skipping: random-ar2-h20-e33554416-s42_2097151_24
+Skipping: bigcycle_5_1
+Skipping: random-ar2-h7-e510-s42_255_7
+Skipping: random-ar2-h7-e510-s42_255_34
+Skipping: random-ar2-h7-e510-s42_255_28
+Skipping: random-ar2-h7-e510-s42_255_33
+Skipping: random-ar2-h7-e510-s42_255_42
+Skipping: random-ar2-h15-e131070-s40_65535_768
+Skipping: random-ar2-h15-e131070-s45_65535_768
+Skipping: random-ar2-h10-e12282-s42_2047_5
+Running: rmat1-bench-rmat1-bench-graph500-scale-16_65536_24
+Executing: srun -n 24 ./test_command.sh LOGIN69 rmat1-bench-rmat1-bench-graph500-scale-16_65536_24 25 --noios --nolocal-bypass --logging progress
+    rmat1-bench-rmat1-bench-graph500-scale-16_65536_24: Finished! Skipping validation
+stdout: Parsing data took: 0.609348s
+Delta-stepping (one-sided) finished.
+Time: 2.20388s.
+Short relaxations: 22276
+  from which bypassed: 0
+Long relaxations: 34426
+Total phases: 12
+
+Skipping: bigcycle_120_4
+Skipping: random-ar2-h15-e131070-s46_65535_768
+Skipping: random-ar2-h7-e510-s42_255_4
+Skipping: random-ar2-h7-e510-s42_255_11
+Skipping: random-ar2-h7-e510-s42_255_6
+Skipping: random-ar2-h10-e16376-s42_2047_5
+Skipping: random-ar2-h7-e510-s42_255_15
+Skipping: random-ar2-h15-e131070-s49_65535_768
+Skipping: bigcycle_12_3
+Skipping: bigcycle_1100200_48
+Skipping: random-ar2-h15-e131070-s48_65535_768
+Skipping: random-ar3-h6-e2186-s10_1093_5
+Skipping: bigcycle_10100200_48
+Skipping: random-ar2-h10-e18423-s42_2047_5
+Skipping: random-ar2-h7-e510-s42_255_21
+Skipping: random-ar2-h15-e131070-s41_65535_768
+Skipping: bigcycle_17019_27
+Skipping: random-ar3-h9-e295240-s47_29524_768
+Skipping: bigcycle_4300400500_72
+Skipping: bigcycle_5_2
+Skipping: random-ar2-h7-e510-s42_255_25
+Skipping: random-ar3-h9-e295240-s49_29524_768
+Skipping: random-ar2-h7-e510-s42_255_32
+Skipping: random-ar2-h10-e14329-s42_2047_5
+Skipping: random-ar2-h7-e510-s42_255_22
+Skipping: random-ar2-h10-e8188-s42_2047_5
+Skipping: random-ar2-h7-e510-s42_255_30
+Skipping: random-ar3-h9-e295240-s40_29524_768
+Skipping: bigcycle_10_3
+Skipping: random-ar2-h7-e510-s42_255_38
+Skipping: random-ar2-h7-e510-s42_255_19
+Skipping: random-ar2-h10-e22517-s42_2047_5
+Skipping: random-ar2-h7-e510-s42_255_18
+Skipping: random-ar3-h6-e2186-s5_1093_5
+Skipping: random-ar2-h7-e510-s42_255_10
+Skipping: bigcycle_1200_6
+Running: rmat1-bench-rmat1-bench-graph500-scale-17_131072_48
+Executing: srun -n 48 ./test_command.sh LOGIN69 rmat1-bench-rmat1-bench-graph500-scale-17_131072_48 25 --noios --nolocal-bypass --logging progress
+    rmat1-bench-rmat1-bench-graph500-scale-17_131072_48: Finished! Skipping validation
+stdout: Parsing data took: 1.2375s
+Delta-stepping (one-sided) finished.
+Time: 3.50234s.
+Short relaxations: 69529
+  from which bypassed: 0
+Long relaxations: 118325
+Total phases: 14
+
+Skipping: random-ar2-h7-e510-s42_255_17
+Running: rmat1-bench-rmat1-bench-graph500-scale-18_262144_96
+Executing: srun -n 96 ./test_command.sh LOGIN69 rmat1-bench-rmat1-bench-graph500-scale-18_262144_96 25 --noios --nolocal-bypass --logging progress
+    rmat1-bench-rmat1-bench-graph500-scale-18_262144_96: Finished! Skipping validation
+stdout: Parsing data took: 2.48962s
+Delta-stepping (one-sided) finished.
+Time: 6.55024s.
+Short relaxations: 195247
+  from which bypassed: 0
+Long relaxations: 387581
+Total phases: 14
+
+Running: rmat1-bench-rmat1-bench-graph500-scale-14_16384_6
+Executing: srun -n 6 ./test_command.sh LOGIN69 rmat1-bench-rmat1-bench-graph500-scale-14_16384_6 25 --noios --nolocal-bypass --logging progress
+    rmat1-bench-rmat1-bench-graph500-scale-14_16384_6: Finished! Skipping validation
+stdout: Parsing data took: 0.152047s
+Delta-stepping (one-sided) finished.
+Time: 0.0339897s.
+Short relaxations: 6261
+  from which bypassed: 0
+Long relaxations: 9021
+Total phases: 12
+
+Skipping: random_20_4
+Skipping: random-ar2-h7-e510-s42_255_24
+Skipping: random-ar2-h15-e131070-s43_65535_768
+Skipping: random-ar2-h7-e510-s42_255_36
+TESTMAX not set. Setting to 10100200300
+Solution: LOGIN69
+Skipping: random-ar3-h9-e295240-s46_29524_768
+Skipping: bigcycle_100100_24
+Skipping: random-ar2-h10-e32752-s42_2047_5
+Skipping: random-ar3-h9-e295240-s44_29524_768
+Skipping: random-ar2-h10-e10235-s42_2047_5
+Skipping: random-ar3-h6-e2186-s4_1093_5
+Skipping: random-ar2-h7-e510-s42_255_37
+Skipping: random-ar2-h10-e20470-s42_2047_5
+Skipping: random-ar2-h7-e510-s42_255_14
+Skipping: bigcycle_10_2
+Skipping: random-ar3-h6-e2186-s1_1093_5
+Skipping: random-ar2-h7-e510-s42_255_31
+Skipping: bigcycle_4_1
+Skipping: random-ar2-h7-e510-s42_255_29
+Skipping: bigcycle_1000000_24
+Skipping: random-ar2-h7-e510-s42_255_5
+Skipping: random-ar3-h6-e2186-s2_1093_5
+Skipping: random-ar3-h6-e2186-s9_1093_5
+Skipping: random-ar2-h7-e510-s42_255_26
+Skipping: random-ar3-h9-e295240-s42_29524_768
+Skipping: random-ar3-h6-e2186-s7_1093_5
+Skipping: random-ar2-h10-e26611-s42_2047_5
+Skipping: random-ar3-h9-e295240-s41_29524_768
+Running: rmat1-bench-rmat1-bench-graph500-scale-19_524288_192
+Executing: srun -n 192 ./test_command.sh LOGIN69 rmat1-bench-rmat1-bench-graph500-scale-19_524288_192 10 --noios --nolocal-bypass --logging progress
+    rmat1-bench-rmat1-bench-graph500-scale-19_524288_192: Finished! Skipping validation
+stdout: Parsing data took: 5.18443s
+Delta-stepping (one-sided) finished.
+Time: 21.3122s.
+Short relaxations: 272461
+  from which bypassed: 0
+Long relaxations: 1364602
+Total phases: 29
+
+Skipping: random-ar2-h7-e510-s42_255_39
+Skipping: random-ar2-h10-e6141-s42_2047_5
+Skipping: random-ar2-h10-e30705-s42_2047_5
+Skipping: random-ar2-h7-e510-s42_255_9
+Skipping: random-ar2-h7-e510-s42_255_27
+Skipping: random-ar2-h7-e510-s42_255_1
+Skipping: random-ar2-h10-e24564-s42_2047_5
+Running: rmat1-bench-rmat1-bench-graph500-scale-15_32768_12
+Executing: srun -n 12 ./test_command.sh LOGIN69 rmat1-bench-rmat1-bench-graph500-scale-15_32768_12 10 --noios --nolocal-bypass --logging progress
+    rmat1-bench-rmat1-bench-graph500-scale-15_32768_12: Finished! Skipping validation
+stdout: Parsing data took: 0.329062s
+Delta-stepping (one-sided) finished.
+Time: 0.38966s.
+Short relaxations: 7422
+  from which bypassed: 0
+Long relaxations: 22032
+Total phases: 27
+
+Skipping: random-ar2-h7-e510-s42_255_3
+Skipping: path_20_4
+Skipping: random-ar3-h9-e295240-s45_29524_768
+Skipping: random-ar2-h7-e510-s42_255_13
+Skipping: random-ar2-h7-e510-s42_255_35
+Skipping: random-ar3-h9-e295240-s48_29524_768
+Skipping: random-ar2-h10-e28658-s42_2047_5
+Skipping: bigcycle_100_1
+Skipping: random-ar2-h15-e131070-s47_65535_768
+Skipping: random-ar2-h7-e510-s42_255_12
+Skipping: random-ar2-h7-e510-s42_255_16
+Skipping: random-ar2-h7-e510-s42_255_8
+Skipping: bigcycle_100200300_48
+Skipping: random-ar2-h10-e4094-s42_2047_5
+Skipping: random-ar3-h9-e295240-s43_29524_768
+Skipping: random-ar2-h7-e510-s42_255_2
+Skipping: random-ar2-h7-e510-s42_255_40
+Skipping: random-ar3-h6-e2186-s3_1093_5
+Skipping: random-ar2-h7-e510-s42_255_41
+Skipping: random-ar2-h15-e131070-s42_65535_768
+Skipping: random-ar3-h6-e2186-s8_1093_5
+Skipping: random-ar2-h7-e510-s42_255_20
+Skipping: random-ar2-h7-e510-s42_255_23
+Skipping: random-ar2-h15-e131070-s44_65535_768
+Skipping: random-ar3-h6-e2186-s6_1093_5
+Skipping: random-ar2-h20-e33554416-s42_2097151_24
+Skipping: bigcycle_5_1
+Skipping: random-ar2-h7-e510-s42_255_7
+Skipping: random-ar2-h7-e510-s42_255_34
+Skipping: random-ar2-h7-e510-s42_255_28
+Skipping: random-ar2-h7-e510-s42_255_33
+Skipping: random-ar2-h7-e510-s42_255_42
+Skipping: random-ar2-h15-e131070-s40_65535_768
+Skipping: random-ar2-h15-e131070-s45_65535_768
+Skipping: random-ar2-h10-e12282-s42_2047_5
+Running: rmat1-bench-rmat1-bench-graph500-scale-16_65536_24
+Executing: srun -n 24 ./test_command.sh LOGIN69 rmat1-bench-rmat1-bench-graph500-scale-16_65536_24 10 --noios --nolocal-bypass --logging progress
+    rmat1-bench-rmat1-bench-graph500-scale-16_65536_24: Finished! Skipping validation
+stdout: Parsing data took: 0.596136s
+Delta-stepping (one-sided) finished.
+Time: 2.1508s.
+Short relaxations: 14049
+  from which bypassed: 0
+Long relaxations: 42653
+Total phases: 27
+
+Skipping: bigcycle_120_4
+Skipping: random-ar2-h15-e131070-s46_65535_768
+Skipping: random-ar2-h7-e510-s42_255_4
+Skipping: random-ar2-h7-e510-s42_255_11
+Skipping: random-ar2-h7-e510-s42_255_6
+Skipping: random-ar2-h10-e16376-s42_2047_5
+Skipping: random-ar2-h7-e510-s42_255_15
+Skipping: random-ar2-h15-e131070-s49_65535_768
+Skipping: bigcycle_12_3
+Skipping: bigcycle_1100200_48
+Skipping: random-ar2-h15-e131070-s48_65535_768
+Skipping: random-ar3-h6-e2186-s10_1093_5
+Skipping: bigcycle_10100200_48
+Skipping: random-ar2-h10-e18423-s42_2047_5
+Skipping: random-ar2-h7-e510-s42_255_21
+Skipping: random-ar2-h15-e131070-s41_65535_768
+Skipping: bigcycle_17019_27
+Skipping: random-ar3-h9-e295240-s47_29524_768
+Skipping: bigcycle_4300400500_72
+Skipping: bigcycle_5_2
+Skipping: random-ar2-h7-e510-s42_255_25
+Skipping: random-ar3-h9-e295240-s49_29524_768
+Skipping: random-ar2-h7-e510-s42_255_32
+Skipping: random-ar2-h10-e14329-s42_2047_5
+Skipping: random-ar2-h7-e510-s42_255_22
+Skipping: random-ar2-h10-e8188-s42_2047_5
+Skipping: random-ar2-h7-e510-s42_255_30
+Skipping: random-ar3-h9-e295240-s40_29524_768
+Skipping: bigcycle_10_3
+Skipping: random-ar2-h7-e510-s42_255_38
+Skipping: random-ar2-h7-e510-s42_255_19
+Skipping: random-ar2-h10-e22517-s42_2047_5
+Skipping: random-ar2-h7-e510-s42_255_18
+Skipping: random-ar3-h6-e2186-s5_1093_5
+Skipping: random-ar2-h7-e510-s42_255_10
+Skipping: bigcycle_1200_6
+Running: rmat1-bench-rmat1-bench-graph500-scale-17_131072_48
+Executing: srun -n 48 ./test_command.sh LOGIN69 rmat1-bench-rmat1-bench-graph500-scale-17_131072_48 10 --noios --nolocal-bypass --logging progress
+    rmat1-bench-rmat1-bench-graph500-scale-17_131072_48: Finished! Skipping validation
+stdout: Parsing data took: 1.23948s
+Delta-stepping (one-sided) finished.
+Time: 3.47747s.
+Short relaxations: 40792
+  from which bypassed: 0
+Long relaxations: 142132
+Total phases: 29
+
+Skipping: random-ar2-h7-e510-s42_255_17
+Running: rmat1-bench-rmat1-bench-graph500-scale-18_262144_96
+Executing: srun -n 96 ./test_command.sh LOGIN69 rmat1-bench-rmat1-bench-graph500-scale-18_262144_96 10 --noios --nolocal-bypass --logging progress
+    rmat1-bench-rmat1-bench-graph500-scale-18_262144_96: Finished! Skipping validation
+stdout: Parsing data took: 2.45943s
+Delta-stepping (one-sided) finished.
+Time: 6.67705s.
+Short relaxations: 108529
+  from which bypassed: 0
+Long relaxations: 452332
+Total phases: 29
+
+Running: rmat1-bench-rmat1-bench-graph500-scale-14_16384_6
+Executing: srun -n 6 ./test_command.sh LOGIN69 rmat1-bench-rmat1-bench-graph500-scale-14_16384_6 10 --noios --nolocal-bypass --logging progress
+    rmat1-bench-rmat1-bench-graph500-scale-14_16384_6: Finished! Skipping validation
+stdout: Parsing data took: 0.152101s
+Delta-stepping (one-sided) finished.
+Time: 0.0216761s.
+Short relaxations: 3975
+  from which bypassed: 0
+Long relaxations: 11307
+Total phases: 27
+
+Skipping: random_20_4
+Skipping: random-ar2-h7-e510-s42_255_24
+Skipping: random-ar2-h15-e131070-s43_65535_768
+Skipping: random-ar2-h7-e510-s42_255_36
+TESTMAX not set. Setting to 10100200300
+Solution: LOGIN69
+Skipping: random-ar3-h9-e295240-s46_29524_768
+Skipping: bigcycle_100100_24
+Skipping: random-ar2-h10-e32752-s42_2047_5
+Skipping: random-ar3-h9-e295240-s44_29524_768
+Skipping: random-ar2-h10-e10235-s42_2047_5
+Skipping: random-ar3-h6-e2186-s4_1093_5
+Skipping: random-ar2-h7-e510-s42_255_37
+Skipping: random-ar2-h10-e20470-s42_2047_5
+Skipping: random-ar2-h7-e510-s42_255_14
+Skipping: bigcycle_10_2
+Skipping: random-ar3-h6-e2186-s1_1093_5
+Skipping: random-ar2-h7-e510-s42_255_31
+Skipping: bigcycle_4_1
+Skipping: random-ar2-h7-e510-s42_255_29
+Skipping: bigcycle_1000000_24
+Skipping: random-ar2-h7-e510-s42_255_5
+Skipping: random-ar3-h6-e2186-s2_1093_5
+Skipping: random-ar3-h6-e2186-s9_1093_5
+Skipping: random-ar2-h7-e510-s42_255_26
+Skipping: random-ar3-h9-e295240-s42_29524_768
+Skipping: random-ar3-h6-e2186-s7_1093_5
+Skipping: random-ar2-h10-e26611-s42_2047_5
+Skipping: random-ar3-h9-e295240-s41_29524_768
+Running: rmat1-bench-rmat1-bench-graph500-scale-19_524288_192
+Executing: srun -n 192 ./test_command.sh LOGIN69 rmat1-bench-rmat1-bench-graph500-scale-19_524288_192 40 --noios --nolocal-bypass --logging progress
+    rmat1-bench-rmat1-bench-graph500-scale-19_524288_192: Finished! Skipping validation
+stdout: Parsing data took: 5.1592s
+Delta-stepping (one-sided) finished.
+Time: 21.9285s.
+Short relaxations: 688710
+  from which bypassed: 0
+Long relaxations: 1070832
+Total phases: 10
+
+Skipping: random-ar2-h7-e510-s42_255_39
+Skipping: random-ar2-h10-e6141-s42_2047_5
+Skipping: random-ar2-h10-e30705-s42_2047_5
+Skipping: random-ar2-h7-e510-s42_255_9
+Skipping: random-ar2-h7-e510-s42_255_27
+Skipping: random-ar2-h7-e510-s42_255_1
+Skipping: random-ar2-h10-e24564-s42_2047_5
+Running: rmat1-bench-rmat1-bench-graph500-scale-15_32768_12
+Executing: srun -n 12 ./test_command.sh LOGIN69 rmat1-bench-rmat1-bench-graph500-scale-15_32768_12 40 --noios --nolocal-bypass --logging progress
+    rmat1-bench-rmat1-bench-graph500-scale-15_32768_12: Finished! Skipping validation
+stdout: Parsing data took: 0.313015s
+Delta-stepping (one-sided) finished.
+Time: 0.378415s.
+Short relaxations: 14235
+  from which bypassed: 0
+Long relaxations: 15219
+Total phases: 8
+
+Skipping: random-ar2-h7-e510-s42_255_3
+Skipping: path_20_4
+Skipping: random-ar3-h9-e295240-s45_29524_768
+Skipping: random-ar2-h7-e510-s42_255_13
+Skipping: random-ar2-h7-e510-s42_255_35
+Skipping: random-ar3-h9-e295240-s48_29524_768
+Skipping: random-ar2-h10-e28658-s42_2047_5
+Skipping: bigcycle_100_1
+Skipping: random-ar2-h15-e131070-s47_65535_768
+Skipping: random-ar2-h7-e510-s42_255_12
+Skipping: random-ar2-h7-e510-s42_255_16
+Skipping: random-ar2-h7-e510-s42_255_8
+Skipping: bigcycle_100200300_48
+Skipping: random-ar2-h10-e4094-s42_2047_5
+Skipping: random-ar3-h9-e295240-s43_29524_768
+Skipping: random-ar2-h7-e510-s42_255_2
+Skipping: random-ar2-h7-e510-s42_255_40
+Skipping: random-ar3-h6-e2186-s3_1093_5
+Skipping: random-ar2-h7-e510-s42_255_41
+Skipping: random-ar2-h15-e131070-s42_65535_768
+Skipping: random-ar3-h6-e2186-s8_1093_5
+Skipping: random-ar2-h7-e510-s42_255_20
+Skipping: random-ar2-h7-e510-s42_255_23
+Skipping: random-ar2-h15-e131070-s44_65535_768
+Skipping: random-ar3-h6-e2186-s6_1093_5
+Skipping: random-ar2-h20-e33554416-s42_2097151_24
+Skipping: bigcycle_5_1
+Skipping: random-ar2-h7-e510-s42_255_7
+Skipping: random-ar2-h7-e510-s42_255_34
+Skipping: random-ar2-h7-e510-s42_255_28
+Skipping: random-ar2-h7-e510-s42_255_33
+Skipping: random-ar2-h7-e510-s42_255_42
+Skipping: random-ar2-h15-e131070-s40_65535_768
+Skipping: random-ar2-h15-e131070-s45_65535_768
+Skipping: random-ar2-h10-e12282-s42_2047_5
+Running: rmat1-bench-rmat1-bench-graph500-scale-16_65536_24
+Executing: srun -n 24 ./test_command.sh LOGIN69 rmat1-bench-rmat1-bench-graph500-scale-16_65536_24 40 --noios --nolocal-bypass --logging progress
+    rmat1-bench-rmat1-bench-graph500-scale-16_65536_24: Finished! Skipping validation
+stdout: Parsing data took: 0.600462s
+Delta-stepping (one-sided) finished.
+Time: 2.18349s.
+Short relaxations: 27183
+  from which bypassed: 0
+Long relaxations: 29519
+Total phases: 8
+
+Skipping: bigcycle_120_4
+Skipping: random-ar2-h15-e131070-s46_65535_768
+Skipping: random-ar2-h7-e510-s42_255_4
+Skipping: random-ar2-h7-e510-s42_255_11
+Skipping: random-ar2-h7-e510-s42_255_6
+Skipping: random-ar2-h10-e16376-s42_2047_5
+Skipping: random-ar2-h7-e510-s42_255_15
+Skipping: random-ar2-h15-e131070-s49_65535_768
+Skipping: bigcycle_12_3
+Skipping: bigcycle_1100200_48
+Skipping: random-ar2-h15-e131070-s48_65535_768
+Skipping: random-ar3-h6-e2186-s10_1093_5
+Skipping: bigcycle_10100200_48
+Skipping: random-ar2-h10-e18423-s42_2047_5
+Skipping: random-ar2-h7-e510-s42_255_21
+Skipping: random-ar2-h15-e131070-s41_65535_768
+Skipping: bigcycle_17019_27
+Skipping: random-ar3-h9-e295240-s47_29524_768
+Skipping: bigcycle_4300400500_72
+Skipping: bigcycle_5_2
+Skipping: random-ar2-h7-e510-s42_255_25
+Skipping: random-ar3-h9-e295240-s49_29524_768
+Skipping: random-ar2-h7-e510-s42_255_32
+Skipping: random-ar2-h10-e14329-s42_2047_5
+Skipping: random-ar2-h7-e510-s42_255_22
+Skipping: random-ar2-h10-e8188-s42_2047_5
+Skipping: random-ar2-h7-e510-s42_255_30
+Skipping: random-ar3-h9-e295240-s40_29524_768
+Skipping: bigcycle_10_3
+Skipping: random-ar2-h7-e510-s42_255_38
+Skipping: random-ar2-h7-e510-s42_255_19
+Skipping: random-ar2-h10-e22517-s42_2047_5
+Skipping: random-ar2-h7-e510-s42_255_18
+Skipping: random-ar3-h6-e2186-s5_1093_5
+Skipping: random-ar2-h7-e510-s42_255_10
+Skipping: bigcycle_1200_6
+Running: rmat1-bench-rmat1-bench-graph500-scale-17_131072_48
+Executing: srun -n 48 ./test_command.sh LOGIN69 rmat1-bench-rmat1-bench-graph500-scale-17_131072_48 40 --noios --nolocal-bypass --logging progress
+    rmat1-bench-rmat1-bench-graph500-scale-17_131072_48: Finished! Skipping validation
+stdout: Parsing data took: 1.24089s
+Delta-stepping (one-sided) finished.
+Time: 3.80726s.
+Short relaxations: 88056
+  from which bypassed: 0
+Long relaxations: 103450
+Total phases: 10
+
+Skipping: random-ar2-h7-e510-s42_255_17
+Running: rmat1-bench-rmat1-bench-graph500-scale-18_262144_96
+Executing: srun -n 96 ./test_command.sh LOGIN69 rmat1-bench-rmat1-bench-graph500-scale-18_262144_96 40 --noios --nolocal-bypass --logging progress
+    rmat1-bench-rmat1-bench-graph500-scale-18_262144_96: Finished! Skipping validation
+stdout: Parsing data took: 2.46037s
+Delta-stepping (one-sided) finished.
+Time: 7.97682s.
+Short relaxations: 259817
+  from which bypassed: 0
+Long relaxations: 407792
+Total phases: 10
+
+Running: rmat1-bench-rmat1-bench-graph500-scale-14_16384_6
+Executing: srun -n 6 ./test_command.sh LOGIN69 rmat1-bench-rmat1-bench-graph500-scale-14_16384_6 40 --noios --nolocal-bypass --logging progress
+    rmat1-bench-rmat1-bench-graph500-scale-14_16384_6: Finished! Skipping validation
+stdout: Parsing data took: 0.154491s
+Delta-stepping (one-sided) finished.
+Time: 0.0201528s.
+Short relaxations: 7573
+  from which bypassed: 0
+Long relaxations: 7709
+Total phases: 8
+
+Skipping: random_20_4
+Skipping: random-ar2-h7-e510-s42_255_24
+Skipping: random-ar2-h15-e131070-s43_65535_768
+Skipping: random-ar2-h7-e510-s42_255_36
+TESTMAX not set. Setting to 10100200300
+Solution: LOGIN69
+Skipping: random-ar3-h9-e295240-s46_29524_768
+Skipping: bigcycle_100100_24
+Skipping: random-ar2-h10-e32752-s42_2047_5
+Skipping: random-ar3-h9-e295240-s44_29524_768
+Skipping: random-ar2-h10-e10235-s42_2047_5
+Skipping: random-ar3-h6-e2186-s4_1093_5
+Skipping: random-ar2-h7-e510-s42_255_37
+Skipping: random-ar2-h10-e20470-s42_2047_5
+Skipping: random-ar2-h7-e510-s42_255_14
+Skipping: bigcycle_10_2
+Skipping: random-ar3-h6-e2186-s1_1093_5
+Skipping: random-ar2-h7-e510-s42_255_31
+Skipping: bigcycle_4_1
+Skipping: random-ar2-h7-e510-s42_255_29
+Skipping: bigcycle_1000000_24
+Skipping: random-ar2-h7-e510-s42_255_5
+Skipping: random-ar3-h6-e2186-s2_1093_5
+Skipping: random-ar3-h6-e2186-s9_1093_5
+Skipping: random-ar2-h7-e510-s42_255_26
+Skipping: random-ar3-h9-e295240-s42_29524_768
+Skipping: random-ar3-h6-e2186-s7_1093_5
+Skipping: random-ar2-h10-e26611-s42_2047_5
+Skipping: random-ar3-h9-e295240-s41_29524_768
+Running: rmat1-bench-rmat1-bench-graph500-scale-19_524288_192
+Executing: srun -n 192 ./test_command.sh LOGIN69 rmat1-bench-rmat1-bench-graph500-scale-19_524288_192 100100100 --noios --nolocal-bypass --logging progress
+    rmat1-bench-rmat1-bench-graph500-scale-19_524288_192: Finished! Skipping validation
+stdout: Parsing data took: 5.16413s
+Delta-stepping (one-sided) finished.
+Time: 49.2625s.
+Short relaxations: 2305472
+  from which bypassed: 0
+Long relaxations: 0
+Total phases: 4
+
+Skipping: random-ar2-h7-e510-s42_255_39
+Skipping: random-ar2-h10-e6141-s42_2047_5
+Skipping: random-ar2-h10-e30705-s42_2047_5
+Skipping: random-ar2-h7-e510-s42_255_9
+Skipping: random-ar2-h7-e510-s42_255_27
+Skipping: random-ar2-h7-e510-s42_255_1
+Skipping: random-ar2-h10-e24564-s42_2047_5
+Running: rmat1-bench-rmat1-bench-graph500-scale-15_32768_12
+Executing: srun -n 12 ./test_command.sh LOGIN69 rmat1-bench-rmat1-bench-graph500-scale-15_32768_12 100100100 --noios --nolocal-bypass --logging progress
+    rmat1-bench-rmat1-bench-graph500-scale-15_32768_12: Finished! Skipping validation
+stdout: Parsing data took: 0.335179s
+Delta-stepping (one-sided) finished.
+Time: 0.425633s.
+Short relaxations: 29454
+  from which bypassed: 0
+Long relaxations: 0
+Total phases: 2
+
+Skipping: random-ar2-h7-e510-s42_255_3
+Skipping: path_20_4
+Skipping: random-ar3-h9-e295240-s45_29524_768
+Skipping: random-ar2-h7-e510-s42_255_13
+Skipping: random-ar2-h7-e510-s42_255_35
+Skipping: random-ar3-h9-e295240-s48_29524_768
+Skipping: random-ar2-h10-e28658-s42_2047_5
+Skipping: bigcycle_100_1
+Skipping: random-ar2-h15-e131070-s47_65535_768
+Skipping: random-ar2-h7-e510-s42_255_12
+Skipping: random-ar2-h7-e510-s42_255_16
+Skipping: random-ar2-h7-e510-s42_255_8
+Skipping: bigcycle_100200300_48
+Skipping: random-ar2-h10-e4094-s42_2047_5
+Skipping: random-ar3-h9-e295240-s43_29524_768
+Skipping: random-ar2-h7-e510-s42_255_2
+Skipping: random-ar2-h7-e510-s42_255_40
+Skipping: random-ar3-h6-e2186-s3_1093_5
+Skipping: random-ar2-h7-e510-s42_255_41
+Skipping: random-ar2-h15-e131070-s42_65535_768
+Skipping: random-ar3-h6-e2186-s8_1093_5
+Skipping: random-ar2-h7-e510-s42_255_20
+Skipping: random-ar2-h7-e510-s42_255_23
+Skipping: random-ar2-h15-e131070-s44_65535_768
+Skipping: random-ar3-h6-e2186-s6_1093_5
+Skipping: random-ar2-h20-e33554416-s42_2097151_24
+Skipping: bigcycle_5_1
+Skipping: random-ar2-h7-e510-s42_255_7
+Skipping: random-ar2-h7-e510-s42_255_34
+Skipping: random-ar2-h7-e510-s42_255_28
+Skipping: random-ar2-h7-e510-s42_255_33
+Skipping: random-ar2-h7-e510-s42_255_42
+Skipping: random-ar2-h15-e131070-s40_65535_768
+Skipping: random-ar2-h15-e131070-s45_65535_768
+Skipping: random-ar2-h10-e12282-s42_2047_5
+Running: rmat1-bench-rmat1-bench-graph500-scale-16_65536_24
+Executing: srun -n 24 ./test_command.sh LOGIN69 rmat1-bench-rmat1-bench-graph500-scale-16_65536_24 100100100 --noios --nolocal-bypass --logging progress
+    rmat1-bench-rmat1-bench-graph500-scale-16_65536_24: Finished! Skipping validation
+stdout: Parsing data took: 0.650396s
+Delta-stepping (one-sided) finished.
+Time: 2.19592s.
+Short relaxations: 56702
+  from which bypassed: 0
+Long relaxations: 0
+Total phases: 2
+
+Skipping: bigcycle_120_4
+Skipping: random-ar2-h15-e131070-s46_65535_768
+Skipping: random-ar2-h7-e510-s42_255_4
+Skipping: random-ar2-h7-e510-s42_255_11
+Skipping: random-ar2-h7-e510-s42_255_6
+Skipping: random-ar2-h10-e16376-s42_2047_5
+Skipping: random-ar2-h7-e510-s42_255_15
+Skipping: random-ar2-h15-e131070-s49_65535_768
+Skipping: bigcycle_12_3
+Skipping: bigcycle_1100200_48
+Skipping: random-ar2-h15-e131070-s48_65535_768
+Skipping: random-ar3-h6-e2186-s10_1093_5
+Skipping: bigcycle_10100200_48
+Skipping: random-ar2-h10-e18423-s42_2047_5
+Skipping: random-ar2-h7-e510-s42_255_21
+Skipping: random-ar2-h15-e131070-s41_65535_768
+Skipping: bigcycle_17019_27
+Skipping: random-ar3-h9-e295240-s47_29524_768
+Skipping: bigcycle_4300400500_72
+Skipping: bigcycle_5_2
+Skipping: random-ar2-h7-e510-s42_255_25
+Skipping: random-ar3-h9-e295240-s49_29524_768
+Skipping: random-ar2-h7-e510-s42_255_32
+Skipping: random-ar2-h10-e14329-s42_2047_5
+Skipping: random-ar2-h7-e510-s42_255_22
+Skipping: random-ar2-h10-e8188-s42_2047_5
+Skipping: random-ar2-h7-e510-s42_255_30
+Skipping: random-ar3-h9-e295240-s40_29524_768
+Skipping: bigcycle_10_3
+Skipping: random-ar2-h7-e510-s42_255_38
+Skipping: random-ar2-h7-e510-s42_255_19
+Skipping: random-ar2-h10-e22517-s42_2047_5
+Skipping: random-ar2-h7-e510-s42_255_18
+Skipping: random-ar3-h6-e2186-s5_1093_5
+Skipping: random-ar2-h7-e510-s42_255_10
+Skipping: bigcycle_1200_6
+Running: rmat1-bench-rmat1-bench-graph500-scale-17_131072_48
+Executing: srun -n 48 ./test_command.sh LOGIN69 rmat1-bench-rmat1-bench-graph500-scale-17_131072_48 100100100 --noios --nolocal-bypass --logging progress
+    rmat1-bench-rmat1-bench-graph500-scale-17_131072_48: Finished! Skipping validation
+stdout: Parsing data took: 1.23522s
+Delta-stepping (one-sided) finished.
+Time: 5.30518s.
+Short relaxations: 275017
+  from which bypassed: 0
+Long relaxations: 0
+Total phases: 4
+
+Skipping: random-ar2-h7-e510-s42_255_17
+Running: rmat1-bench-rmat1-bench-graph500-scale-18_262144_96
+Executing: srun -n 96 ./test_command.sh LOGIN69 rmat1-bench-rmat1-bench-graph500-scale-18_262144_96 100100100 --noios --nolocal-bypass --logging progress
+    rmat1-bench-rmat1-bench-graph500-scale-18_262144_96: Finished! Skipping validation
+stdout: Parsing data took: 2.47951s
+Delta-stepping (one-sided) finished.
+Time: 57.5518s.
+Short relaxations: 900757
+  from which bypassed: 0
+Long relaxations: 0
+Total phases: 4
+
+Running: rmat1-bench-rmat1-bench-graph500-scale-14_16384_6
+Executing: srun -n 6 ./test_command.sh LOGIN69 rmat1-bench-rmat1-bench-graph500-scale-14_16384_6 100100100 --noios --nolocal-bypass --logging progress
+    rmat1-bench-rmat1-bench-graph500-scale-14_16384_6: Finished! Skipping validation
+stdout: Parsing data took: 0.184166s
+Delta-stepping (one-sided) finished.
+Time: 0.0534985s.
+Short relaxations: 15282
+  from which bypassed: 0
+Long relaxations: 0
+Total phases: 2
+
+Skipping: random_20_4
+Skipping: random-ar2-h7-e510-s42_255_24
+Skipping: random-ar2-h15-e131070-s43_65535_768
+Skipping: random-ar2-h7-e510-s42_255_36
+TESTMAX not set. Setting to 10100200300
+Solution: LOGIN69
+Skipping: random-ar3-h9-e295240-s46_29524_768
+Skipping: bigcycle_100100_24
+Skipping: random-ar2-h10-e32752-s42_2047_5
+Skipping: random-ar3-h9-e295240-s44_29524_768
+Skipping: random-ar2-h10-e10235-s42_2047_5
+Skipping: random-ar3-h6-e2186-s4_1093_5
+Skipping: random-ar2-h7-e510-s42_255_37
+Skipping: random-ar2-h10-e20470-s42_2047_5
+Skipping: random-ar2-h7-e510-s42_255_14
+Skipping: bigcycle_10_2
+Skipping: random-ar3-h6-e2186-s1_1093_5
+Skipping: random-ar2-h7-e510-s42_255_31
+Skipping: bigcycle_4_1
+Skipping: random-ar2-h7-e510-s42_255_29
+Skipping: bigcycle_1000000_24
+Skipping: random-ar2-h7-e510-s42_255_5
+Skipping: random-ar3-h6-e2186-s2_1093_5
+Skipping: random-ar3-h6-e2186-s9_1093_5
+Skipping: random-ar2-h7-e510-s42_255_26
+Skipping: random-ar3-h9-e295240-s42_29524_768
+Skipping: random-ar3-h6-e2186-s7_1093_5
+Skipping: random-ar2-h10-e26611-s42_2047_5
+Skipping: random-ar3-h9-e295240-s41_29524_768
+Running: rmat1-bench-rmat1-bench-graph500-scale-19_524288_192
+Executing: srun -n 192 ./test_command.sh LOGIN69 rmat1-bench-rmat1-bench-graph500-scale-19_524288_192 1 --noios --nolocal-bypass --logging progress
+    rmat1-bench-rmat1-bench-graph500-scale-19_524288_192: Finished! Skipping validation
+stdout: Parsing data took: 5.2108s
+Delta-stepping (one-sided) finished.
+Time: 27.9718s.
+Short relaxations: 48026
+  from which bypassed: 0
+Long relaxations: 1523686
+Total phases: 259
+
+Skipping: random-ar2-h7-e510-s42_255_39
+Skipping: random-ar2-h10-e6141-s42_2047_5
+Skipping: random-ar2-h10-e30705-s42_2047_5
+Skipping: random-ar2-h7-e510-s42_255_9
+Skipping: random-ar2-h7-e510-s42_255_27
+Skipping: random-ar2-h7-e510-s42_255_1
+Skipping: random-ar2-h10-e24564-s42_2047_5
+Running: rmat1-bench-rmat1-bench-graph500-scale-15_32768_12
+Executing: srun -n 12 ./test_command.sh LOGIN69 rmat1-bench-rmat1-bench-graph500-scale-15_32768_12 1 --noios --nolocal-bypass --logging progress
+    rmat1-bench-rmat1-bench-graph500-scale-15_32768_12: Finished! Skipping validation
+stdout: Parsing data took: 0.332642s
+Delta-stepping (one-sided) finished.
+Time: 0.407333s.
+Short relaxations: 2118
+  from which bypassed: 0
+Long relaxations: 27336
+Total phases: 257
+
+Skipping: random-ar2-h7-e510-s42_255_3
+Skipping: path_20_4
+Skipping: random-ar3-h9-e295240-s45_29524_768
+Skipping: random-ar2-h7-e510-s42_255_13
+Skipping: random-ar2-h7-e510-s42_255_35
+Skipping: random-ar3-h9-e295240-s48_29524_768
+Skipping: random-ar2-h10-e28658-s42_2047_5
+Skipping: bigcycle_100_1
+Skipping: random-ar2-h15-e131070-s47_65535_768
+Skipping: random-ar2-h7-e510-s42_255_12
+Skipping: random-ar2-h7-e510-s42_255_16
+Skipping: random-ar2-h7-e510-s42_255_8
+Skipping: bigcycle_100200300_48
+Skipping: random-ar2-h10-e4094-s42_2047_5
+Skipping: random-ar3-h9-e295240-s43_29524_768
+Skipping: random-ar2-h7-e510-s42_255_2
+Skipping: random-ar2-h7-e510-s42_255_40
+Skipping: random-ar3-h6-e2186-s3_1093_5
+Skipping: random-ar2-h7-e510-s42_255_41
+Skipping: random-ar2-h15-e131070-s42_65535_768
+Skipping: random-ar3-h6-e2186-s8_1093_5
+Skipping: random-ar2-h7-e510-s42_255_20
+Skipping: random-ar2-h7-e510-s42_255_23
+Skipping: random-ar2-h15-e131070-s44_65535_768
+Skipping: random-ar3-h6-e2186-s6_1093_5
+Skipping: random-ar2-h20-e33554416-s42_2097151_24
+Skipping: bigcycle_5_1
+Skipping: random-ar2-h7-e510-s42_255_7
+Skipping: random-ar2-h7-e510-s42_255_34
+Skipping: random-ar2-h7-e510-s42_255_28
+Skipping: random-ar2-h7-e510-s42_255_33
+Skipping: random-ar2-h7-e510-s42_255_42
+Skipping: random-ar2-h15-e131070-s40_65535_768
+Skipping: random-ar2-h15-e131070-s45_65535_768
+Skipping: random-ar2-h10-e12282-s42_2047_5
+Running: rmat1-bench-rmat1-bench-graph500-scale-16_65536_24
+Executing: srun -n 24 ./test_command.sh LOGIN69 rmat1-bench-rmat1-bench-graph500-scale-16_65536_24 1 --noios --nolocal-bypass --logging progress
+    rmat1-bench-rmat1-bench-graph500-scale-16_65536_24: Finished! Skipping validation
+stdout: Parsing data took: 0.600417s
+Delta-stepping (one-sided) finished.
+Time: 2.19096s.
+Short relaxations: 4078
+  from which bypassed: 0
+Long relaxations: 52624
+Total phases: 257
+
+Skipping: bigcycle_120_4
+Skipping: random-ar2-h15-e131070-s46_65535_768
+Skipping: random-ar2-h7-e510-s42_255_4
+Skipping: random-ar2-h7-e510-s42_255_11
+Skipping: random-ar2-h7-e510-s42_255_6
+Skipping: random-ar2-h10-e16376-s42_2047_5
+Skipping: random-ar2-h7-e510-s42_255_15
+Skipping: random-ar2-h15-e131070-s49_65535_768
+Skipping: bigcycle_12_3
+Skipping: bigcycle_1100200_48
+Skipping: random-ar2-h15-e131070-s48_65535_768
+Skipping: random-ar3-h6-e2186-s10_1093_5
+Skipping: bigcycle_10100200_48
+Skipping: random-ar2-h10-e18423-s42_2047_5
+Skipping: random-ar2-h7-e510-s42_255_21
+Skipping: random-ar2-h15-e131070-s41_65535_768
+Skipping: bigcycle_17019_27
+Skipping: random-ar3-h9-e295240-s47_29524_768
+Skipping: bigcycle_4300400500_72
+Skipping: bigcycle_5_2
+Skipping: random-ar2-h7-e510-s42_255_25
+Skipping: random-ar3-h9-e295240-s49_29524_768
+Skipping: random-ar2-h7-e510-s42_255_32
+Skipping: random-ar2-h10-e14329-s42_2047_5
+Skipping: random-ar2-h7-e510-s42_255_22
+Skipping: random-ar2-h10-e8188-s42_2047_5
+Skipping: random-ar2-h7-e510-s42_255_30
+Skipping: random-ar3-h9-e295240-s40_29524_768
+Skipping: bigcycle_10_3
+Skipping: random-ar2-h7-e510-s42_255_38
+Skipping: random-ar2-h7-e510-s42_255_19
+Skipping: random-ar2-h10-e22517-s42_2047_5
+Skipping: random-ar2-h7-e510-s42_255_18
+Skipping: random-ar3-h6-e2186-s5_1093_5
+Skipping: random-ar2-h7-e510-s42_255_10
+Skipping: bigcycle_1200_6
+Running: rmat1-bench-rmat1-bench-graph500-scale-17_131072_48
+Executing: srun -n 48 ./test_command.sh LOGIN69 rmat1-bench-rmat1-bench-graph500-scale-17_131072_48 1 --noios --nolocal-bypass --logging progress
+    rmat1-bench-rmat1-bench-graph500-scale-17_131072_48: Finished! Skipping validation
+stdout: Parsing data took: 1.34233s
+Delta-stepping (one-sided) finished.
+Time: 3.42768s.
+Short relaxations: 9832
+  from which bypassed: 0
+Long relaxations: 168500
+Total phases: 259
+
+Skipping: random-ar2-h7-e510-s42_255_17
+Running: rmat1-bench-rmat1-bench-graph500-scale-18_262144_96
+Executing: srun -n 96 ./test_command.sh LOGIN69 rmat1-bench-rmat1-bench-graph500-scale-18_262144_96 1 --noios --nolocal-bypass --logging progress
+    rmat1-bench-rmat1-bench-graph500-scale-18_262144_96: Finished! Skipping validation
+stdout: Parsing data took: 2.47697s
+Delta-stepping (one-sided) finished.
+Time: 6.3804s.
+Short relaxations: 22156
+  from which bypassed: 0
+Long relaxations: 518738
+Total phases: 259
+
+Running: rmat1-bench-rmat1-bench-graph500-scale-14_16384_6
+Executing: srun -n 6 ./test_command.sh LOGIN69 rmat1-bench-rmat1-bench-graph500-scale-14_16384_6 1 --noios --nolocal-bypass --logging progress
+    rmat1-bench-rmat1-bench-graph500-scale-14_16384_6: Finished! Skipping validation
+stdout: Parsing data took: 0.153227s
+Delta-stepping (one-sided) finished.
+Time: 0.0385981s.
+Short relaxations: 1100
+  from which bypassed: 0
+Long relaxations: 14182
+Total phases: 257
+
+Skipping: random_20_4
+Skipping: random-ar2-h7-e510-s42_255_24
+Skipping: random-ar2-h15-e131070-s43_65535_768
+Skipping: random-ar2-h7-e510-s42_255_36
+ srun -n 96 --tasks-per-node 24 -N 4 --cpus-per-task 1 --time 20:00 -- test_command.sh LOGIN69 rmat2-bench-graph500-scale-18_262144_96/
+srun: job 1394133 queued and waiting for resources
+srun: job 1394133 has been allocated resources
+Parsing data took: 2.85475s
+Delta-stepping (one-sided) finished.
+Time: 129.982s.
+Short relaxations: 269578
+  from which bypassed: 0
+Long relaxations: 1631960
+Total phases: 29
+Last phase before bellman: 0
+srun -n 192 --tasks-per-node 24 -N 8 --cpus-per-task 1 --time 20:00 -- test_command.sh LOGIN69 rmat2-bench-graph500-scale-19_524288_192/
+srun: job 1394123 queued and waiting for resources
+srun: job 1394123 has been allocated resources
+Parsing data took: 5.8094s
+
+Delta-stepping (one-sided) finished.
+Time: 711.615s.
+Short relaxations: 610870
+  from which bypassed: 0
+Long relaxations: 5879504
+Total phases: 29
+Last phase before bellman: 0
+
+> srun -n 12 --tasks-per-node 24 -N 1 --cpus-per-task 1 --time 20:00 -- test_command.sh LOGIN69 rmat2-bench-graph500-scale-15_32768_12/
+srun: job 1394137 queued and waiting for resources
+srun: job 1394137 has been allocated resources
+Parsing data took: 0.358676s
+Delta-stepping (one-sided) finished.
+Time: 0.994721s.
+Short relaxations: 19384
+  from which bypassed: 0
+Long relaxations: 42954
+Total phases: 27
+Last phase before bellman: 0
+
+srun -n 48 --tasks-per-node 24 -N 2 --cpus-per-task 1 --time 20:00 -- test_command.sh LOGIN69 rmat2-bench-graph500-scale-17_131072_48/
+srun: job 1394134 queued and waiting for resources
+srun: job 1394134 has been allocated resources
+Parsing data took: 1.44086s
+Delta-stepping (one-sided) finished.
+Time: 15.7369s.
+Short relaxations: 106423
+  from which bypassed: 0
+Long relaxations: 484115
+Total phases: 29
+Last phase before bellman: 0
+
+ srun -n 24 --tasks-per-node 24 -N 1 --cpus-per-task 1 --time 20:00 -- test_command.sh LOGIN69 rmat2-bench-graph500-scale-16_65536_24/
+srun: job 1394136 queued and waiting for resources
+srun: job 1394136 has been allocated resources
+Parsing data took: 0.664117s
+Delta-stepping (one-sided) finished.
+Time: 4.12398s.
+Short relaxations: 38020
+  from which bypassed: 0
+Long relaxations: 86158
+Total phases: 27
+Last phase before bellman: 0
+
+TESTMAX not set. Setting to 10100200300
+Solution: LOGIN69
+Skipping: bigcycle_100100_24
+Skipping: random-ar2-h10-e32752-s42_2047_5
+Skipping: random-ar2-h10-e10235-s42_2047_5
+Skipping: random-ar3-h6-e2186-s4_1093_5
+Skipping: random-ar2-h7-e510-s42_255_37
+Skipping: random-ar2-h10-e20470-s42_2047_5
+Skipping: random-ar2-h7-e510-s42_255_14
+Skipping: bigcycle_10_2
+Skipping: random-ar3-h6-e2186-s1_1093_5
+Skipping: random-ar2-h7-e510-s42_255_31
+Skipping: bigcycle_4_1
+Skipping: random-ar2-h7-e510-s42_255_29
+Skipping: bigcycle_1000000_24
+Skipping: random-ar2-h7-e510-s42_255_5
+Skipping: random-ar3-h6-e2186-s2_1093_5
+Skipping: random-ar3-h6-e2186-s9_1093_5
+Skipping: random-ar2-h7-e510-s42_255_26
+Skipping: random-ar3-h6-e2186-s7_1093_5
+Skipping: random-ar2-h10-e26611-s42_2047_5
+Running: rmat1-bench-rmat1-bench-graph500-scale-19_524288_192
+Executing: srun -n 192 ./test_command.sh LOGIN69 rmat1-bench-rmat1-bench-graph500-scale-19_524288_192 10 --noios --nolocal-bypass --hybrid --logging progress
+    rmat1-bench-rmat1-bench-graph500-scale-19_524288_192: Finished! Skipping validation
+stdout: Parsing data took: 5.48901s
+Delta-stepping (one-sided) finished.
+Time: 22.8036s.
+Short relaxations: 272461
+  from which bypassed: 0
+Long relaxations: 1364602
+Total phases: 29
+Last phase before bellman: 0
+
+Skipping: random-ar2-h7-e510-s42_255_39
+Skipping: random-ar2-h10-e6141-s42_2047_5
+Skipping: random-ar2-h10-e30705-s42_2047_5
+Skipping: random-ar2-h7-e510-s42_255_9
+Skipping: random-ar2-h7-e510-s42_255_27
+Skipping: random-ar2-h7-e510-s42_255_1
+Skipping: random-ar2-h10-e24564-s42_2047_5
+Running: rmat1-bench-rmat1-bench-graph500-scale-15_32768_12
+Executing: srun -n 12 ./test_command.sh LOGIN69 rmat1-bench-rmat1-bench-graph500-scale-15_32768_12 10 --noios --nolocal-bypass --hybrid --logging progress
+    rmat1-bench-rmat1-bench-graph500-scale-15_32768_12: Finished! Skipping validation
+stdout: Parsing data took: 0.33778s
+Delta-stepping (one-sided) finished.
+Time: 0.392299s.
+Short relaxations: 9143
+  from which bypassed: 0
+Long relaxations: 20532
+Total phases: 19
+Last phase before bellman: 18
+
+Skipping: random-ar2-h7-e510-s42_255_3
+Skipping: path_20_4
+Skipping: random-ar2-h7-e510-s42_255_13
+Skipping: random-ar2-h7-e510-s42_255_35
+Skipping: random-ar2-h10-e28658-s42_2047_5
+Skipping: bigcycle_100_1
+Skipping: random-ar2-h7-e510-s42_255_12
+Skipping: random-ar2-h7-e510-s42_255_16
+Skipping: random-ar2-h7-e510-s42_255_8
+Skipping: bigcycle_100200300_48
+Skipping: random-ar2-h10-e4094-s42_2047_5
+Skipping: random-ar2-h7-e510-s42_255_2
+Skipping: random-ar2-h7-e510-s42_255_40
+Skipping: random-ar3-h6-e2186-s3_1093_5
+Skipping: random-ar2-h7-e510-s42_255_41
+Skipping: random-ar3-h6-e2186-s8_1093_5
+Skipping: random-ar2-h7-e510-s42_255_20
+Skipping: random-ar2-h7-e510-s42_255_23
+Skipping: random-ar3-h6-e2186-s6_1093_5
+Skipping: random-ar2-h20-e33554416-s42_2097151_24
+Skipping: bigcycle_5_1
+Skipping: random-ar2-h7-e510-s42_255_7
+Skipping: random-ar2-h7-e510-s42_255_34
+Skipping: random-ar2-h7-e510-s42_255_28
+Skipping: random-ar2-h7-e510-s42_255_33
+Skipping: random-ar2-h7-e510-s42_255_42
+Skipping: random-ar2-h10-e12282-s42_2047_5
+Running: rmat1-bench-rmat1-bench-graph500-scale-16_65536_24
+Executing: srun -n 24 ./test_command.sh LOGIN69 rmat1-bench-rmat1-bench-graph500-scale-16_65536_24 10 --noios --nolocal-bypass --hybrid --logging progress
+    rmat1-bench-rmat1-bench-graph500-scale-16_65536_24: Finished! Skipping validation
+stdout: Parsing data took: 0.631247s
+Delta-stepping (one-sided) finished.
+Time: 1.47927s.
+Short relaxations: 16529
+  from which bypassed: 0
+Long relaxations: 40541
+Total phases: 21
+Last phase before bellman: 20
+
+Skipping: bigcycle_120_4
+Skipping: random-ar2-h7-e510-s42_255_4
+Skipping: random-ar2-h7-e510-s42_255_11
+Skipping: random-ar2-h7-e510-s42_255_6
+Skipping: random-ar2-h10-e16376-s42_2047_5
+Skipping: random-ar2-h7-e510-s42_255_15
+Skipping: bigcycle_12_3
+Skipping: bigcycle_1100200_48
+Skipping: random-ar3-h6-e2186-s10_1093_5
+Skipping: bigcycle_10100200_48
+Skipping: random-ar2-h10-e18423-s42_2047_5
+Skipping: random-ar2-h7-e510-s42_255_21
+Skipping: bigcycle_17019_27
+Skipping: bigcycle_4300400500_72
+Skipping: bigcycle_5_2
+Skipping: random-ar2-h7-e510-s42_255_25
+Skipping: random-ar2-h7-e510-s42_255_32
+Skipping: random-ar2-h10-e14329-s42_2047_5
+Skipping: random-ar2-h7-e510-s42_255_22
+Skipping: random-ar2-h10-e8188-s42_2047_5
+Skipping: random-ar2-h7-e510-s42_255_30
+Skipping: bigcycle_10_3
+Skipping: random-ar2-h7-e510-s42_255_38
+Skipping: random-ar2-h7-e510-s42_255_19
+Skipping: random-ar2-h10-e22517-s42_2047_5
+Skipping: random-ar2-h7-e510-s42_255_18
+Skipping: random-ar3-h6-e2186-s5_1093_5
+Skipping: random-ar2-h7-e510-s42_255_10
+Skipping: bigcycle_1200_6
+Running: rmat1-bench-rmat1-bench-graph500-scale-17_131072_48
+Executing: srun -n 48 ./test_command.sh LOGIN69 rmat1-bench-rmat1-bench-graph500-scale-17_131072_48 10 --noios --nolocal-bypass --hybrid --logging progress
+    rmat1-bench-rmat1-bench-graph500-scale-17_131072_48: Finished! Skipping validation
+stdout: Parsing data took: 1.33592s
+Delta-stepping (one-sided) finished.
+Time: 3.55058s.
+Short relaxations: 43013
+  from which bypassed: 0
+Long relaxations: 140564
+Total phases: 27
+Last phase before bellman: 26
+
+Skipping: random-ar2-h7-e510-s42_255_17
+Running: rmat1-bench-rmat1-bench-graph500-scale-18_262144_96
+Executing: srun -n 96 ./test_command.sh LOGIN69 rmat1-bench-rmat1-bench-graph500-scale-18_262144_96 10 --noios --nolocal-bypass --hybrid --logging progress
+    rmat1-bench-rmat1-bench-graph500-scale-18_262144_96: Finished! Skipping validation
+stdout: Parsing data took: 2.76373s
+Delta-stepping (one-sided) finished.
+Time: 6.60158s.
+Short relaxations: 109188
+  from which bypassed: 0
+Long relaxations: 452332
+Total phases: 30
+Last phase before bellman: 29
+
+Running: rmat1-bench-rmat1-bench-graph500-scale-14_16384_6
+Executing: srun -n 6 ./test_command.sh LOGIN69 rmat1-bench-rmat1-bench-graph500-scale-14_16384_6 10 --noios --nolocal-bypass --hybrid --logging progress
+    rmat1-bench-rmat1-bench-graph500-scale-14_16384_6: Finished! Skipping validation
+stdout: Parsing data took: 0.152594s
+Delta-stepping (one-sided) finished.
+Time: 0.0339665s.
+Short relaxations: 5117
+  from which bypassed: 0
+Long relaxations: 10302
+Total phases: 17
+Last phase before bellman: 16
+
+Skipping: random_20_4
+Skipping: random-ar2-h7-e510-s42_255_24
+Skipping: random-ar2-h7-e510-s42_255_36

@@ -66,6 +66,14 @@ else
     echo "Info: Makefile not found in the current directory. Skipping."
 fi
 
+# Copy raport
+if [ -f "raport.pdf" ]; then
+    cp "raport.pdf" "$TARGET_CONTENT_DIR/"
+    echo "Copied Makefile to staging area."
+else
+    echo "Info: Makefile not found in the current directory. Skipping."
+fi
+
 # Copy src directory contents (if src exists and is not empty)
 if [ -d "src" ]; then
     if [ -n "$(ls -A src)" ]; then
